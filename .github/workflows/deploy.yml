@@ -15,8 +15,32 @@ jobs:
           username: ${{secrets.SSH_USERNAME}}
         
           script: |
-            cd /var/www/html/GuROOM_Frontend
+            cd /root/
             git pull
+            
+      - name: Npm install and build
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{secrets.SSH_HOST}}
+          key: ${{secrets.SSH_KEY}}
+          username: ${{secrets.SSH_USERNAME}}
+        
+          script: |
+            cd /root/GuROOM_Frontend
+            npm install
+            npm run build
+ 
+
+      
+      - name: Copy build file to /var/www/html
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{secrets.SSH_HOST}}
+          key: ${{secrets.SSH_KEY}}
+          username: ${{secrets.SSH_USERNAME}}
+        
+          script: |
+            sudo cp -r /root/GuROOM_Frontend/build/. /var/www/html
             
       - name: Restart Nginx
         uses: appleboy/ssh-action@v0.1.2
