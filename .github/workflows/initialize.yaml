@@ -31,7 +31,7 @@ jobs:
           username: ${{secrets.SSH_USERNAME}}
         
           script: |
-            apt install npm
+            apt-get -y install npm
 
       - name: Copy Github Repository
         uses: appleboy/ssh-action@v0.1.2
