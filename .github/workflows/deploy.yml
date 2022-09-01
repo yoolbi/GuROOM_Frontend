@@ -15,7 +15,7 @@ jobs:
           username: ${{secrets.SSH_USERNAME}}
         
           script: |
-            cd /root/
+            cd /root/GuROOM_Frontend
             git pull
             
       - name: Npm install and build
