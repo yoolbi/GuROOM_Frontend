@@ -17,4 +17,24 @@ jobs:
           script: |
             cd /var/www/html/GuROOM_Frontend
             git pull
-            npm start
+            
+      - name: Build npm
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{secrets.SSH_HOST}}
+          key: ${{secrets.SSH_KEY}}
+          username: ${{secrets.SSH_USERNAME}}
+        
+          script: |
+            npm init
+            npm run build
+            
+      - name: Restart Nginx
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{secrets.SSH_HOST}}
+          key: ${{secrets.SSH_KEY}}
+          username: ${{secrets.SSH_USERNAME}}
+        
+          script: |
+            systemctl restart nginx
