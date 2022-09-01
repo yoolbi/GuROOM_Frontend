@@ -22,16 +22,6 @@ jobs:
         
           script: |
             apt-get -y update
-            
-      - name: Install NPM
-        uses: appleboy/ssh-action@v0.1.2
-        with:
-          host: ${{secrets.SSH_HOST}}
-          key: ${{secrets.SSH_KEY}}
-          username: ${{secrets.SSH_USERNAME}}
-        
-          script: |
-            apt-get -y install npm
 
       - name: Copy Github Repository
         uses: appleboy/ssh-action@v0.1.2
