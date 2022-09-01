@@ -13,6 +13,7 @@ jobs:
         
           script: |
             apt-get -y update
+            apt-get -y npm
             apt-get -y install nginx
 
       - name: Copy Github Repository
