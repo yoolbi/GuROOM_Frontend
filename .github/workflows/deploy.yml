@@ -26,6 +26,7 @@ jobs:
           username: ${{secrets.SSH_USERNAME}}
         
           script: |
+            cd /var/www/html/GuROOM_Frontend
             npm install
             npm run build
             
