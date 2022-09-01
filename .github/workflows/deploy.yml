@@ -1,0 +1,17 @@
+name: Initalization of VM
+on: workflow_dispatch
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retrieve updated changes
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{secrets.SSH_HOST}}
+          key: ${{secrets.SSH_KEY}}
+          username: ${{secrets.SSH_USERNAME}}
+        
+          script: |
+            cd /var/www/html/GuROOM_Frontend
+            git pull --config core.sshCommand="ssh -i ~/.ssh/guroom_frontend2github"
+            npm start
