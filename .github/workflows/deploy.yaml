@@ -14,8 +14,7 @@ jobs:
           username: ${{secrets.SSH_USERNAME}}
           
           script: |
-            mkdir /var/www/html/guroom_frontend
-            cd /var/www/html/guroom_frontend
+            cd /var/www/html
             git clone git@github.com:YoohaBae/GuROOM_Frontend.git --config core.sshCommand="ssh -i ~/.ssh/guroom_frontend2github"
-            echo 'Deployment successful to digital ocean'
+            echo 'Repository successfully cloned'
             
