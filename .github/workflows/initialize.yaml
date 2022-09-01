@@ -53,7 +53,7 @@ jobs:
           username: ${{secrets.SSH_USERNAME}}
           
           script: |
-            cd /var/www/html
+            cd /root
             git clone git@github.com:YoohaBae/GuROOM_Frontend.git --config core.sshCommand="ssh -i ~/.ssh/guroom2github"
             echo 'Repository successfully cloned'
             
