@@ -26,7 +26,7 @@ jobs:
           username: ${{secrets.SSH_USERNAME}}
         
           script: |
-            npm init
+            npm install
             npm run build
             
       - name: Restart Nginx
