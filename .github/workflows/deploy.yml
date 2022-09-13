@@ -7,22 +7,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v2
-        
-      - name: Set up Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      
-      - run: npm install
-
-      - name: Run Prettier
-        run: npm run prettier
-        
-      - name: Run Eslint
-        run: npm run lint
-
       - name: Retrieve updated changes
         uses: appleboy/ssh-action@v0.1.2
         with:
