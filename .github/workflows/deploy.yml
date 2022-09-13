@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: 12
       
-      - run: npm ci
+      - run: npm install
 
       - name: Run EsLint
         uses: wearerequired/lint-action@v2.1.0
@@ -43,7 +43,7 @@ jobs:
         
           script: |
             cd /root/GuROOM_Frontend
-            npm ci
+            npm install
             npm run build
       
       - name: Copy build file to /var/www/html
