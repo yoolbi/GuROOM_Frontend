@@ -6,7 +6,6 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
-    "eslint": "^8.23.1",
     "prettier": "^2.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -20,7 +19,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint src",
     "prettier": "prettier --check src",
-    "lint:fix": "npm run lint -- --fix"
+    "prettier:fix": "npx prettier --write src",
+    "lint:fix": "eslint --fix src "
   },
   "eslintConfig": {
     "extends": [
@@ -50,5 +50,14 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/YoohaBae/GuROOM_Frontend/issues"
+  },
+  "devDependencies": {
+    "eslint": "^8.24.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.3.0",
+    "eslint-plugin-promise": "^6.0.1",
+    "eslint-plugin-react": "^7.31.8"
   }
 }
