@@ -76,7 +76,8 @@ const InitialSetup = () => {
           height: "65px",
           display: "flex",
           justifyContent: "space-between",
-        }}>
+        }}
+      >
         <img
           src="/img/startpage_logo.png"
           style={{
@@ -85,7 +86,8 @@ const InitialSetup = () => {
             alignItems: "center",
             display: "flex",
             minHeight: "56px",
-          }}></img>
+          }}
+        ></img>
       </div>
       <div
         style={{
@@ -93,13 +95,15 @@ const InitialSetup = () => {
           height: "92vh",
           overflowY: "hidden",
           justifyContent: "center",
-        }}>
+        }}
+      >
         <div
           style={{
             paddingTop: "15%",
             height: "100%",
             width: "50%",
-          }}>
+          }}
+        >
           <Box>
             <Stepper activeStep={activeStep} orientation="vertical">
               {steps.map((step, index) => (
@@ -129,7 +133,8 @@ const InitialSetup = () => {
                           {index === steps.length - 1 ? (
                             <Link
                               to={"/Homepage"}
-                              style={{ textDecoration: "none" }}>
+                              style={{ textDecoration: "none" }}
+                            >
                               <Button variant="contained" sx={{ mt: 1, mr: 1 }}>
                                 GUROOM YOUR DRIVE
                               </Button>
@@ -138,7 +143,8 @@ const InitialSetup = () => {
                             <Button
                               variant="contained"
                               onClick={handleNext}
-                              sx={{ mt: 1, mr: 1 }}>
+                              sx={{ mt: 1, mr: 1 }}
+                            >
                               Continue
                             </Button>
                           ) : (
@@ -146,7 +152,8 @@ const InitialSetup = () => {
                               <Button
                                 variant="contained"
                                 onClick={handleNextModal}
-                                sx={{ mt: 1, mr: 1 }}>
+                                sx={{ mt: 1, mr: 1 }}
+                              >
                                 Continue
                               </Button>
                               <Modal open={open}>
@@ -159,7 +166,8 @@ const InitialSetup = () => {
                                       top: "-10px",
                                       position: "absolute",
                                       left: "18%",
-                                    }}>
+                                    }}
+                                  >
                                     <lord-icon
                                       trigger="loop"
                                       src="icon_camera.json"
@@ -167,13 +175,15 @@ const InitialSetup = () => {
                                         width: "350px",
                                         height: "350px",
                                         // marginLeft: "20%",
-                                      }}></lord-icon>
+                                      }}
+                                    ></lord-icon>
                                     <div
                                       style={{
                                         fontFamily: "Poppins",
                                         fontSize: "50px",
                                         textAlignLast: "center",
-                                      }}>
+                                      }}
+                                    >
                                       Taking Snapshot
                                     </div>
                                   </div>
@@ -189,20 +199,23 @@ const InitialSetup = () => {
                                       top: "0px",
                                       position: "absolute",
                                       left: "25%",
-                                    }}>
+                                    }}
+                                  >
                                     <lord-icon
                                       trigger="loop"
                                       src="icon_done.json"
                                       style={{
                                         width: "350px",
                                         height: "350px",
-                                      }}></lord-icon>
+                                      }}
+                                    ></lord-icon>
                                     <div
                                       style={{
                                         fontFamily: "Poppins",
                                         fontSize: "50px",
                                         textAlignLast: "center",
-                                      }}>
+                                      }}
+                                    >
                                       DONE!
                                     </div>
                                   </div>
@@ -213,7 +226,8 @@ const InitialSetup = () => {
                           <Button
                             disabled={index === 0}
                             onClick={handleBack}
-                            sx={{ mt: 1, mr: 1 }}>
+                            sx={{ mt: 1, mr: 1 }}
+                          >
                             Back
                           </Button>
                         </div>
