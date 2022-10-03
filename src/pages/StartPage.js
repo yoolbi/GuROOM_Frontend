@@ -9,7 +9,8 @@ const startPage = () => {
           height: "65px",
           display: "flex",
           justifyContent: "space-between",
-        }}>
+        }}
+      >
         <img
           src="/img/startpage_logo.png"
           style={{
@@ -18,7 +19,8 @@ const startPage = () => {
             alignItems: "center",
             display: "flex",
             minHeight: "56px",
-          }}></img>
+          }}
+        ></img>
         <Link to={"/"} style={{ margin: "10px", marginRight: "10%" }}>
           <input
             type="button"
@@ -33,7 +35,8 @@ const startPage = () => {
 
               fontFamily: "Poppins",
               fontSize: "14px",
-            }}></input>
+            }}
+          ></input>
         </Link>
       </div>
       <div
@@ -42,14 +45,16 @@ const startPage = () => {
           display: "flex",
           position: "absolute",
           top: "20%",
-        }}>
+        }}
+      >
         <div>
           <img
             src="/img/startImg.png"
             style={{
               height: "80%",
               marginLeft: "40%",
-            }}></img>
+            }}
+          ></img>
         </div>
         <div
           style={{
@@ -59,7 +64,8 @@ const startPage = () => {
             justifyContent: "space-evenly",
             marginTop: "5%",
             marginLeft: "200px",
-          }}>
+          }}
+        >
           <div style={{ fontFamily: "Poppins", fontSize: "30px" }}>Sign In</div>
           <Link to={"/InitialSetup"}>
             <img src="./img/signin_google.png" style={{ height: "50px" }}></img>
@@ -67,7 +73,8 @@ const startPage = () => {
           <Link to={"/InitialSetup"}>
             <img
               src="./img/signin_dropbox.png"
-              style={{ height: "50px" }}></img>
+              style={{ height: "50px" }}
+            ></img>
           </Link>
         </div>
       </div>
