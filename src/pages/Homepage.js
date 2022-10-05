@@ -14,7 +14,7 @@ import Select from "@mui/material/Select";
 // import { Link } from "react-router-dom";
 
 const Homepage = () => {
-  const [value, setValue] = React.useState("1");
+  const [value, setValue] = React.useState("home");
 
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);
@@ -27,31 +27,52 @@ const Homepage = () => {
   };
 
   return (
-    <div style={{ display: "flex", height: "99.8vh", width: "100vw" }}>
-      <div
-        className="Left"
-        style={{ border: "1px solid black", width: "30%", minWidth: "250px" }}
-      >
+    <div
+      style={{
+        display: "flex",
+        height: "99.8vh",
+        width: "100vw",
+        position: "absolute",
+        overflowY: "hidden",
+      }}
+    >
+      {value === "home" ? (
         <div
+          className="Left"
           style={{
-            height: "65px",
-            display: "flex",
-            justifyContent: "space-between",
+            borderRight: "1px solid #DBDBDB",
+            width: "30%",
+            minWidth: "250px",
           }}
+          // style={{ border: "1px solid black", width: "30%", minWidth: "250px" }}
         >
-          <img
-            src="/img/startpage_logo.png"
+          <div
             style={{
-              height: "60px",
-              alignItems: "center",
+              height: "65px",
               display: "flex",
-              minHeight: "56px",
-              padding: "10px",
+              justifyContent: "space-between",
             }}
-          ></img>
+          >
+            <img
+              src="/img/startpage_logo.png"
+              style={{
+                height: "60px",
+                alignItems: "center",
+                display: "flex",
+                minHeight: "56px",
+                padding: "10px",
+              }}
+            ></img>
+          </div>
         </div>
-      </div>
-      <div className="Tab" style={{ border: "1px solid red", width: "100%" }}>
+      ) : (
+        <div style={{ borderRight: "1px solid #DBDBDB" }}>
+          <img src="/img/logo.png" style={{ width: 60, marginTop: "15px" }} />
+        </div>
+      )}
+
+      {/*<div className="Tab" style={{ border: "1px solid red", width: "100%" }}>*/}
+      <div className="Tab" style={{ width: "100%" }}>
         <Box sx={{ width: "100%", typography: "body1" }}>
           <TabContext value={value}>
             <Box
@@ -64,14 +85,15 @@ const Homepage = () => {
                 onChange={handleChangeTab}
                 aria-label="lab API tabs example"
               >
-                <Tab label="Home" value="1" />
-                <Tab label="Access Control" value="2" />
-                <Tab label="Compare Snapshots" value="3" />
+                <Tab label="Home" value="home" />
+                <Tab label="Access Control" value="accessControl" />
+                <Tab label="Compare Snapshots" value="compareSnapshots" />
+                <div style={{ width: "55%" }}></div>
+                {/*drivechange&profile*/}
                 <div
                   style={{
                     display: "flex",
-                    marginLeft: "45%",
-                    marginRight: "1%",
+                    marginRight: "2%",
                   }}
                 >
                   <Box sx={{ minWidth: 75 }}>
@@ -112,13 +134,13 @@ const Homepage = () => {
               </TabList>
             </Box>
 
-            <TabPanel value="1">
+            <TabPanel value="home">
               <Home />
             </TabPanel>
-            <TabPanel value="2">
+            <TabPanel value="accessControl">
               <AccessControl />
             </TabPanel>
-            <TabPanel value="3">
+            <TabPanel value="compareSnapshots">
               <CompareSnapshots />
             </TabPanel>
           </TabContext>
