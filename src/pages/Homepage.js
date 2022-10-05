@@ -88,7 +88,11 @@ const Homepage = () => {
                 <Tab label="Home" value="home" />
                 <Tab label="Access Control" value="accessControl" />
                 <Tab label="Compare Snapshots" value="compareSnapshots" />
-                <div style={{ width: "55%" }}></div>
+                {value === "home" ? (
+                  <div style={{ width: "55%" }}></div>
+                ) : (
+                  <div style={{ width: "70%" }}></div>
+                )}
                 {/*drivechange&profile*/}
                 <div
                   style={{
