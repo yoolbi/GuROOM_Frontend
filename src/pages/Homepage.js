@@ -26,6 +26,13 @@ const Homepage = () => {
     setDrive(event.target.value);
   };
 
+  const [openGroup, setOpenGroup] = React.useState(true);
+
+  const handleClickOpenGroup = () => {
+    setOpenGroup(!openGroup);
+    console.log(openGroup);
+  };
+
   return (
     <div
       style={{
@@ -37,34 +44,90 @@ const Homepage = () => {
       }}
     >
       {value === "home" ? (
-        <div
-          className="Left"
-          style={{
-            borderRight: "1px solid #DBDBDB",
-            width: "30%",
-            minWidth: "250px",
-          }}
-          // style={{ border: "1px solid black", width: "30%", minWidth: "250px" }}
-        >
+        openGroup ? (
+          <div
+            className="Left"
+            style={{
+              borderRight: "1px solid #DBDBDB",
+              width: "30%",
+              minWidth: "250px",
+            }}
+            // style={{ border: "1px solid black", width: "30%", minWidth: "250px" }}
+          >
+            <div
+              style={{
+                height: "65px",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <img
+                src="/img/startpage_logo.png"
+                style={{
+                  height: "60px",
+                  alignItems: "center",
+                  display: "flex",
+                  minHeight: "56px",
+                  padding: "10px",
+                  cursor: "pointer",
+                }}
+              ></img>
+              <img
+                src="/img/closeGroup.png"
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  marginTop: "30px",
+                  marginRight: "15px",
+                  cursor: "pointer",
+                }}
+                onClick={handleClickOpenGroup}
+              ></img>
+            </div>
+          </div>
+        ) : (
           <div
             style={{
-              height: "65px",
-              display: "flex",
-              justifyContent: "space-between",
+              borderRight: "1px solid #DBDBDB",
+              width: "85px",
             }}
           >
-            <img
-              src="/img/startpage_logo.png"
-              style={{
-                height: "60px",
-                alignItems: "center",
-                display: "flex",
-                minHeight: "56px",
-                padding: "10px",
-              }}
-            ></img>
+            <div style={{ display: "flex", marginBottom: "30px" }}>
+              <img
+                src="/img/logo.png"
+                style={{ width: 60, marginTop: "15px", cursor: "pointer" }}
+              />
+              <img
+                src="/img/openGroup.png"
+                style={{
+                  width: "15px",
+                  height: "15px",
+                  marginTop: "31px",
+                  cursor: "pointer",
+                }}
+                onClick={handleClickOpenGroup}
+              />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <img
+                src="/img/groupSelected.png"
+                style={{
+                  width: "35px",
+                  height: "25px",
+                  margin: "5px 0px 5px 24px",
+                }}
+              />
+              <img
+                src="/img/groupUnselected.png"
+                style={{
+                  width: "35px",
+                  height: "25px",
+                  margin: "5px 0px 5px 24px",
+                }}
+              />
+            </div>
           </div>
-        </div>
+        )
       ) : (
         <div style={{ borderRight: "1px solid #DBDBDB" }}>
           <img src="/img/logo.png" style={{ width: 60, marginTop: "15px" }} />

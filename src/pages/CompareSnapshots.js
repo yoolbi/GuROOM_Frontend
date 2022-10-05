@@ -32,7 +32,7 @@ const CompareSnapshots = () => {
         </Box>
         <img
           src="/img/arrow.png"
-          style={{ width: "50px", height: "32px", marginTop: "10px" }}
+          style={{ width: "40px", height: "23px", marginTop: "16px" }}
         />
         <Box sx={{ minWidth: 250 }}>
           <FormControl sx={{ m: 1, minWidth: 250 }} size="small">
