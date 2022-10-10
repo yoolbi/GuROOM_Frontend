@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
 
 const startPage = () => {
   const [user, setUser] = useState(false);
 
-  const [removeCookie] = useCookies(["credentials"]);
+  // const [removeCookie] = useCookies(["credentials"]);
 
   const handleClickLogout = () => {
     document.cookie = "user=credentials; max-age=0";
-    removeCookie("credentials", { path: "/" });
+    // removeCookie("credentials", { path: "/" });
     console.log("로그아웃");
   };
 
