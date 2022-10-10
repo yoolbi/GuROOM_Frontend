@@ -8,6 +8,7 @@ const startPage = () => {
   const [removeCookie] = useCookies(["credentials"]);
 
   const handleClickLogout = () => {
+    document.cookie = "user=credentials; max-age=0";
     removeCookie("credentials", { path: "/" });
     console.log("로그아웃");
   };
