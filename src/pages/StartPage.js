@@ -5,21 +5,12 @@ import { useCookies } from "react-cookie";
 const startPage = () => {
   const [user, setUser] = useState(false);
 
-  const [credentials, setCredentials, removeCredentials] = useCookies([
-    "credentials",
-  ]);
-  const [state, setState, removeState] = useCookies(["state"]);
+  const [, , removeCredentials] = useCookies(["credentials"]);
+  const [, , removeState] = useCookies(["state"]);
 
   const handleClickLogout = () => {
-    // document.cookie = "user=credentials; max-age=0";
-    console.log(credentials);
     removeCredentials("credentials");
-    setCredentials("credentials", "hi");
-    console.log(credentials);
-    console.log(state);
     removeState("state");
-    setState("state", "hi");
-    console.log(state);
     console.log("로그아웃");
   };
 
