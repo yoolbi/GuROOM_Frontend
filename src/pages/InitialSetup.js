@@ -78,16 +78,18 @@ const InitialSetup = () => {
           justifyContent: "space-between",
         }}
       >
-        <img
-          src="/img/startpage_logo.png"
-          style={{
-            height: "60px",
-            marginLeft: "10%",
-            alignItems: "center",
-            display: "flex",
-            minHeight: "56px",
-          }}
-        ></img>
+        <Link to="/InitialSetup">
+          <img
+            src="/img/startpage_logo.png"
+            style={{
+              height: "60px",
+              marginLeft: "10%",
+              alignItems: "center",
+              display: "flex",
+              minHeight: "56px",
+            }}
+          ></img>
+        </Link>
       </div>
       <div
         style={{

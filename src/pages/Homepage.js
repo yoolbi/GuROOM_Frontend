@@ -39,6 +39,10 @@ const Homepage = () => {
     setGroup(event.target.value);
   };
 
+  const handleClickLogo = () => {
+    setValue("home");
+  };
+
   return (
     <div
       style={{
@@ -77,6 +81,7 @@ const Homepage = () => {
                   padding: "10px",
                   cursor: "pointer",
                 }}
+                onClick={handleClickLogo}
               ></img>
               <img
                 src="/img/closeGroup.png"
@@ -143,6 +148,7 @@ const Homepage = () => {
               <img
                 src="/img/logo.png"
                 style={{ width: 60, marginTop: "15px", cursor: "pointer" }}
+                onClick={handleClickLogo}
               />
               <img
                 src="/img/openGroup.png"
@@ -177,7 +183,11 @@ const Homepage = () => {
         )
       ) : (
         <div style={{ borderRight: "1px solid #DBDBDB" }}>
-          <img src="/img/logo.png" style={{ width: 60, marginTop: "15px" }} />
+          <img
+            src="/img/logo.png"
+            style={{ width: 60, marginTop: "15px", cursor: "pointer" }}
+            onClick={handleClickLogo}
+          />
         </div>
       )}
 
