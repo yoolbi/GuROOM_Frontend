@@ -24,8 +24,9 @@ const startPage = () => {
         setUser(true);
       } else {
         getAuthorizeAPIMethod().then((data) => {
-          console.log(data);
-          window.location.replace(data);
+          console.log("authorize data: " + data);
+          console.log("authorize data.body: " + data.body);
+          window.location.replace(data.body);
         });
       }
     });
