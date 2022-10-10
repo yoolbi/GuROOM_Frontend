@@ -1,5 +1,7 @@
 function parseJSON(response) {
-  return response.json();
+  return response
+    .json()
+    .then((data) => ({ status: response.status, body: data }));
 }
 
 export const getAuthorizeAPIMethod = () => {
