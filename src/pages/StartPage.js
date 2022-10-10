@@ -17,8 +17,9 @@ const startPage = () => {
 
   const googleAuth = () => {
     getUserAPIMethod().then((user) => {
-      console.log(user);
-      if (user === 200) {
+      console.log("user: " + user);
+      console.log("user.status: " + user.status);
+      if (user.status === 200) {
         console.log("user status 200: " + user);
         setUser(true);
       } else {
