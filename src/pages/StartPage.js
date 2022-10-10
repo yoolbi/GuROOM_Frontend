@@ -26,7 +26,7 @@ const startPage = () => {
         getAuthorizeAPIMethod().then((data) => {
           console.log("authorize data: " + JSON.stringify(data));
           console.log("authorize data.body: " + JSON.stringify(data.body));
-          window.location.replace(JSON.stringify(data.body));
+          window.location.replace(data.body);
         });
       }
     });
