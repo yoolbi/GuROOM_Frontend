@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
+import { getAuthorizeAPIMethod, getUserAPIMethod } from "../api/client";
 
 const startPage = () => {
   const [user, setUser] = useState(false);
@@ -15,69 +16,18 @@ const startPage = () => {
   };
 
   const googleAuth = () => {
-    // fetch("https://guroom.live/apps/auth/v1/google/user", {
-    //   credentials: "include",
-    // })
-    //   .then(function (response) {
-    //     return response.json();
-    //   })
-    //   .then(function (data) {
-    //     //data = user status
-    //     console.log("user " + data);
-    //     if (data === 200) {
-    //       //200: user가 있는 경우 바로 홈페이지로
-    //       console.log(data + " user: 200");
-    //       setUser(true);
-    //     } else {
-    //       return fetch("https://guroom.live/apps/auth/v1/google/authorize", {
-    //         credentials: "include",
-    //       });
-    //     }
-    //   })
-    //   .then(function (response) {
-    //     return response.json();
-    //   })
-    //   .then(function (data) {
-    //     //data = login link
-    //     console.log("authorize " + data);
-    //     window.location.replace(data);
-    //     // window.open(obj.body);
-    //     setUser(true);
-    //   })
-    //   .catch(function (error) {
-    //     console.log("Requestfailed", error);
-    //   });
-
-    fetch("https://guroom.live/apps/auth/v1/google/user", {
-      credentials: "include",
-    })
-      .then((res) =>
-        res.json().then((data) => ({ status: res.status, body: data }))
-      )
-      .then((obj) => {
-        console.log(obj);
-        if (obj.status === 200) {
-          //200: user가 있는 경우 바로 홈페이지로
-          console.log(obj.status + "200");
-          // setUser(true);
-        } else {
-          fetch("https://guroom.live/apps/auth/v1/google/authorize", {
-            credentials: "include",
-          })
-            .then((res) =>
-              res.json().then((data) => ({ status: res.status, body: data }))
-            )
-            .then((obj) => {
-              window.location.replace(obj.body);
-              console.log(obj.body);
-              // window.open(obj.body);
-              console.log(obj);
-              setUser(true);
-            });
-          //201 & 401: user가 없는 경우
-          console.log(obj.status);
-        }
-      });
+    getUserAPIMethod().then((user) => {
+      console.log(user);
+      if (user === 200) {
+        console.log("user status 200: " + user);
+        setUser(true);
+      } else {
+        getAuthorizeAPIMethod().then((data) => {
+          console.log(data);
+          window.location.replace(data);
+        });
+      }
+    });
   };
 
   return (
