@@ -1,82 +1,92 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
-// import { useCookies } from "react-cookie";
+import { useCookies } from "react-cookie";
 
 const startPage = () => {
   const [user, setUser] = useState(false);
 
-  // const [removeCookie] = useCookies(["credentials"]);
+  const [credentials, setCredentials, removeCredentials] = useCookies([
+    "credentials",
+  ]);
+  const [state, setState, removeState] = useCookies(["state"]);
 
   const handleClickLogout = () => {
-    document.cookie = "user=credentials; max-age=0";
-    // removeCookie("credentials", { path: "/" });
+    // document.cookie = "user=credentials; max-age=0";
+    console.log(credentials);
+    removeCredentials("credentials");
+    setCredentials("credentials", "hi");
+    console.log(credentials);
+    console.log(state);
+    removeState("state");
+    setState("state", "hi");
+    console.log(state);
     console.log("로그아웃");
   };
 
   const googleAuth = () => {
-    fetch("https://guroom.live/apps/auth/v1/google/user", {
-      credentials: "include",
-    })
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (data) {
-        //data = user status
-        console.log("user " + data);
-        if (data === 200) {
-          //200: user가 있는 경우 바로 홈페이지로
-          console.log(data + " user: 200");
-          setUser(true);
-        } else {
-          return fetch("https://guroom.live/apps/auth/v1/google/authorize", {
-            credentials: "include",
-          });
-        }
-      })
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (data) {
-        //data = login link
-        console.log("authorize " + data);
-        window.location.replace(data);
-        // window.open(obj.body);
-        setUser(true);
-      })
-      .catch(function (error) {
-        console.log("Requestfailed", error);
-      });
-
     // fetch("https://guroom.live/apps/auth/v1/google/user", {
     //   credentials: "include",
     // })
-    //   .then((res) =>
-    //     res.json().then((data) => ({ status: res.status, body: data }))
-    //   )
-    //   .then((obj) => {
-    //     console.log(obj);
-    //     if (obj.status === 200) {
+    //   .then(function (response) {
+    //     return response.json();
+    //   })
+    //   .then(function (data) {
+    //     //data = user status
+    //     console.log("user " + data);
+    //     if (data === 200) {
     //       //200: user가 있는 경우 바로 홈페이지로
-    //       console.log(obj.status + "200");
-    //       // setUser(true);
+    //       console.log(data + " user: 200");
+    //       setUser(true);
     //     } else {
-    //       fetch("https://guroom.live/apps/auth/v1/google/authorize", {
+    //       return fetch("https://guroom.live/apps/auth/v1/google/authorize", {
     //         credentials: "include",
-    //       })
-    //         .then((res) =>
-    //           res.json().then((data) => ({ status: res.status, body: data }))
-    //         )
-    //         .then((obj) => {
-    //           window.location.replace(obj.body);
-    //           console.log(obj.body);
-    //           // window.open(obj.body);
-    //           console.log(obj);
-    //           setUser(true);
-    //         });
-    //       //201 & 401: user가 없는 경우
-    //       console.log(obj.status);
+    //       });
     //     }
+    //   })
+    //   .then(function (response) {
+    //     return response.json();
+    //   })
+    //   .then(function (data) {
+    //     //data = login link
+    //     console.log("authorize " + data);
+    //     window.location.replace(data);
+    //     // window.open(obj.body);
+    //     setUser(true);
+    //   })
+    //   .catch(function (error) {
+    //     console.log("Requestfailed", error);
     //   });
+
+    fetch("https://guroom.live/apps/auth/v1/google/user", {
+      credentials: "include",
+    })
+      .then((res) =>
+        res.json().then((data) => ({ status: res.status, body: data }))
+      )
+      .then((obj) => {
+        console.log(obj);
+        if (obj.status === 200) {
+          //200: user가 있는 경우 바로 홈페이지로
+          console.log(obj.status + "200");
+          // setUser(true);
+        } else {
+          fetch("https://guroom.live/apps/auth/v1/google/authorize", {
+            credentials: "include",
+          })
+            .then((res) =>
+              res.json().then((data) => ({ status: res.status, body: data }))
+            )
+            .then((obj) => {
+              window.location.replace(obj.body);
+              console.log(obj.body);
+              // window.open(obj.body);
+              console.log(obj);
+              setUser(true);
+            });
+          //201 & 401: user가 없는 경우
+          console.log(obj.status);
+        }
+      });
   };
 
   return (
