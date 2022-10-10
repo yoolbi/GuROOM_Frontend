@@ -17,16 +17,16 @@ const startPage = () => {
 
   const googleAuth = () => {
     getUserAPIMethod().then((user) => {
-      console.log("user: " + user);
-      console.log("user.status: " + user.status);
+      console.log("user: " + JSON.stringify(user));
+      console.log("user.status: ", user.status);
       if (user.status === 200) {
-        console.log("user status 200: " + user);
+        console.log("user status 200: " + JSON.stringify(user));
         setUser(true);
       } else {
         getAuthorizeAPIMethod().then((data) => {
-          console.log("authorize data: " + data);
-          console.log("authorize data.body: " + data.body);
-          window.location.replace(data.body);
+          console.log("authorize data: " + JSON.stringify(data));
+          console.log("authorize data.body: " + JSON.stringify(data.body));
+          window.location.replace(JSON.stringify(data.body));
         });
       }
     });
