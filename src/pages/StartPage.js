@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
-import { getAuthorizeAPIMethod, getUserAPIMethod } from "../api/client";
+import { getAuthorizeAPIMethod } from "../api/client";
 
 const startPage = () => {
   const [user, setUser] = useState(false);
@@ -16,19 +16,25 @@ const startPage = () => {
   };
 
   const googleAuth = () => {
-    getUserAPIMethod().then((user) => {
-      console.log("user: " + JSON.stringify(user));
-      console.log("user.status: ", user.status);
-      if (user.status === 200) {
-        console.log("user status 200: " + JSON.stringify(user));
-        setUser(true);
-      } else {
-        getAuthorizeAPIMethod().then((data) => {
-          console.log("authorize data: " + JSON.stringify(data));
-          console.log("authorize data.body: " + JSON.stringify(data.body));
-          window.location.replace(data.body);
-        });
-      }
+    // getUserAPIMethod().then((user) => {
+    //   console.log("user: " + JSON.stringify(user));
+    //   console.log("user.status: ", user.status);
+    //   if (user.status === 200) {
+    //     console.log("user status 200: " + JSON.stringify(user));
+    //     setUser(true);
+    //   } else {
+    //     getAuthorizeAPIMethod().then((data) => {
+    //       console.log("authorize data: " + JSON.stringify(data));
+    //       console.log("authorize data.body: " + JSON.stringify(data.body));
+    //       window.location.replace(data.body);
+    //     });
+    //   }
+    // });
+    setUser(false);
+    getAuthorizeAPIMethod().then((data) => {
+      console.log("authorize data: " + JSON.stringify(data));
+      console.log("authorize data.body: " + JSON.stringify(data.body));
+      window.location.replace(data.body);
     });
   };
 
