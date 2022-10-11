@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
+
 const Authorization = () => {
   const [searchParams] = useSearchParams();
 
@@ -13,6 +14,11 @@ const Authorization = () => {
     // BE에 받은 code(access_code) 보내주기
     // post해서 받은 걸 확인하고 괜찮으면 redirect
   }, []);
+
+ // useEffect(() => {
+ //   console.log("state: ", state);
+ //   console.log("code: ", code);
+ // }, [state, code]);
 
   return (
     <div>
