@@ -15,9 +15,12 @@ const startPage = () => {
     console.log("로그아웃");
   };
 
-  const [accessTokenRevoke] = useCookies(["access_token_cookie"]);
+  const [accessTokenRevoke, , removeAccessTokenRevoke] = useCookies([
+    "access_token_cookie",
+  ]);
   const handleClickRevoke = () => {
     console.log("after revoke: ", accessTokenRevoke);
+    removeAccessTokenRevoke("access_token_cookie");
     deleteRevokeAPIMethod(accessTokenRevoke).then((res) => {
       console.log("revoke: ", res);
     });
