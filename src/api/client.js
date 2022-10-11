@@ -16,14 +16,13 @@ export const getUserAPIMethod = () => {
   }).then(parseJSON);
 };
 
-export const postAccessTokenAPIMethod = (code, accessToken) => {
+export const postAccessTokenAPIMethod = (code) => {
   return fetch("https://guroom.live/apps/auth/v1/google/login", {
     credentials: "include",
     method: "POST",
     body: JSON.stringify({ code: code }),
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
-      Authorization: `Bearer ${accessToken}`,
     },
   }).then(parseJSON);
 };
