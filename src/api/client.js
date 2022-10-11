@@ -27,3 +27,14 @@ export const postAccessTokenAPIMethod = (code, accessToken) => {
     },
   }).then(parseJSON);
 };
+
+export const deleteRevokeAPIMethod = (accessToken) => {
+  return fetch("https://guroom.live/apps/auth/v1/google/revoke", {
+    credentials: "include",
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  }).then(parseJSON);
+};

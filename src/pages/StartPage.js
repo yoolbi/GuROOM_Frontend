@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
-import { getAuthorizeAPIMethod } from "../api/client";
+import { deleteRevokeAPIMethod, getAuthorizeAPIMethod } from "../api/client";
 
 const startPage = () => {
   const [user, setUser] = useState(false);
@@ -13,6 +13,13 @@ const startPage = () => {
     removeCredentials("credentials");
     removeState("state");
     console.log("로그아웃");
+  };
+
+  const [accessToken] = useCookies(["access_token_cookie"]);
+  const handleClickRevoke = () => {
+    deleteRevokeAPIMethod(accessToken).then((res) => {
+      console.log("revoke: ", res);
+    });
   };
 
   const googleAuth = () => {
@@ -131,6 +138,7 @@ const startPage = () => {
         </div>
       </div>
       <div onClick={handleClickLogout}>로그아웃</div>
+      <div onClick={handleClickRevoke}>revoke</div>
     </div>
   );
 };
