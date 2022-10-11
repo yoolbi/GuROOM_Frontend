@@ -15,3 +15,10 @@ export const getUserAPIMethod = () => {
     credentials: "include",
   }).then(parseJSON);
 };
+
+export const postAccessTokenAPIMethod = () => {
+  return fetch("https://guroom.live/apps/auth/v1/google/user", {
+    credentials: "include",
+    method: "POST",
+  }).then(parseJSON);
+};
