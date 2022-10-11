@@ -27,19 +27,7 @@ const startPage = () => {
           console.log("authorize data: " + JSON.stringify(data));
           console.log("authorize data.body: " + JSON.stringify(data.body));
           window.location.replace(data.body);
-          getUserAPIMethod().then((user) => {
-            if (user.status === 200) {
-              console.log("1st user: " + JSON.stringify(user));
-              setUser(true);
-            }
-          });
         });
-      }
-    });
-    getUserAPIMethod().then((user) => {
-      if (user.status === 200) {
-        console.log("2nd user: " + JSON.stringify(user));
-        setUser(true);
       }
     });
   };

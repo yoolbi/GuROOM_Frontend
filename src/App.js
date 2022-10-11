@@ -6,6 +6,7 @@ import Homepage from "./pages/Homepage";
 import Home from "./pages/Home";
 import CompareSnapshots from "./pages/CompareSnapshots";
 import AccessControl from "./pages/AccessControl";
+import Authorization from "./pages/Authorization";
 
 import "./index.css";
 
@@ -19,6 +20,7 @@ function App() {
         <Route path="/Home" element={<Home />} />
         <Route path="/CompareSnapshots" element={<CompareSnapshots />} />
         <Route path="/AccessControl" element={<AccessControl />} />
+        <Route path="/auth/oauth-callback" element={<Authorization />} />
       </Routes>
     </Router>
   );
