@@ -21,5 +21,8 @@ export const postAccessTokenAPIMethod = (code) => {
     credentials: "include",
     method: "POST",
     body: JSON.stringify(code),
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+    },
   }).then(parseJSON);
 };
