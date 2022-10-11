@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 const Authorization = () => {
   const { state, code } = useParams();
 
+  useEffect(() => {
+    console.log("state: ", state);
+    console.log("code: ", code);
+  }, [state, code]);
+
   return (
     <div>
-      <div>state: {state}</div>
-      <div>code: {code}</div>
+      <h4>processing authorization...</h4>
     </div>
   );
 };
