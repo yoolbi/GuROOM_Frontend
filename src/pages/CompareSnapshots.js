@@ -10,10 +10,15 @@ import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 
 const CompareSnapshots = () => {
-  const [baseFile, setBaseFile] = useState("");
+  const [baseFileFirst, setBaseFileFisrt] = useState("");
+  const [baseFileSecond, setBaseFileSecond] = useState("");
 
-  const handleChange = (event) => {
-    setBaseFile(event.target.value);
+  const handleChangeFirst = (event) => {
+    setBaseFileFisrt(event.target.value);
+  };
+
+  const handleChangeSecond = (event) => {
+    setBaseFileSecond(event.target.value);
   };
 
   const [selectedIndex, setSelectedIndex] = useState(1);
@@ -31,9 +36,9 @@ const CompareSnapshots = () => {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={baseFile}
+              value={baseFileFirst}
               label="Base File Snapshot"
-              onChange={handleChange}
+              onChange={handleChangeFirst}
             >
               <MenuItem value={10}>Ten</MenuItem>
               <MenuItem value={20}>Twenty</MenuItem>
@@ -51,9 +56,9 @@ const CompareSnapshots = () => {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={baseFile}
+              value={baseFileSecond}
               label="Base File Snapshot"
-              onChange={handleChange}
+              onChange={handleChangeSecond}
             >
               <MenuItem value={10}>Ten</MenuItem>
               <MenuItem value={20}>Twenty</MenuItem>
