@@ -95,6 +95,12 @@ const CompareSnapshots = () => {
             >
               <ListItemText primary="My Drive / ... / Lecture1.pdf" />
             </ListItemButton>
+            <ListItemButton
+              selected={selectedIndex === 5}
+              onClick={(event) => handleListItemClick(event, 5)}
+            >
+              <ListItemText primary="My Drive / ... / Lecture1.pdf" />
+            </ListItemButton>
           </List>
         </Box>
       </div>
