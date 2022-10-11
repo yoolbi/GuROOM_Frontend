@@ -15,6 +15,9 @@ import FilterModal from "./FilterModal";
 import { DataGrid } from "@mui/x-data-grid";
 import { Button, CircularProgress } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
 const style = {
   position: "absolute",
   top: "50%",
@@ -130,6 +133,11 @@ const Home = () => {
     console.log("close");
   };
 
+  function handleClickOpenBreadcrumb(event) {
+    event.preventDefault();
+    console.info("You clicked a breadcrumb.");
+  }
+
   return (
     <div>
       <div
@@ -214,7 +222,23 @@ const Home = () => {
           justifyContent: "space-between",
         }}
       >
-        <div>My Drive/ 어쩌고 저쩌고/ CSE 416</div>
+        <div role="presentation" onClick={handleClickOpenBreadcrumb}>
+          <Breadcrumbs maxItems={2} aria-label="breadcrumb">
+            <Link underline="hover" color="inherit" href="#">
+              Home
+            </Link>
+            <Link underline="hover" color="inherit" href="#">
+              Catalog
+            </Link>
+            <Link underline="hover" color="inherit" href="#">
+              Accessories
+            </Link>
+            <Link underline="hover" color="inherit" href="#">
+              New Collection
+            </Link>
+            <Typography color="text.primary">Belts</Typography>
+          </Breadcrumbs>
+        </div>
         <Button variant="contained" size="small">
           EDIT
         </Button>

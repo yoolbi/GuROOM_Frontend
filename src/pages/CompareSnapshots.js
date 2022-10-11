@@ -8,6 +8,9 @@ import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
 
 const CompareSnapshots = () => {
   const [baseFileFirst, setBaseFileFisrt] = useState("");
@@ -26,6 +29,11 @@ const CompareSnapshots = () => {
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
   };
+
+  function handleClickOpenBreadcrumb(event) {
+    event.preventDefault();
+    console.info("You clicked a breadcrumb.");
+  }
 
   return (
     <div>
@@ -77,7 +85,23 @@ const CompareSnapshots = () => {
               selected={selectedIndex === 1}
               onClick={(event) => handleListItemClick(event, 1)}
             >
-              <ListItemText primary="My Drive / ... / Lecture1.pdf" />
+              <div role="presentation" onClick={handleClickOpenBreadcrumb}>
+                <Breadcrumbs maxItems={2} aria-label="breadcrumb">
+                  <Link underline="hover" color="inherit" href="#">
+                    Home
+                  </Link>
+                  <Link underline="hover" color="inherit" href="#">
+                    Catalog
+                  </Link>
+                  <Link underline="hover" color="inherit" href="#">
+                    Accessories
+                  </Link>
+                  <Link underline="hover" color="inherit" href="#">
+                    New Collection
+                  </Link>
+                  <Typography color="text.primary">Belts</Typography>
+                </Breadcrumbs>
+              </div>
             </ListItemButton>
             <Divider />
             <ListItemButton
