@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { postAccessTokenAPIMethod } from "../api/client";
+import urlJoin from "url-join";
 
 const Authorization = () => {
   const [searchParams] = useSearchParams();
@@ -13,8 +14,11 @@ const Authorization = () => {
     // post해서 받은 걸 확인하고 괜찮으면 redirect
     postAccessTokenAPIMethod(code).then((res) => {
       console.log(res);
-      if (res === 201) {
-        window.location.replace("https://guroom.live/InitialSetup");
+      console.log(res.status);
+      if (res.status === 201) {
+        window.location.replace(
+          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
+        );
       }
     });
   }, []);
