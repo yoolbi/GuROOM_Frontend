@@ -17,6 +17,7 @@ const startPage = () => {
 
   const [accessToken] = useCookies(["access_token_cookie"]);
   const handleClickRevoke = () => {
+    console.log("after revoke: ", accessToken);
     deleteRevokeAPIMethod(accessToken).then((res) => {
       console.log("revoke: ", res);
     });
