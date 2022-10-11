@@ -14,6 +14,11 @@ const Authorization = () => {
     // post해서 받은 걸 확인하고 괜찮으면 redirect
   }, []);
 
+  // useEffect(() => {
+  //   console.log("state: ", state);
+  //   console.log("code: ", code);
+  // }, [state, code]);
+
   return (
     <div>
       <h4>processing authorization...</h4>
