@@ -96,12 +96,12 @@ const Homepage = () => {
               ></img>
             </div>
             <div className="groupSelect">
-              <div style={{ marginLeft: "60%", color: "#8A8D92" }}>
-                2022.12.23 12:00:05
-              </div>
+              {/*<div style={{ marginLeft: "60%", color: "#8A8D92" }}>*/}
+              {/*  2022.12.23 12:00:05*/}
+              {/*</div>*/}
               <Box
                 sx={{ width: "96.5%" }}
-                style={{ margin: "5px 0px 15px 13px" }}
+                style={{ margin: "20px 0px 15px 13px" }}
               >
                 <FormControl sx={{ width: "96.5%" }} size="small">
                   <InputLabel id="baseFileSelect">Group Snapshot</InputLabel>
