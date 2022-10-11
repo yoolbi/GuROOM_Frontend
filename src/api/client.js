@@ -16,9 +16,10 @@ export const getUserAPIMethod = () => {
   }).then(parseJSON);
 };
 
-export const postAccessTokenAPIMethod = () => {
-  return fetch("https://guroom.live/apps/auth/v1/google/user", {
+export const postAccessTokenAPIMethod = (code) => {
+  return fetch("https://guroom.live/apps/auth/v1/google/login", {
     credentials: "include",
     method: "POST",
+    body: JSON.stringify(code),
   }).then(parseJSON);
 };
