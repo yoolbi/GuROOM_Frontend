@@ -1,17 +1,14 @@
 import { Link } from "react-router-dom";
-import React, { useState } from "react";
-import { useCookies } from "react-cookie";
-import { deleteRevokeAPIMethod, getAuthorizeAPIMethod } from "../api/client";
+import React from "react";
+import {
+  deleteRevokeAPIMethod,
+  getAuthorizeAPIMethod,
+  getUserAPIMethod,
+} from "../api/client";
+import urlJoin from "url-join";
 
 const startPage = () => {
-  const [user, setUser] = useState(false);
-
-  const [, , removeCredentials] = useCookies(["credentials"]);
-  const [, , removeState] = useCookies(["state"]);
-
   const handleClickLogout = () => {
-    removeCredentials("credentials");
-    removeState("state");
     console.log("로그아웃");
   };
 
@@ -22,25 +19,24 @@ const startPage = () => {
   };
 
   const googleAuth = () => {
-    // getUserAPIMethod().then((user) => {
-    //   console.log("user: " + JSON.stringify(user));
-    //   console.log("user.status: ", user.status);
-    //   if (user.status === 200) {
-    //     console.log("user status 200: " + JSON.stringify(user));
-    //     setUser(true);
-    //   } else {
-    //     getAuthorizeAPIMethod().then((data) => {
-    //       console.log("authorize data: " + JSON.stringify(data));
-    //       console.log("authorize data.body: " + JSON.stringify(data.body));
-    //       window.location.replace(data.body);
-    //     });
-    //   }
-    // });
-    setUser(false);
-    getAuthorizeAPIMethod().then((data) => {
-      console.log("authorize data: " + JSON.stringify(data));
-      console.log("authorize data.body: " + JSON.stringify(data.body));
-      window.location.replace(data.body);
+    getUserAPIMethod().then((user) => {
+      console.log(user);
+      console.log(user.status);
+      if (user.status === 200) {
+        window.location.replace(
+          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/Homepage")
+        );
+      } else if (user.status === 201) {
+        window.location.replace(
+          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
+        );
+      } else {
+        getAuthorizeAPIMethod().then((data) => {
+          console.log("authorize data: " + JSON.stringify(data));
+          console.log("authorize data.body: " + JSON.stringify(data.body));
+          window.location.replace(data.body);
+        });
+      }
     });
   };
 
@@ -111,29 +107,15 @@ const startPage = () => {
           }}
         >
           <div style={{ fontFamily: "Poppins", fontSize: "30px" }}>Sign In</div>
-          {user ? (
-            <Link to={"/Homepage"}>
-              <img
-                src="./img/signin_google.png"
-                style={{ height: "50px" }}
-                onClick={googleAuth}
-              ></img>
-            </Link>
-          ) : (
-            <Link to={"/InitialSetup"}>
-              <img
-                src="./img/signin_google.png"
-                style={{ height: "50px" }}
-                onClick={googleAuth}
-              ></img>
-            </Link>
-          )}
-          <Link to={"/InitialSetup"}>
-            <img
-              src="./img/signin_dropbox.png"
-              style={{ height: "50px" }}
-            ></img>
-          </Link>
+          <img
+            src="./img/signin_google.png"
+            style={{ height: "50px", cursor: "pointer" }}
+            onClick={googleAuth}
+          ></img>
+          <img
+            src="./img/signin_dropbox.png"
+            style={{ height: "50px", cursor: "pointer" }}
+          ></img>
         </div>
       </div>
       <div onClick={handleClickLogout}>로그아웃</div>
