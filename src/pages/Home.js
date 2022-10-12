@@ -166,7 +166,25 @@ const Home = () => {
     },
   ]);
 
+  const [rows, setRows] = useState([
+    {
+      id: 1,
+      name: "My Drive",
+    },
+    { id: 2, name: "Shared With Me" },
+  ]);
+
   const [myDrive, setMyDrive] = useState(false);
+
+  // const onRowsSelectionHandler = (ids) => {
+  //   const selectedRowsData = ids.map((id) => rows.find((row) => row.id === id));
+  //   console.log(selectedRowsData);
+  //   // setSelectionModel(selectedRowsData);
+  //   console.log(selectionModel);
+  // };
+
+  const [selectionModel, setSelectionModel] = useState([]); //added line
+
   const handleClickCell = (name) => {
     let my_drive = false;
     console.log("click", name);
@@ -222,14 +240,8 @@ const Home = () => {
         sortable: false,
       },
     ]);
+    setSelectionModel([]);
   };
-  const [rows, setRows] = useState([
-    {
-      id: 1,
-      name: "My Drive",
-    },
-    { id: 2, name: "Shared With Me" },
-  ]);
 
   const takingSnapshot = () => {
     setOpenTakingSnapshot(true);
@@ -492,6 +504,12 @@ const Home = () => {
             rowsPerPageOptions={[10, 20, 30]}
             pagination
             checkboxSelection
+            // onSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}
+            onSelectionModelChange={(newSelectionModel) => {
+              setSelectionModel(newSelectionModel);
+            }}
+            selectionModel={selectionModel}
+            disableSelectionOnClick
           />
         </div>
       </div>
