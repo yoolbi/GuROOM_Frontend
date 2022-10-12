@@ -82,3 +82,15 @@ export const postRefreshAPIMethod = () => {
     }
   ).then(parseJSON);
 };
+
+export const getFileSnapshotNamesAPIMethod = () => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/google/files/names"
+    ),
+    {
+      credentials: "include",
+    }
+  ).then(parseJSON);
+};
