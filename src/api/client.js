@@ -111,3 +111,23 @@ export const deleteFileSnapshotNamesAPIMethod = (name) => {
     }
   ).then(parseJSON);
 };
+
+export const putFileSnapshotNamesAPIMethod = (oldName, newName) => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/google/files"
+    ),
+    {
+      method: "PUT",
+      credentials: "include",
+      body: JSON.stringify({
+        snapshot_name: oldName,
+        new_snapshot_name: newName,
+      }),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};
