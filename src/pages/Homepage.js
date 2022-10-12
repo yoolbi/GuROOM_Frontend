@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
@@ -15,26 +15,32 @@ import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
+import {
+  getAuthorizeAPIMethod,
+  getUserAPIMethod,
+  postRefreshAPIMethod,
+} from "../api/client";
+import urlJoin from "url-join";
 // import { Link } from "react-router-dom";
 
 const Homepage = () => {
-  const [value, setValue] = React.useState("home");
+  const [value, setValue] = useState("home");
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);
   };
 
-  const [drive, setDrive] = React.useState("google");
+  const [drive, setDrive] = useState("google");
   const handleChange = (event) => {
     setDrive(event.target.value);
   };
 
-  const [openGroup, setOpenGroup] = React.useState(true);
+  const [openGroup, setOpenGroup] = useState(true);
   const handleClickOpenGroup = () => {
     setOpenGroup(!openGroup);
     console.log(openGroup);
   };
 
-  const [group, setGroup] = React.useState("");
+  const [group, setGroup] = useState("");
   const handleSelectGroup = (event) => {
     setGroup(event.target.value);
   };
@@ -42,6 +48,57 @@ const Homepage = () => {
   const handleClickLogo = () => {
     setValue("home");
   };
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    getUserAPIMethod().then((user) => {
+      console.log(user);
+      console.log(user.status);
+      console.log(user.body);
+      if (user.status === 200) {
+        setUser(user.body);
+      } else if (user.status === 201) {
+        window.location.replace(
+          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
+        );
+        setUser(user.body);
+      } else {
+        //Todo: create refresh, refresh 가 실패시 authorize. refresh가 성공하면 다시 getUser
+        //check if the token has expired
+        postRefreshAPIMethod().then((data) => {
+          if (data.status === 200) {
+            getUserAPIMethod().then((user) => {
+              if (user.status === 200) {
+                window.location.replace(
+                  urlJoin(process.env.REACT_APP_FRONTEND_URL, "/Homepage")
+                );
+              } else if (user.status === 201) {
+                window.location.replace(
+                  urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
+                );
+              } else {
+                getAuthorizeAPIMethod().then((data) => {
+                  console.log("authorize data: " + JSON.stringify(data));
+                  console.log(
+                    "authorize data.body: " + JSON.stringify(data.body)
+                  );
+                  window.location.replace(data.body);
+                });
+              }
+            });
+          } else {
+            getAuthorizeAPIMethod().then((data) => {
+              console.log("authorize data: " + JSON.stringify(data));
+              console.log("authorize data.body: " + JSON.stringify(data.body));
+              window.location.replace(data.body);
+            });
+          }
+        });
+      }
+    });
+    console.log(user);
+  }, []);
 
   return (
     <div

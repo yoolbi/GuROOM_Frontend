@@ -4,6 +4,7 @@ import {
   deleteRevokeAPIMethod,
   getAuthorizeAPIMethod,
   getUserAPIMethod,
+  postRefreshAPIMethod,
 } from "../api/client";
 import urlJoin from "url-join";
 
@@ -32,10 +33,36 @@ const startPage = () => {
           urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
         );
       } else {
-        getAuthorizeAPIMethod().then((data) => {
-          console.log("authorize data: " + JSON.stringify(data));
-          console.log("authorize data.body: " + JSON.stringify(data.body));
-          window.location.replace(data.body);
+        //Todo: create refresh, refresh 가 실패시 authorize. refresh가 성공하면 다시 getUser
+        //check if the token has expired
+        postRefreshAPIMethod().then((data) => {
+          if (data.status === 200) {
+            getUserAPIMethod().then((user) => {
+              if (user.status === 200) {
+                window.location.replace(
+                  urlJoin(process.env.REACT_APP_FRONTEND_URL, "/Homepage")
+                );
+              } else if (user.status === 201) {
+                window.location.replace(
+                  urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
+                );
+              } else {
+                getAuthorizeAPIMethod().then((data) => {
+                  console.log("authorize data: " + JSON.stringify(data));
+                  console.log(
+                    "authorize data.body: " + JSON.stringify(data.body)
+                  );
+                  window.location.replace(data.body);
+                });
+              }
+            });
+          } else {
+            getAuthorizeAPIMethod().then((data) => {
+              console.log("authorize data: " + JSON.stringify(data));
+              console.log("authorize data.body: " + JSON.stringify(data.body));
+              window.location.replace(data.body);
+            });
+          }
         });
       }
     });

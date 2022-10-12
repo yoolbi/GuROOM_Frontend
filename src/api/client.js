@@ -54,7 +54,7 @@ export const deleteRevokeAPIMethod = () => {
   ).then(parseJSON);
 };
 
-export const postSnapshotAPIMethod = async (name) => {
+export const postFileSnapshotAPIMethod = async (name) => {
   return await fetch(
     urlJoin(
       process.env.REACT_APP_BACKEND_URL + "/apps/snapshot/v1/google/files"
@@ -63,6 +63,19 @@ export const postSnapshotAPIMethod = async (name) => {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({ snapshot_name: name }),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};
+
+export const postRefreshAPIMethod = () => {
+  return fetch(
+    urlJoin(process.env.REACT_APP_BACKEND_URL + "/apps/auth/v1/google/refresh"),
+    {
+      credentials: "include",
+      method: "POST",
       headers: {
         "Content-Type": "application/json; charset=UTF-8",
       },
