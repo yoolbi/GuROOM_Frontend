@@ -233,6 +233,7 @@ const Home = () => {
       console.log(data);
       setFileSnapshotNames(data.body.names.reverse());
       setCount(data.body.names.length + 1);
+      setFileSnapshot(data.body.names[0].name);
       console.log(fileSnapshotNames);
     });
     console.log(fileSnapshotNames);
@@ -253,7 +254,7 @@ const Home = () => {
             p: "2px 4px",
             display: "flex",
             alignItems: "center",
-            width: "80%",
+            width: "70%",
           }}
         >
           <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
@@ -284,8 +285,8 @@ const Home = () => {
           </IconButton>
         </Paper>
         <div style={{ width: "3%" }}></div>
-        <Box sx={{ minWidth: 210 }}>
-          <FormControl sx={{ m: 1, minWidth: 200, margin: "0px" }} size="small">
+        <Box style={{ width: "40%" }}>
+          <FormControl sx={{ m: 1, width: "90%", margin: "0px" }} size="small">
             <InputLabel id="demo-select-small">File Snapshot</InputLabel>
             <Select
               labelId="demo-select-small"
