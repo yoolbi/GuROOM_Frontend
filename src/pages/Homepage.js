@@ -15,6 +15,14 @@ import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemButton from "@mui/material/ListItemButton";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogTitle from "@mui/material/DialogTitle";
+import Button from "@mui/material/Button";
 import {
   getAuthorizeAPIMethod,
   getUserAPIMethod,
@@ -22,6 +30,19 @@ import {
 } from "../api/client";
 import urlJoin from "url-join";
 // import { Link } from "react-router-dom";
+import Modal from "@mui/material/Modal";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 300,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  // p: 4,
+};
 
 const Homepage = () => {
   const [value, setValue] = useState("home");
@@ -47,6 +68,29 @@ const Homepage = () => {
 
   const handleClickLogo = () => {
     setValue("home");
+  };
+
+  //Profile
+  const [openProfile, setOpenProfile] = React.useState(false);
+  const handleOpenProfile = () => setOpenProfile(true);
+  const handleCloseProfile = () => setOpenProfile(false);
+
+  //Alert Logout
+  const [openLogout, setOpenLogout] = React.useState(false);
+  const handleClickOpenLogout = () => {
+    setOpenLogout(true);
+  };
+  const handleCloseLogout = () => {
+    setOpenLogout(false);
+  };
+
+  //Alert Withdrawal
+  const [openWithdrawal, setOpenWithdrawal] = React.useState(false);
+  const handleClickOpenWithdrawal = () => {
+    setOpenWithdrawal(true);
+  };
+  const handleCloseWithdrawal = () => {
+    setOpenWithdrawal(false);
   };
 
   const [user, setUser] = useState(null);
@@ -312,8 +356,16 @@ const Homepage = () => {
                     </FormControl>
                   </Box>
                   <img
-                    src="/img/profile_image.png"
-                    style={{ width: "40px", height: "40px", marginTop: "15px" }}
+                    // src="/img/profile_image.png"
+                    src={user?.picture || "/img/profile_image_blank.png"}
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      marginTop: "15px",
+                      borderRadius: "50px",
+                      cursor: "pointer",
+                    }}
+                    onClick={handleOpenProfile}
                   />
                 </div>
               </TabList>
@@ -331,6 +383,61 @@ const Homepage = () => {
           </TabContext>
         </Box>
       </div>
+      <Modal
+        open={openProfile}
+        onClose={handleCloseProfile}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <nav aria-label="main mailbox folders">
+            <List>
+              <ListItemButton onClick={handleClickOpenLogout}>
+                <ListItem disablePadding>
+                  <ListItemText primary="Logout" />
+                </ListItem>
+              </ListItemButton>
+              <ListItemButton onClick={handleClickOpenWithdrawal}>
+                <ListItem disablePadding>
+                  <ListItemText primary="Close your account" />
+                </ListItem>
+              </ListItemButton>
+            </List>
+          </nav>
+        </Box>
+      </Modal>
+      <Dialog
+        open={openLogout}
+        onClose={handleCloseLogout}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Are you sure want to logout?"}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleCloseLogout}>Cancel</Button>
+          <Button onClick={handleCloseLogout} autoFocus>
+            Logout
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openWithdrawal}
+        onClose={handleCloseWithdrawal}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Are you sure want to close your account?"}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleCloseWithdrawal}>Cancel</Button>
+          <Button onClick={handleCloseWithdrawal} autoFocus>
+            Withdrawal
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
