@@ -13,7 +13,12 @@ import Select from "@mui/material/Select";
 import Modal from "@mui/material/Modal";
 import FilterModal from "./FilterModal";
 import { DataGrid } from "@mui/x-data-grid";
-import { Button, CircularProgress } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  DialogContent,
+  TextField,
+} from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Typography from "@mui/material/Typography";
@@ -25,6 +30,7 @@ import {
   deleteFileSnapshotNamesAPIMethod,
   getFileSnapshotNamesAPIMethod,
   postFileSnapshotAPIMethod,
+  putFileSnapshotNamesAPIMethod,
 } from "../api/client";
 import FilePermissionEditModal from "./FilePermissionEditModal";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -165,32 +171,60 @@ const Home = () => {
   //file Snapshot name
   const [fileSnapshotNames, setFileSnapshotNames] = useState([]);
 
-  //Alert Edit File Snapshot Name
-  const [openEditFileSnapshotName, setOpenEditFileSnapshotName] =
-    useState(false);
-
   const [selectedEditFileSnapshotName, setSelectedEditFileSnapshotName] =
     useState("");
 
-  const handleClickOpenEditFileSnapshotName = (name) => {
-    setOpenEditFileSnapshotName(true);
+  //Alert Delete File Snapshot Name
+  const [openDeleteFileSnapshotName, setOpenDeleteFileSnapshotName] =
+    useState(false);
+
+  const handleClickOpenDeleteFileSnapshotName = (name) => {
+    setOpenDeleteFileSnapshotName(true);
     console.log(name);
     setSelectedEditFileSnapshotName(name);
   };
 
-  const handleCloseEditFileSnapshotName = () => {
-    setOpenEditFileSnapshotName(false);
+  const handleCloseDeleteFileSnapshotName = () => {
+    setOpenDeleteFileSnapshotName(false);
   };
 
   const [editedFileSnapshotName, setEditedFileSnapshotName] = useState(false);
-  const handleDeleteEditFileSnapshotName = () => {
-    handleCloseEditFileSnapshotName();
+  const handleDeleteFileSnapshotName = () => {
+    handleCloseDeleteFileSnapshotName();
     deleteFileSnapshotNamesAPIMethod(selectedEditFileSnapshotName).then(
       (res) => {
         console.log(res);
         setEditedFileSnapshotName(!editedFileSnapshotName);
       }
     );
+  };
+
+  //Edit file snapshot name
+  const [openEditFileSnapshotName, setOpenFileSnapshotName] = useState(false);
+  const [newFileSnapshotName, setNewFileSnapshotName] = useState("");
+
+  const handleOpenEditFileSnapshotName = (name) => {
+    setOpenFileSnapshotName(true);
+    setSelectedEditFileSnapshotName(name);
+  };
+
+  const handleCloseEditFileSnapshotName = () => {
+    setOpenFileSnapshotName(false);
+  };
+
+  const handleEditFileSnapshotName = () => {
+    handleCloseEditFileSnapshotName();
+    putFileSnapshotNamesAPIMethod(
+      selectedEditFileSnapshotName,
+      newFileSnapshotName
+    ).then((res) => {
+      console.log(res);
+      setEditedFileSnapshotName(!editedFileSnapshotName);
+    });
+  };
+
+  const handleChangeNewFileSnapshotName = (e) => {
+    setNewFileSnapshotName(e.target.value);
   };
 
   useEffect(() => {
@@ -261,27 +295,36 @@ const Home = () => {
               onChange={handleChange}
             >
               {fileSnapshotNames.map((name) => (
-                <MenuItem key={name.name} value={name.name}>
-                  {name.name}
+                <MenuItem
+                  key={name.name}
+                  value={name.name}
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <div>{name.name}</div>
                   {fileSnapshot !== name.name && (
-                    <Box style={{ marginLeft: "20px", display: "block" }}>
-                      <IconButton
-                        size="small"
-                        style={{ padding: "0px 5px 0px 0px" }}
-                      >
-                        <EditIcon fontSize="inherit" />
-                      </IconButton>
-                      <IconButton
-                        aria-label="delete"
-                        size="small"
-                        style={{ padding: "0px" }}
-                        onClick={() =>
-                          handleClickOpenEditFileSnapshotName(name.name)
-                        }
-                      >
-                        <DeleteOutlineIcon fontSize="inherit" />
-                      </IconButton>
-                    </Box>
+                    <div>
+                      <Box style={{ marginLeft: "20px", display: "block" }}>
+                        <IconButton
+                          size="small"
+                          style={{ padding: "0px 5px 0px 0px" }}
+                          onClick={() =>
+                            handleOpenEditFileSnapshotName(name.name)
+                          }
+                        >
+                          <EditIcon fontSize="inherit" />
+                        </IconButton>
+                        <IconButton
+                          aria-label="delete"
+                          size="small"
+                          style={{ padding: "0px" }}
+                          onClick={() =>
+                            handleClickOpenDeleteFileSnapshotName(name.name)
+                          }
+                        >
+                          <DeleteOutlineIcon fontSize="inherit" />
+                        </IconButton>
+                      </Box>
+                    </div>
                   )}
                 </MenuItem>
               ))}
@@ -414,8 +457,8 @@ const Home = () => {
         </div>
       </Modal>
       <Dialog
-        open={openEditFileSnapshotName}
-        onClose={handleCloseEditFileSnapshotName}
+        open={openDeleteFileSnapshotName}
+        onClose={handleCloseDeleteFileSnapshotName}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -423,9 +466,35 @@ const Home = () => {
           {"Are you sure delete"} {selectedEditFileSnapshotName} {"?"}
         </DialogTitle>
         <DialogActions>
-          <Button onClick={handleCloseEditFileSnapshotName}>Cancel</Button>
-          <Button onClick={handleDeleteEditFileSnapshotName} autoFocus>
+          <Button onClick={handleCloseDeleteFileSnapshotName}>Cancel</Button>
+          <Button onClick={handleDeleteFileSnapshotName} autoFocus>
             Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openEditFileSnapshotName}
+        onClose={handleCloseEditFileSnapshotName}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Edit File Snapshot Name"}
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            label="New File Snapshot Name"
+            id="outlined-size-small"
+            // defaultValue="Small"
+            size="medium"
+            style={{ width: "500px", margin: "5px" }}
+            onChange={handleChangeNewFileSnapshotName}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEditFileSnapshotName}>Cancel</Button>
+          <Button onClick={handleEditFileSnapshotName} autoFocus>
+            OK
           </Button>
         </DialogActions>
       </Dialog>
