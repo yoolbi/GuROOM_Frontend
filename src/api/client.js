@@ -94,3 +94,20 @@ export const getFileSnapshotNamesAPIMethod = () => {
     }
   ).then(parseJSON);
 };
+
+export const deleteFileSnapshotNamesAPIMethod = (name) => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/google/files"
+    ),
+    {
+      method: "DELETE",
+      credentials: "include",
+      body: JSON.stringify({ snapshot_name: name }),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};

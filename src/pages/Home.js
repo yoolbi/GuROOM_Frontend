@@ -18,11 +18,18 @@ import ClearIcon from "@mui/icons-material/Clear";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditIcon from "@mui/icons-material/Edit";
+
 import {
+  deleteFileSnapshotNamesAPIMethod,
   getFileSnapshotNamesAPIMethod,
   postFileSnapshotAPIMethod,
 } from "../api/client";
 import FilePermissionEditModal from "./FilePermissionEditModal";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
+import Dialog from "@mui/material/Dialog";
 const style = {
   position: "absolute",
   top: "50%",
@@ -155,7 +162,37 @@ const Home = () => {
     console.info("You clicked a breadcrumb.");
   }
 
+  //file Snapshot name
   const [fileSnapshotNames, setFileSnapshotNames] = useState([]);
+
+  //Alert Edit File Snapshot Name
+  const [openEditFileSnapshotName, setOpenEditFileSnapshotName] =
+    useState(false);
+
+  const [selectedEditFileSnapshotName, setSelectedEditFileSnapshotName] =
+    useState("");
+
+  const handleClickOpenEditFileSnapshotName = (name) => {
+    setOpenEditFileSnapshotName(true);
+    console.log(name);
+    setSelectedEditFileSnapshotName(name);
+  };
+
+  const handleCloseEditFileSnapshotName = () => {
+    setOpenEditFileSnapshotName(false);
+  };
+
+  const [editedFileSnapshotName, setEditedFileSnapshotName] = useState(false);
+  const handleDeleteEditFileSnapshotName = () => {
+    handleCloseEditFileSnapshotName();
+    deleteFileSnapshotNamesAPIMethod(selectedEditFileSnapshotName).then(
+      (res) => {
+        console.log(res);
+        setEditedFileSnapshotName(!editedFileSnapshotName);
+      }
+    );
+  };
+
   useEffect(() => {
     console.log("get file names");
     getFileSnapshotNamesAPIMethod().then((data) => {
@@ -165,7 +202,7 @@ const Home = () => {
       console.log(fileSnapshotNames);
     });
     console.log(fileSnapshotNames);
-  }, [openTakingSnapshot]);
+  }, [openTakingSnapshot, editedFileSnapshotName]);
 
   return (
     <div>
@@ -226,6 +263,26 @@ const Home = () => {
               {fileSnapshotNames.map((name) => (
                 <MenuItem key={name.name} value={name.name}>
                   {name.name}
+                  {fileSnapshot !== name.name && (
+                    <Box style={{ marginLeft: "20px", display: "block" }}>
+                      <IconButton
+                        size="small"
+                        style={{ padding: "0px 5px 0px 0px" }}
+                      >
+                        <EditIcon fontSize="inherit" />
+                      </IconButton>
+                      <IconButton
+                        aria-label="delete"
+                        size="small"
+                        style={{ padding: "0px" }}
+                        onClick={() =>
+                          handleClickOpenEditFileSnapshotName(name.name)
+                        }
+                      >
+                        <DeleteOutlineIcon fontSize="inherit" />
+                      </IconButton>
+                    </Box>
+                  )}
                 </MenuItem>
               ))}
             </Select>
@@ -356,6 +413,22 @@ const Home = () => {
           </div>
         </div>
       </Modal>
+      <Dialog
+        open={openEditFileSnapshotName}
+        onClose={handleCloseEditFileSnapshotName}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Are you sure delete"} {selectedEditFileSnapshotName} {"?"}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleCloseEditFileSnapshotName}>Cancel</Button>
+          <Button onClick={handleDeleteEditFileSnapshotName} autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
