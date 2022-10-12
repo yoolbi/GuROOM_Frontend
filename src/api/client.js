@@ -18,7 +18,7 @@ export const getAuthorizeAPIMethod = () => {
   ).then(parseJSON);
 };
 
-export const getUserAPIMethod = () => {
+export const getUserAPIMethod = async () => {
   return fetch(
     urlJoin(process.env.REACT_APP_BACKEND_URL, "/apps/auth/v1/google/user"),
     {
