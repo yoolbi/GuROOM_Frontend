@@ -63,93 +63,173 @@ const Home = () => {
   const openFilePermissionEditModal = () => setOpenEditModal(true);
   const closeFilePermissionEditModal = () => setOpenEditModal(false);
 
+  let fileSnapshotLet = "";
   const handleChange = (event) => {
     setFileSnapshot(event.target.value);
-    getFileSnapshotAPIMethod(event.target.value, 0, 10).then((res) => {
-      setFiles(res.data);
-      console.log(res.data);
-    });
+    fileSnapshotLet = event.target.value;
+    console.log(fileSnapshot);
+    setRows([
+      {
+        id: 1,
+        name: "My Drive",
+      },
+      { id: 2, name: "Shared With Me" },
+    ]);
+    setColumns([
+      {
+        field: "name",
+        headerName: "Name",
+        width: 200,
+        renderCell: (params) => (
+          <div
+            style={{ textDecoration: "underline", cursor: "pointer" }}
+            onClick={() => handleClickCell(params.row.name)}
+          >
+            {params.row.name}
+          </div>
+        ),
+      },
+    ]);
   };
 
   //Table
   const [pageSize, setPageSize] = useState(10);
-  const columns = [
-    { field: "name", headerName: "Name", width: 200 },
+  const [columns, setColumns] = useState([
+    // { field: "name", headerName: "Name", width: 200 },
+    // {
+    //   field: "owner",
+    //   headerName: "Owner",
+    //   width: 130,
+    //   sortable: false,
+    // },
+    // {
+    //   field: "inheritPermissions",
+    //   headerName: "Inherit Permission",
+    //   width: 150,
+    //   sortable: false,
+    // },
+    // {
+    //   field: "directPermission",
+    //   headerName: "Direct Permission",
+    //   width: 150,
+    //   sortable: false,
+    // },
+    // {
+    //   field: "sharingDifferences",
+    //   headerName: "Sharing Differnece",
+    //   description:
+    //     "The differences between the file’s permissions and the folder’s permissions.",
+    //   sortable: false,
+    //   width: 150,
+    //   // valueGetter: (params) =>
+    //   //   `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+    // },
+    // {
+    //   field: "deviantPermissions",
+    //   headerName: "Deviant Permissions",
+    //   description:
+    //     "The differences between this file’s permissions and the permissions of most other files in the folder",
+    //   width: 200,
+    // },
+    // {
+    //   field: "created",
+    //   headerName: "Created",
+    //   width: 120,
+    // },
+    // {
+    //   field: "modified",
+    //   headerName: "Modified",
+    //   width: 120,
+    // },
+    // {
+    //   field: "size",
+    //   headerName: "Size",
+    //   width: 80,
+    // },
+    // {
+    //   field: "edit",
+    //   headerName: "",
+    //   width: 50,
+    // },
     {
-      field: "owner",
-      headerName: "Owner",
-      width: 130,
-      sortable: false,
-    },
-    {
-      field: "inheritPermissions",
-      headerName: "Inherit Permission",
-      width: 150,
-      sortable: false,
-    },
-    {
-      field: "directPermission",
-      headerName: "Direct Permission",
-      width: 150,
-      sortable: false,
-    },
-    {
-      field: "sharingDifferences",
-      headerName: "Sharing Differnece",
-      description:
-        "The differences between the file’s permissions and the folder’s permissions.",
-      sortable: false,
-      width: 150,
-      // valueGetter: (params) =>
-      //   `${params.row.firstName || ""} ${params.row.lastName || ""}`,
-    },
-    {
-      field: "deviantPermissions",
-      headerName: "Deviant Permissions",
-      description:
-        "The differences between this file’s permissions and the permissions of most other files in the folder",
+      field: "name",
+      headerName: "Name",
       width: 200,
+      renderCell: (params) => (
+        <div
+          style={{ textDecoration: "underline", cursor: "pointer" }}
+          onClick={() => handleClickCell(params.row.name)}
+        >
+          {params.row.name}
+        </div>
+      ),
     },
-    {
-      field: "created",
-      headerName: "Created",
-      width: 120,
-    },
-    {
-      field: "modified",
-      headerName: "Modified",
-      width: 120,
-    },
-    {
-      field: "size",
-      headerName: "Size",
-      width: 80,
-    },
-    {
-      field: "edit",
-      headerName: "",
-      width: 50,
-    },
-  ];
+  ]);
 
-  const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 10, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 11, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 12, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 13, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 14, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 15, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 16, lastName: "Roxie", firstName: "Harvey", age: 65 },
-  ];
+  const [myDrive, setMyDrive] = useState(false);
+  const handleClickCell = (name) => {
+    let my_drive = false;
+    console.log("click", name);
+    if (name === "My Drive") {
+      setMyDrive(true);
+      my_drive = true;
+    } else if (name === "Shared With Me") {
+      setMyDrive(false);
+      my_drive = false;
+    }
+    console.log(myDrive);
+    console.log(my_drive);
+    console.log(fileSnapshot);
+    getFileSnapshotAPIMethod(fileSnapshotLet, 0, pageSize, null, my_drive).then(
+      (res) => {
+        setFiles(res.data);
+        console.log(res.data);
+      }
+    );
+
+    setRows([
+      {
+        id: 1,
+        name: "File 1",
+      },
+      { id: 2, name: "File 2" },
+    ]);
+
+    setColumns([
+      {
+        field: "name",
+        headerName: "Name",
+        width: 200,
+        renderCell: (params) => (
+          <div
+            style={{ textDecoration: "underline", cursor: "pointer" }}
+            onClick={() => handleClickCell(params.row.name)}
+          >
+            {params.row.name}
+          </div>
+        ),
+      },
+      {
+        field: "owner",
+        headerName: "Owner",
+        width: 130,
+        sortable: false,
+      },
+      {
+        field: "inheritPermissions",
+        headerName: "Inherit Permission",
+        width: 150,
+        sortable: false,
+      },
+    ]);
+  };
+  const [rows, setRows] = useState([
+    {
+      id: 1,
+      name: "My Drive",
+    },
+    { id: 2, name: "Shared With Me" },
+  ]);
 
   const takingSnapshot = () => {
     setOpenTakingSnapshot(true);
@@ -242,11 +322,14 @@ const Home = () => {
       setFileSnapshotNames(data.body.names.reverse());
       setCount(data.body.names.length + 1);
       setFileSnapshot(data.body.names[0].name);
+      fileSnapshotLet = data.body.names[0].name;
       console.log(fileSnapshotNames);
-      getFileSnapshotAPIMethod(data.body.names[0].name, 0, 10).then((res) => {
-        setFiles(res.data);
-        console.log(res.data);
-      });
+      // getFileSnapshotAPIMethod(data.body.names[0].name, 0, 10, null, true).then(
+      //   (res) => {
+      //     setFiles(res.data);
+      //     console.log(res.data);
+      //   }
+      // );
     });
     console.log(fileSnapshotNames);
     console.log(files);
