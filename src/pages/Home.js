@@ -9,7 +9,6 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-// import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import FilterModal from "./FilterModal";
 import { DataGrid } from "@mui/x-data-grid";
@@ -29,6 +28,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import {
   deleteFileSnapshotNamesAPIMethod,
   getFileSnapshotNamesAPIMethod,
+  getFileSnapshotAPIMethod,
   postFileSnapshotAPIMethod,
   putFileSnapshotNamesAPIMethod,
 } from "../api/client";
@@ -36,6 +36,7 @@ import FilePermissionEditModal from "./FilePermissionEditModal";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -64,6 +65,10 @@ const Home = () => {
 
   const handleChange = (event) => {
     setFileSnapshot(event.target.value);
+    getFileSnapshotAPIMethod(event.target.value, 0, 10).then((res) => {
+      setFiles(res.data);
+      console.log(res.data);
+    });
   };
 
   //Table
@@ -227,6 +232,9 @@ const Home = () => {
     setNewFileSnapshotName(e.target.value);
   };
 
+  //file snapshot get
+  const [files, setFiles] = useState([]);
+
   useEffect(() => {
     console.log("get file names");
     getFileSnapshotNamesAPIMethod().then((data) => {
@@ -235,8 +243,13 @@ const Home = () => {
       setCount(data.body.names.length + 1);
       setFileSnapshot(data.body.names[0].name);
       console.log(fileSnapshotNames);
+      getFileSnapshotAPIMethod(data.body.names[0].name, 0, 10).then((res) => {
+        setFiles(res.data);
+        console.log(res.data);
+      });
     });
     console.log(fileSnapshotNames);
+    console.log(files);
   }, [openTakingSnapshot, editedFileSnapshotName]);
 
   return (

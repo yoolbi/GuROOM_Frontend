@@ -1,4 +1,5 @@
 import urlJoin from "url-join";
+import axios from "axios";
 
 function parseJSON(response) {
   return response
@@ -130,4 +131,30 @@ export const putFileSnapshotNamesAPIMethod = (oldName, newName) => {
       },
     }
   ).then(parseJSON);
+};
+
+export const getFileSnapshotAPIMethod = async (
+  snapshot_name,
+  offset,
+  limit,
+  folder_id,
+  my_drive
+) => {
+  return await axios.get(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/google/files"
+    ),
+    {
+      credentials: "include",
+      withCredentials: true,
+      params: {
+        snapshot_name: snapshot_name,
+        offset: offset,
+        limit: limit,
+        folder_id: folder_id,
+        my_drive: my_drive,
+      },
+    }
+  );
 };
