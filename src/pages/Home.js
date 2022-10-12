@@ -160,8 +160,8 @@ const Home = () => {
     console.log("get file names");
     getFileSnapshotNamesAPIMethod().then((data) => {
       console.log(data);
-      setFileSnapshotNames(data.body.reverse());
-      setCount(data.body.length + 1);
+      setFileSnapshotNames(data.body.names.reverse());
+      setCount(data.body.names.length + 1);
       console.log(fileSnapshotNames);
     });
     console.log(fileSnapshotNames);
