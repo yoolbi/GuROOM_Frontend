@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
@@ -18,7 +18,10 @@ import ClearIcon from "@mui/icons-material/Clear";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
-import { postFileSnapshotAPIMethod } from "../api/client";
+import {
+  getFileSnapshotNamesAPIMethod,
+  postFileSnapshotAPIMethod,
+} from "../api/client";
 import FilePermissionEditModal from "./FilePermissionEditModal";
 const style = {
   position: "absolute",
@@ -140,7 +143,6 @@ const Home = () => {
         setOpenTakingSnapshot(false);
       }
     });
-    setCount(count + 1);
   };
 
   const takingSnapshotClose = () => {
@@ -152,6 +154,18 @@ const Home = () => {
     event.preventDefault();
     console.info("You clicked a breadcrumb.");
   }
+
+  const [fileSnapshotNames, setFileSnapshotNames] = useState([]);
+  useEffect(() => {
+    console.log("get file names");
+    getFileSnapshotNamesAPIMethod().then((data) => {
+      console.log(data);
+      setFileSnapshotNames(data.body.reverse());
+      setCount(data.body.length + 1);
+      console.log(fileSnapshotNames);
+    });
+    console.log(fileSnapshotNames);
+  }, [openTakingSnapshot]);
 
   return (
     <div>
@@ -209,12 +223,11 @@ const Home = () => {
               label="File Snapshot"
               onChange={handleChange}
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {fileSnapshotNames.map((name) => (
+                <MenuItem key={name.name} value={name.name}>
+                  {name.name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -336,7 +349,7 @@ const Home = () => {
               justifyContent: "space-between",
             }}
           >
-            <div style={{ paddingLeft: "20px" }}>Snapshot #1</div>
+            <div style={{ paddingLeft: "20px" }}>File Snapshot {count}</div>
             <div style={{ marginRight: "20px", marginTop: "5px" }}>
               <CircularProgress size={20} />
             </div>
