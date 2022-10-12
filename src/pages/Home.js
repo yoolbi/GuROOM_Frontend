@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
@@ -18,6 +18,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
+import { postSnapshotAPIMethod } from "../api/client";
 const style = {
   position: "absolute",
   top: "50%",
@@ -32,9 +33,10 @@ const style = {
 };
 
 const Home = () => {
-  const [fileSnapshot, setFileSnapshot] = React.useState("");
-  const [open, setOpen] = React.useState(false);
-  const [openTakingSnapshot, setOpenTakingSnapshot] = React.useState(false);
+  const [fileSnapshot, setFileSnapshot] = useState("");
+  const [open, setOpen] = useState(false);
+  const [openTakingSnapshot, setOpenTakingSnapshot] = useState(false);
+  const [count, setCount] = useState(2);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -44,7 +46,7 @@ const Home = () => {
   };
 
   //Table
-  const [pageSize, setPageSize] = React.useState(10);
+  const [pageSize, setPageSize] = useState(10);
   const columns = [
     { field: "name", headerName: "Name", width: 200 },
     {
@@ -126,6 +128,11 @@ const Home = () => {
   const takingSnapshot = () => {
     setOpenTakingSnapshot(true);
     console.log("open");
+    postSnapshotAPIMethod("File Snapshot " + count).then((data) => {
+      console.log(data);
+      console.log(data.status);
+    });
+    setCount(count + 1);
   };
 
   const takingSnapshotClose = () => {

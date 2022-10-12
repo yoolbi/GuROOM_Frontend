@@ -1,4 +1,5 @@
 import urlJoin from "url-join";
+
 function parseJSON(response) {
   return response
     .json()
@@ -46,6 +47,22 @@ export const deleteRevokeAPIMethod = () => {
     {
       credentials: "include",
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};
+
+export const postSnapshotAPIMethod = async (name) => {
+  return await fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL + "/apps/snapshot/v1/google/files"
+    ),
+    {
+      credentials: "include",
+      method: "POST",
+      body: JSON.stringify({ snapshot_name: name }),
       headers: {
         "Content-Type": "application/json; charset=UTF-8",
       },

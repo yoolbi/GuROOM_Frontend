@@ -22,6 +22,7 @@ const startPage = () => {
     getUserAPIMethod().then((user) => {
       console.log(user);
       console.log(user.status);
+      console.log(user.body);
       if (user.status === 200) {
         window.location.replace(
           urlJoin(process.env.REACT_APP_FRONTEND_URL, "/Homepage")
