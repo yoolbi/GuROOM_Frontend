@@ -23,6 +23,11 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Collapse from "@mui/material/Collapse";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import PeopleIcon from "@mui/icons-material/People";
 import {
   getAuthorizeAPIMethod,
   getUserAPIMethod,
@@ -94,6 +99,12 @@ const Homepage = () => {
   };
 
   const [user, setUser] = useState(null);
+
+  const [open, setOpen] = React.useState(true);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
 
   useEffect(() => {
     getUserAPIMethod().then((user) => {
@@ -197,9 +208,6 @@ const Homepage = () => {
               ></img>
             </div>
             <div className="groupSelect">
-              {/*<div style={{ marginLeft: "60%", color: "#8A8D92" }}>*/}
-              {/*  2022.12.23 12:00:05*/}
-              {/*</div>*/}
               <Box
                 sx={{ width: "96.5%" }}
                 style={{ margin: "20px 0px 15px 13px" }}
@@ -236,6 +244,46 @@ const Homepage = () => {
                   inputProps={{ "aria-label": "search google maps" }}
                 />
               </Paper>
+              <List
+                sx={{
+                  width: "100%",
+                  maxWidth: 360,
+                  bgcolor: "background.paper",
+                  marginTop: "10px",
+                }}
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+              >
+                <ListItemButton onClick={handleClick}>
+                  <ListItemIcon>
+                    <PeopleIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Group Name" />
+                  {open ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
+                <Collapse in={open} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    <ListItemButton sx={{ pl: 4, marginLeft: "40px" }}>
+                      <ListItemText
+                        style={{ marginBottom: "10px" }}
+                        primary="people email #1"
+                      />
+                    </ListItemButton>
+                    <ListItemButton sx={{ pl: 4, marginLeft: "40px" }}>
+                      <ListItemText
+                        style={{ marginBottom: "10px" }}
+                        primary="people email #2"
+                      />
+                    </ListItemButton>
+                    <ListItemButton sx={{ pl: 4, marginLeft: "40px" }}>
+                      <ListItemText
+                        style={{ marginBottom: "10px" }}
+                        primary="people email #3"
+                      />
+                    </ListItemButton>
+                  </List>
+                </Collapse>
+              </List>
             </div>
           </div>
         ) : (
