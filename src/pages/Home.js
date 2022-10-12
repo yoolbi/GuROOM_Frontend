@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
@@ -18,6 +18,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
+import { postFileSnapshotAPIMethod } from "../api/client";
 import FilePermissionEditModal from "./FilePermissionEditModal";
 const style = {
   position: "absolute",
@@ -33,11 +34,11 @@ const style = {
 };
 
 const Home = () => {
-  const [fileSnapshot, setFileSnapshot] = React.useState("");
-  const [open, setOpen] = React.useState(false);
-  const [openTakingSnapshot, setOpenTakingSnapshot] = React.useState(false);
-
-  const [openEditModal, setOpenEditModal] = React.useState(false);
+  const [fileSnapshot, setFileSnapshot] = useState("");
+  const [open, setOpen] = useState(false);
+  const [openTakingSnapshot, setOpenTakingSnapshot] = useState(false);
+  const [count, setCount] = useState(2);
+  const [openEditModal, setOpenEditModal] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -50,7 +51,7 @@ const Home = () => {
   };
 
   //Table
-  const [pageSize, setPageSize] = React.useState(10);
+  const [pageSize, setPageSize] = useState(10);
   const columns = [
     { field: "name", headerName: "Name", width: 200 },
     {
@@ -120,18 +121,26 @@ const Home = () => {
     { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
     { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
     { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
+    { id: 10, lastName: "Roxie", firstName: "Harvey", age: 65 },
+    { id: 11, lastName: "Roxie", firstName: "Harvey", age: 65 },
+    { id: 12, lastName: "Roxie", firstName: "Harvey", age: 65 },
+    { id: 13, lastName: "Roxie", firstName: "Harvey", age: 65 },
+    { id: 14, lastName: "Roxie", firstName: "Harvey", age: 65 },
+    { id: 15, lastName: "Roxie", firstName: "Harvey", age: 65 },
+    { id: 16, lastName: "Roxie", firstName: "Harvey", age: 65 },
   ];
 
   const takingSnapshot = () => {
     setOpenTakingSnapshot(true);
     console.log("open");
+    postFileSnapshotAPIMethod("File Snapshot " + count).then((data) => {
+      console.log(data);
+      console.log(data.status);
+      if (data.status === 201) {
+        setOpenTakingSnapshot(false);
+      }
+    });
+    setCount(count + 1);
   };
 
   const takingSnapshotClose = () => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import lottie from "lottie-web";
 import { defineLordIconElement } from "lord-icon-element";
+import { postFileSnapshotAPIMethod } from "../api/client";
 
 // // register lottie and define custom element
 defineLordIconElement(lottie.loadAnimation);
@@ -57,16 +58,32 @@ const InitialSetup = () => {
 
   const handleNextModal = () => {
     handleOpen();
-    setTimeout(() => {
-      handleOpenDone();
-      setTimeout(() => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      }, 3000);
-    }, 15000);
+    postFileSnapshotAPIMethod(fileSnapshot).then((data) => {
+      console.log(data);
+      console.log(data.status);
+      if (data.status === 201) {
+        handleOpenDone();
+        setTimeout(() => {
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        }, 3000);
+      }
+    });
+    // setTimeout(() => {
+    //   handleOpenDone();
+    //   setTimeout(() => {
+    //     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    //   }, 3000);
+    // }, 15000);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const [fileSnapshot, setFileSnapshot] = useState("");
+  const handleChangeFileSnapshot = (e) => {
+    setFileSnapshot(e.target.value);
+    console.log(fileSnapshot);
   };
 
   return (
@@ -121,6 +138,7 @@ const InitialSetup = () => {
                             label="Drive snapshot name"
                             variant="outlined"
                             style={{ width: "100%", marginTop: "15px" }}
+                            onChange={handleChangeFileSnapshot}
                           />
                         ) : index === 1 ? (
                           <TextField
