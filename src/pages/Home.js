@@ -150,20 +150,20 @@ const Home = () => {
     }
     console.log(permissionsLet);
   };
-  //
-  // const removeOwnerFromInheritPermissions = () => {
-  //   // let tempPermissions;
-  //   console.log(permissionsLet);
-  //   for (var key in permissionsLet) {
-  //     for (var key2 in permissionsLet[key]["inherit_permissions"]) {
-  //       let role = permissionsLet[key]["inherit_permissions"][key2]["role"];
-  //       if (role === "owner") {
-  //         delete permissionsLet[key]["inherit_permissions"][key2];
-  //       }
-  //     }
-  //   }
-  //   console.log(permissionsLet);
-  // };
+
+  const removeOwnerFromInheritPermissions = () => {
+    // let tempPermissions;
+    console.log(permissionsLet);
+    for (var key in permissionsLet) {
+      for (var key2 in permissionsLet[key]["inherit_permissions"]) {
+        let role = permissionsLet[key]["inherit_permissions"][key2]["role"];
+        if (role === "owner") {
+          delete permissionsLet[key]["inherit_permissions"][key2];
+        }
+      }
+    }
+    console.log(permissionsLet);
+  };
 
   //onClick folder name in table
   const handleClickCell = (name, type, id) => {
@@ -199,7 +199,7 @@ const Home = () => {
       permissionsLet = res.data.permissions;
 
       removeOwnerFromPermissions();
-      // removeOwnerFromInheritPermissions();
+      removeOwnerFromInheritPermissions();
 
       console.log(res.data);
       console.log(res);
@@ -218,6 +218,7 @@ const Home = () => {
         }
         console.log(directPermissionsLet);
         console.log(directPermissionsLet.pop());
+        console.log(inheritPermissionsLet.pop());
         fileRow.push({
           id: data.id,
           name: data.name,
@@ -295,7 +296,7 @@ const Home = () => {
                 return (
                   <Chip
                     avatar={<Avatar alt="Natacha" src={data.photoLink} />}
-                    label={data.displayName}
+                    label={data.type === "anyone" ? "Anyone" : data.displayName}
                     variant="outlined"
                     key={data.id}
                   />
@@ -315,7 +316,7 @@ const Home = () => {
                 return (
                   <Chip
                     avatar={<Avatar alt="Natacha" src={data.photoLink} />}
-                    label={data.displayName}
+                    label={data.type === "anyone" ? "Anyone" : data.displayName}
                     variant="outlined"
                     key={data.id}
                   />
