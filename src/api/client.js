@@ -138,6 +138,7 @@ export const getFileSnapshotAPIMethod = async (
   offset,
   limit,
   folder_id,
+  shared_drive,
   my_drive
 ) => {
   return await axios.get(
@@ -153,6 +154,7 @@ export const getFileSnapshotAPIMethod = async (
         offset: offset,
         limit: limit,
         folder_id: folder_id,
+        shared_drive: shared_drive,
         my_drive: my_drive,
       },
     }
