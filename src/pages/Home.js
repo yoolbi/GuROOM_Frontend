@@ -145,6 +145,7 @@ const Home = () => {
         let role = permissionsLet[key]["direct_permissions"][key2]["role"];
         if (role === "owner") {
           delete permissionsLet[key]["direct_permissions"][key2];
+          permissionsLet[key]["direct_permissions"].pop();
         }
       }
     }
@@ -159,6 +160,7 @@ const Home = () => {
         let role = permissionsLet[key]["inherit_permissions"][key2]["role"];
         if (role === "owner") {
           delete permissionsLet[key]["inherit_permissions"][key2];
+          permissionsLet[key]["inherit_permissions"].pop();
         }
       }
     }
@@ -217,8 +219,8 @@ const Home = () => {
           console.log(permissionsLet[key]["inherit_permissions"]);
         }
         console.log(directPermissionsLet);
-        console.log(directPermissionsLet.pop());
-        console.log(inheritPermissionsLet.pop());
+        // console.log(directPermissionsLet.pop());
+        // console.log(inheritPermissionsLet.pop());
         fileRow.push({
           id: data.id,
           name: data.name,
