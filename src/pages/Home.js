@@ -24,6 +24,7 @@ import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
+import FolderIcon from "@mui/icons-material/Folder";
 
 import {
   deleteFileSnapshotNamesAPIMethod,
@@ -92,65 +93,9 @@ const Home = () => {
     ]);
   };
 
-  //Table
+  //Initial Table
   const [pageSize, setPageSize] = useState(10);
   const [columns, setColumns] = useState([
-    // { field: "name", headerName: "Name", width: 200 },
-    // {
-    //   field: "owner",
-    //   headerName: "Owner",
-    //   width: 130,
-    //   sortable: false,
-    // },
-    // {
-    //   field: "inheritPermissions",
-    //   headerName: "Inherit Permission",
-    //   width: 150,
-    //   sortable: false,
-    // },
-    // {
-    //   field: "directPermission",
-    //   headerName: "Direct Permission",
-    //   width: 150,
-    //   sortable: false,
-    // },
-    // {
-    //   field: "sharingDifferences",
-    //   headerName: "Sharing Differnece",
-    //   description:
-    //     "The differences between the file’s permissions and the folder’s permissions.",
-    //   sortable: false,
-    //   width: 150,
-    //   // valueGetter: (params) =>
-    //   //   `${params.row.firstName || ""} ${params.row.lastName || ""}`,
-    // },
-    // {
-    //   field: "deviantPermissions",
-    //   headerName: "Deviant Permissions",
-    //   description:
-    //     "The differences between this file’s permissions and the permissions of most other files in the folder",
-    //   width: 200,
-    // },
-    // {
-    //   field: "created",
-    //   headerName: "Created",
-    //   width: 120,
-    // },
-    // {
-    //   field: "modified",
-    //   headerName: "Modified",
-    //   width: 120,
-    // },
-    // {
-    //   field: "size",
-    //   headerName: "Size",
-    //   width: 80,
-    // },
-    // {
-    //   field: "edit",
-    //   headerName: "",
-    //   width: 50,
-    // },
     {
       field: "name",
       headerName: "Name",
@@ -174,19 +119,16 @@ const Home = () => {
     { id: 2, name: "Shared With Me" },
   ]);
 
+  //True: My Drive. False: Shared With Me?
   const [myDrive, setMyDrive] = useState(false);
-
-  // const onRowsSelectionHandler = (ids) => {
-  //   const selectedRowsData = ids.map((id) => rows.find((row) => row.id === id));
-  //   console.log(selectedRowsData);
-  //   // setSelectionModel(selectedRowsData);
-  //   console.log(selectionModel);
-  // };
-
+  //Table checkbox selected
   const [selectionModel, setSelectionModel] = useState([]); //added line
-
-  const handleClickCell = (name) => {
-    let my_drive = false;
+  const [startOffset, setStartOffset] = useState(0);
+  let my_drive = false;
+  //onClick folder name in table
+  const handleClickCell = (name, type, id) => {
+    console.log(type);
+    console.log(id);
     console.log("click", name);
     if (name === "My Drive") {
       setMyDrive(true);
@@ -198,51 +140,122 @@ const Home = () => {
     console.log(myDrive);
     console.log(my_drive);
     console.log(fileSnapshot);
-    getFileSnapshotAPIMethod(fileSnapshotLet, 0, pageSize, null, my_drive).then(
+    let fileRow = [];
+    getFileSnapshotAPIMethod(fileSnapshotLet, 0, 5, id, my_drive).then(
       (res) => {
         setFiles(res.data);
         console.log(res.data);
+        res.data.map((data) => {
+          fileRow.push({
+            id: data.files.id,
+            name: data.files.name,
+            type: data.files.mimeType.split(".")[2],
+            owner: data.files.owners[0].emailAddress,
+            created:
+              new Date(data.files.createdTime).toString().split(" ")[1] +
+              " " +
+              new Date(data.files.createdTime).toString().split(" ")[2] +
+              ", " +
+              new Date(data.files.createdTime).toString().split(" ")[3],
+            modified: data.files.modifiedTime.toString().substr(0, 10),
+            size: data.files.size,
+          });
+          console.log(new Date(data.files.createdTime).toString());
+        });
+        setRows(fileRow);
+        setColumns([
+          {
+            field: "name",
+            headerName: "Name",
+            width: 200,
+            renderCell: (params) =>
+              params.row.type === "folder" ? (
+                <div
+                  style={{
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    display: "flex",
+                  }}
+                  onClick={() =>
+                    handleClickCell(
+                      params.row.name,
+                      params.row.type,
+                      params.row.id
+                    )
+                  }
+                >
+                  <FolderIcon
+                    color="disabled"
+                    style={{ width: "20px", paddingRight: "5px" }}
+                  />
+                  {params.row.name}
+                </div>
+              ) : (
+                <div>{params.row.name}</div>
+              ),
+          },
+          {
+            field: "type",
+            headerName: "type",
+            width: 130,
+            sortable: false,
+          },
+          {
+            field: "owner",
+            headerName: "Owner",
+            width: 130,
+            sortable: false,
+          },
+          {
+            field: "inheritPermissions",
+            headerName: "Inherit Permission",
+            width: 150,
+            sortable: false,
+          },
+          {
+            field: "directPermission",
+            headerName: "Direct Permission",
+            width: 150,
+            sortable: false,
+          },
+          {
+            field: "sharingDifferences",
+            headerName: "Sharing Differnece",
+            description:
+              "The differences between the file’s permissions and the folder’s permissions.",
+            sortable: false,
+            width: 150,
+          },
+          {
+            field: "deviantPermissions",
+            headerName: "Deviant Permissions",
+            description:
+              "The differences between this file’s permissions and the permissions of most other files in the folder",
+            width: 200,
+          },
+          {
+            field: "created",
+            headerName: "Created",
+            width: 120,
+          },
+          {
+            field: "modified",
+            headerName: "Modified",
+            width: 120,
+          },
+          {
+            field: "size",
+            headerName: "Size",
+            width: 100,
+          },
+        ]);
       }
     );
 
-    setRows([
-      {
-        id: 1,
-        name: "File 1",
-      },
-      { id: 2, name: "File 2" },
-    ]);
-
-    setColumns([
-      {
-        field: "name",
-        headerName: "Name",
-        width: 200,
-        renderCell: (params) => (
-          <div
-            style={{ textDecoration: "underline", cursor: "pointer" }}
-            onClick={() => handleClickCell(params.row.name)}
-          >
-            {params.row.name}
-          </div>
-        ),
-      },
-      {
-        field: "owner",
-        headerName: "Owner",
-        width: 130,
-        sortable: false,
-      },
-      {
-        field: "inheritPermissions",
-        headerName: "Inherit Permission",
-        width: 150,
-        sortable: false,
-      },
-    ]);
-    setSelectionModel([]);
+    setSelectionModel([]); //reset selected checkbox in table
   };
 
+  // take file snapshot
   const takingSnapshot = () => {
     setOpenTakingSnapshot(true);
     console.log("open");
@@ -336,12 +349,6 @@ const Home = () => {
       setFileSnapshot(data.body.names[0].name);
       fileSnapshotLet = data.body.names[0].name;
       console.log(fileSnapshotNames);
-      // getFileSnapshotAPIMethod(data.body.names[0].name, 0, 10, null, true).then(
-      //   (res) => {
-      //     setFiles(res.data);
-      //     console.log(res.data);
-      //   }
-      // );
     });
     console.log(fileSnapshotNames);
     console.log(files);
@@ -500,8 +507,10 @@ const Home = () => {
             rows={rows}
             columns={columns}
             pageSize={pageSize}
-            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-            rowsPerPageOptions={[10, 20, 30]}
+            onPageSizeChange={(newPageSize) => (
+              setPageSize(newPageSize), setStartOffset(startOffset + pageSize)
+            )}
+            rowsPerPageOptions={[5, 10, 20, 30]}
             pagination
             checkboxSelection
             // onSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}
