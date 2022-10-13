@@ -125,6 +125,7 @@ const Home = () => {
   const [selectionModel, setSelectionModel] = useState([]); //added line
   const [startOffset, setStartOffset] = useState(0);
   let my_drive = false;
+  let shared_drive = false;
   //onClick folder name in table
   const handleClickCell = (name, type, id) => {
     console.log(type);
@@ -133,124 +134,140 @@ const Home = () => {
     if (name === "My Drive") {
       setMyDrive(true);
       my_drive = true;
+      shared_drive = false;
     } else if (name === "Shared With Me") {
       setMyDrive(false);
       my_drive = false;
+      shared_drive = true;
+    } else {
+      my_drive = false;
+      shared_drive = false;
     }
     console.log(myDrive);
     console.log(my_drive);
     console.log(fileSnapshot);
     let fileRow = [];
-    getFileSnapshotAPIMethod(fileSnapshotLet, 0, 5, id, my_drive).then(
-      (res) => {
-        setFiles(res.data);
-        console.log(res.data);
-        res.data.map((data) => {
-          fileRow.push({
-            id: data.files.id,
-            name: data.files.name,
-            type: data.files.mimeType.split(".")[2],
-            owner: data.files.owners[0].emailAddress,
-            created:
-              new Date(data.files.createdTime).toString().split(" ")[1] +
-              " " +
-              new Date(data.files.createdTime).toString().split(" ")[2] +
-              ", " +
-              new Date(data.files.createdTime).toString().split(" ")[3],
-            modified: data.files.modifiedTime.toString().substr(0, 10),
-            size: data.files.size,
-          });
-          console.log(new Date(data.files.createdTime).toString());
+    getFileSnapshotAPIMethod(
+      fileSnapshotLet,
+      0,
+      10,
+      id,
+      my_drive,
+      shared_drive
+    ).then((res) => {
+      setFiles(res.data);
+      console.log(res.data);
+      res.data.map((data) => {
+        console.log(data);
+        fileRow.push({
+          id: data.id,
+          name: data.name,
+          type: data.mimeType.split(".")[2],
+          owner: data.owners[0].emailAddress,
+          created:
+            new Date(data.createdTime).toString().split(" ")[1] +
+            " " +
+            new Date(data.createdTime).toString().split(" ")[2] +
+            ", " +
+            new Date(data.createdTime).toString().split(" ")[3],
+          modified:
+            new Date(data.modifiedTime).toString().split(" ")[1] +
+            " " +
+            new Date(data.modifiedTime).toString().split(" ")[2] +
+            ", " +
+            new Date(data.modifiedTime).toString().split(" ")[3],
+          size: data.size,
         });
-        setRows(fileRow);
-        setColumns([
-          {
-            field: "name",
-            headerName: "Name",
-            width: 200,
-            renderCell: (params) =>
-              params.row.type === "folder" ? (
-                <div
-                  style={{
-                    textDecoration: "underline",
-                    cursor: "pointer",
-                    display: "flex",
-                  }}
-                  onClick={() =>
-                    handleClickCell(
-                      params.row.name,
-                      params.row.type,
-                      params.row.id
-                    )
-                  }
-                >
-                  <FolderIcon
-                    color="disabled"
-                    style={{ width: "20px", paddingRight: "5px" }}
-                  />
-                  {params.row.name}
-                </div>
-              ) : (
-                <div>{params.row.name}</div>
-              ),
-          },
-          {
-            field: "type",
-            headerName: "type",
-            width: 130,
-            sortable: false,
-          },
-          {
-            field: "owner",
-            headerName: "Owner",
-            width: 130,
-            sortable: false,
-          },
-          {
-            field: "inheritPermissions",
-            headerName: "Inherit Permission",
-            width: 150,
-            sortable: false,
-          },
-          {
-            field: "directPermission",
-            headerName: "Direct Permission",
-            width: 150,
-            sortable: false,
-          },
-          {
-            field: "sharingDifferences",
-            headerName: "Sharing Differnece",
-            description:
-              "The differences between the file’s permissions and the folder’s permissions.",
-            sortable: false,
-            width: 150,
-          },
-          {
-            field: "deviantPermissions",
-            headerName: "Deviant Permissions",
-            description:
-              "The differences between this file’s permissions and the permissions of most other files in the folder",
-            width: 200,
-          },
-          {
-            field: "created",
-            headerName: "Created",
-            width: 120,
-          },
-          {
-            field: "modified",
-            headerName: "Modified",
-            width: 120,
-          },
-          {
-            field: "size",
-            headerName: "Size",
-            width: 100,
-          },
-        ]);
-      }
-    );
+        console.log(new Date(data.createdTime).toString());
+      });
+      setRows(fileRow);
+      setColumns([
+        {
+          field: "name",
+          headerName: "Name",
+          width: 200,
+          renderCell: (params) =>
+            params.row.type === "folder" ? (
+              <div
+                style={{
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  display: "flex",
+                }}
+                onClick={() =>
+                  handleClickCell(
+                    params.row.name,
+                    params.row.type,
+                    params.row.id
+                  )
+                }
+              >
+                <FolderIcon
+                  color="disabled"
+                  style={{ width: "20px", paddingRight: "5px" }}
+                />
+                {params.row.name}
+              </div>
+            ) : (
+              <div>{params.row.name}</div>
+            ),
+        },
+        {
+          field: "type",
+          headerName: "type",
+          width: 130,
+          sortable: false,
+        },
+        {
+          field: "owner",
+          headerName: "Owner",
+          width: 130,
+          sortable: false,
+        },
+        {
+          field: "inheritPermissions",
+          headerName: "Inherit Permission",
+          width: 150,
+          sortable: false,
+        },
+        {
+          field: "directPermission",
+          headerName: "Direct Permission",
+          width: 150,
+          sortable: false,
+        },
+        {
+          field: "sharingDifferences",
+          headerName: "Sharing Differnece",
+          description:
+            "The differences between the file’s permissions and the folder’s permissions.",
+          sortable: false,
+          width: 150,
+        },
+        {
+          field: "deviantPermissions",
+          headerName: "Deviant Permissions",
+          description:
+            "The differences between this file’s permissions and the permissions of most other files in the folder",
+          width: 200,
+        },
+        {
+          field: "created",
+          headerName: "Created",
+          width: 120,
+        },
+        {
+          field: "modified",
+          headerName: "Modified",
+          width: 120,
+        },
+        {
+          field: "size",
+          headerName: "Size",
+          width: 100,
+        },
+      ]);
+    });
 
     setSelectionModel([]); //reset selected checkbox in table
   };
@@ -343,11 +360,11 @@ const Home = () => {
   useEffect(() => {
     console.log("get file names");
     getFileSnapshotNamesAPIMethod().then((data) => {
-      console.log(data);
-      setFileSnapshotNames(data.body.names.reverse());
-      setCount(data.body.names.length + 1);
-      setFileSnapshot(data.body.names[0].name);
-      fileSnapshotLet = data.body.names[0].name;
+      console.log(data.body);
+      setFileSnapshotNames(data.body.reverse());
+      setCount(data.body.length + 1);
+      setFileSnapshot(data.body[0].name);
+      fileSnapshotLet = data.body[0].name;
       console.log(fileSnapshotNames);
     });
     console.log(fileSnapshotNames);

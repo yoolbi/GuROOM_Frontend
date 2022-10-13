@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import React from "react";
 import {
-  deleteRevokeAPIMethod,
   getAuthorizeAPIMethod,
   getUserAPIMethod,
   postRefreshAPIMethod,
@@ -9,16 +8,6 @@ import {
 import urlJoin from "url-join";
 
 const startPage = () => {
-  const handleClickLogout = () => {
-    console.log("로그아웃");
-  };
-
-  const handleClickRevoke = () => {
-    deleteRevokeAPIMethod().then((res) => {
-      console.log("revoke: ", res);
-    });
-  };
-
   const googleAuth = () => {
     getUserAPIMethod().then((user) => {
       console.log(user);
@@ -146,8 +135,6 @@ const startPage = () => {
           ></img>
         </div>
       </div>
-      <div onClick={handleClickLogout}>로그아웃</div>
-      <div onClick={handleClickRevoke}>revoke</div>
     </div>
   );
 };
