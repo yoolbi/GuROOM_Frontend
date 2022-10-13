@@ -191,7 +191,7 @@ const Home = () => {
     getFileSnapshotAPIMethod(
       fileSnapshotLet,
       0,
-      10,
+      10000,
       id,
       shared_drive,
       my_drive
@@ -208,8 +208,8 @@ const Home = () => {
       console.log(permissions);
       console.log(permissionsLet);
       res.data.files.map((data) => {
-        let inheritPermissionsLet = {};
-        let directPermissionsLet = {};
+        let inheritPermissionsLet = [];
+        let directPermissionsLet = [];
         console.log(inheritPermissionsLet);
         for (var key in permissionsLet) {
           if (key === data.id) {
