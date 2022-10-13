@@ -13,7 +13,6 @@ import {
   Select,
   InputBase,
   Box,
-  Button,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTheme } from "@mui/material/styles";
@@ -136,7 +135,7 @@ const QueryBuilder = () => {
     );
   };
   return (
-    <div style={{ height: 620, overflowY: "scroll" }}>
+    <div style={{ height: 570, overflowY: "scroll" }}>
       <div>
         <div>Drive Type</div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -410,27 +409,6 @@ const QueryBuilder = () => {
           control={<Checkbox defaultChecked />}
           label="Folder Only"
         />
-      </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          paddingBottom: "15px",
-          width: "545px",
-        }}
-      >
-        <Button variant="contained">GENERATE</Button>
-        <div style={{ width: "10px" }}></div>
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "#E0E0E0",
-            color: "black",
-            "&:hover": { backgroundColor: "#E0E0E0" },
-          }}
-        >
-          CANCEL
-        </Button>
       </div>
     </div>
   );

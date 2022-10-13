@@ -1,7 +1,7 @@
 import React from "react";
-import { TextField, Chip, Paper, Button } from "@mui/material";
+import { TextField, Chip, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import TagFacesIcon from "@mui/icons-material/TagFaces";
+import Avatar from "@mui/material/Avatar";
 
 const ListItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),
@@ -88,7 +88,7 @@ const SingleFilePermissionEdit = () => {
   };
 
   return (
-    <div style={{ height: 620, overflowY: "scroll" }}>
+    <div style={{ height: 570, overflowY: "scroll" }}>
       <TextField
         id="outlined-textareas"
         label="File Name"
@@ -123,16 +123,12 @@ const SingleFilePermissionEdit = () => {
           component="ul"
         >
           {ownerData.map((data) => {
-            let icon;
-
-            if (data.label === "React") {
-              icon = <TagFacesIcon />;
-            }
-
             return (
               <ListItem key={data.key}>
                 <Chip
-                  icon={icon}
+                  avatar={
+                    <Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />
+                  }
                   label={data.label}
                   onDelete={
                     data.label === "React" ? undefined : handleDeleteOwner(data)
@@ -165,16 +161,12 @@ const SingleFilePermissionEdit = () => {
           component="ul"
         >
           {inheritPermissionData.map((data) => {
-            let icon;
-
-            if (data.label === "React") {
-              icon = <TagFacesIcon />;
-            }
-
             return (
               <ListItem key={data.key}>
                 <Chip
-                  icon={icon}
+                  avatar={
+                    <Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />
+                  }
                   label={data.label}
                   onDelete={
                     data.label === "React"
@@ -209,16 +201,12 @@ const SingleFilePermissionEdit = () => {
           component="ul"
         >
           {directPermissionData.map((data) => {
-            let icon;
-
-            if (data.label === "React") {
-              icon = <TagFacesIcon />;
-            }
-
             return (
               <ListItem key={data.key}>
                 <Chip
-                  icon={icon}
+                  avatar={
+                    <Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />
+                  }
                   label={data.label}
                   onDelete={
                     data.label === "React"
@@ -254,16 +242,12 @@ const SingleFilePermissionEdit = () => {
           component="ul"
         >
           {sharingDifferencesData.map((data) => {
-            let icon;
-
-            if (data.label === "React") {
-              icon = <TagFacesIcon />;
-            }
-
             return (
               <ListItem key={data.key}>
                 <Chip
-                  icon={icon}
+                  avatar={
+                    <Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />
+                  }
                   label={data.label}
                   onDelete={
                     data.label === "React"
@@ -287,20 +271,20 @@ const SingleFilePermissionEdit = () => {
         sx={{ width: "545px", marginBottom: "15px", marginTop: "5px" }}
       />
 
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Button variant="contained">EDIT</Button>
-        <div style={{ width: "10px" }}></div>
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "#E0E0E0",
-            color: "black",
-            "&:hover": { backgroundColor: "#E0E0E0" },
-          }}
-        >
-          CANCEL
-        </Button>
-      </div>
+      {/*<div style={{ display: "flex", justifyContent: "space-between" }}>*/}
+      {/*  <Button variant="contained">EDIT</Button>*/}
+      {/*  <div style={{ width: "10px" }}></div>*/}
+      {/*  <Button*/}
+      {/*    variant="contained"*/}
+      {/*    sx={{*/}
+      {/*      backgroundColor: "#E0E0E0",*/}
+      {/*      color: "black",*/}
+      {/*      "&:hover": { backgroundColor: "#E0E0E0" },*/}
+      {/*    }}*/}
+      {/*  >*/}
+      {/*    CANCEL*/}
+      {/*  </Button>*/}
+      {/*</div>*/}
     </div>
   );
 };

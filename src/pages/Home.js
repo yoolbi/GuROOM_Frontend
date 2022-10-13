@@ -492,18 +492,18 @@ const Home = () => {
             aria-label="tune"
             onClick={handleOpen}
           >
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box sx={style}>
-                <FilterModal></FilterModal>
-              </Box>
-            </Modal>
             <TuneIcon />
           </IconButton>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <FilterModal handleClose={handleClose}></FilterModal>
+            </Box>
+          </Modal>
         </Paper>
         <div style={{ width: "3%" }}></div>
         <Box style={{ width: "40%" }}>
@@ -594,18 +594,20 @@ const Home = () => {
           size="small"
           onClick={openFilePermissionEditModal}
         >
-          <Modal
-            open={openEditModal}
-            onClose={closeFilePermissionEditModal}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={style}>
-              <FilePermissionEditModal></FilePermissionEditModal>
-            </Box>
-          </Modal>
           EDIT
         </Button>
+        <Modal
+          open={openEditModal}
+          onClose={closeFilePermissionEditModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <FilePermissionEditModal
+              closeFilePermissionEditModal={closeFilePermissionEditModal}
+            ></FilePermissionEditModal>
+          </Box>
+        </Modal>
       </div>
       <div style={{ height: "100%", marginTop: "10px" }}>
         <div style={{ height: 630, width: "100%" }}>
