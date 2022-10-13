@@ -25,6 +25,8 @@ import Link from "@mui/material/Link";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import FolderIcon from "@mui/icons-material/Folder";
+import Avatar from "@mui/material/Avatar";
+import Chip from "@mui/material/Chip";
 
 import {
   deleteFileSnapshotNamesAPIMethod,
@@ -119,6 +121,9 @@ const Home = () => {
     { id: 2, name: "Shared With Me" },
   ]);
 
+  //file snapshot get
+  const [files, setFiles] = useState([]);
+
   //True: My Drive. False: Shared With Me?
   const [myDrive, setMyDrive] = useState(false);
   //Table checkbox selected
@@ -126,6 +131,40 @@ const Home = () => {
   const [startOffset, setStartOffset] = useState(0);
   let my_drive = false;
   let shared_drive = false;
+
+  //file permissions
+  const [permissions, setPermissions] = useState([]);
+  let permissionsLet = [];
+
+  //remove owner from permissions
+  const removeOwnerFromPermissions = () => {
+    // let tempPermissions;
+    console.log(permissionsLet);
+    for (var key in permissionsLet) {
+      for (var key2 in permissionsLet[key]["direct_permissions"]) {
+        let role = permissionsLet[key]["direct_permissions"][key2]["role"];
+        if (role === "owner") {
+          delete permissionsLet[key]["direct_permissions"][key2];
+        }
+      }
+    }
+    console.log(permissionsLet);
+  };
+  //
+  // const removeOwnerFromInheritPermissions = () => {
+  //   // let tempPermissions;
+  //   console.log(permissionsLet);
+  //   for (var key in permissionsLet) {
+  //     for (var key2 in permissionsLet[key]["inherit_permissions"]) {
+  //       let role = permissionsLet[key]["inherit_permissions"][key2]["role"];
+  //       if (role === "owner") {
+  //         delete permissionsLet[key]["inherit_permissions"][key2];
+  //       }
+  //     }
+  //   }
+  //   console.log(permissionsLet);
+  // };
+
   //onClick folder name in table
   const handleClickCell = (name, type, id) => {
     console.log(type);
@@ -152,18 +191,40 @@ const Home = () => {
       0,
       10,
       id,
-      my_drive,
-      shared_drive
+      shared_drive,
+      my_drive
     ).then((res) => {
-      setFiles(res.data);
+      setFiles(res.data.files);
+      setPermissions(res.data.permissions);
+      permissionsLet = res.data.permissions;
+
+      removeOwnerFromPermissions();
+      // removeOwnerFromInheritPermissions();
+
       console.log(res.data);
-      res.data.map((data) => {
-        console.log(data);
+      console.log(res);
+      console.log(permissions);
+      console.log(permissionsLet);
+      res.data.files.map((data) => {
+        let inheritPermissionsLet = {};
+        let directPermissionsLet = {};
+        console.log(inheritPermissionsLet);
+        for (var key in permissionsLet) {
+          if (key === data.id) {
+            inheritPermissionsLet = permissionsLet[key]["inherit_permissions"];
+            directPermissionsLet = permissionsLet[key]["direct_permissions"];
+          }
+          console.log(permissionsLet[key]["inherit_permissions"]);
+        }
+        console.log(directPermissionsLet);
+        console.log(directPermissionsLet.pop());
         fileRow.push({
           id: data.id,
           name: data.name,
           type: data.mimeType.split(".")[2],
           owner: data.owners[0].emailAddress,
+          inheritPermissions: JSON.stringify(inheritPermissionsLet),
+          directPermissions: JSON.stringify(directPermissionsLet),
           created:
             new Date(data.createdTime).toString().split(" ")[1] +
             " " +
@@ -178,7 +239,6 @@ const Home = () => {
             new Date(data.modifiedTime).toString().split(" ")[3],
           size: data.size,
         });
-        console.log(new Date(data.createdTime).toString());
       });
       setRows(fileRow);
       setColumns([
@@ -214,7 +274,7 @@ const Home = () => {
         },
         {
           field: "type",
-          headerName: "type",
+          headerName: "Type",
           width: 130,
           sortable: false,
         },
@@ -229,16 +289,44 @@ const Home = () => {
           headerName: "Inherit Permission",
           width: 150,
           sortable: false,
+          renderCell: (params) => (
+            <div style={{ width: "100%", overflowX: "auto" }}>
+              {JSON.parse(params.row.inheritPermissions).map((data) => {
+                return (
+                  <Chip
+                    avatar={<Avatar alt="Natacha" src={data.photoLink} />}
+                    label={data.displayName}
+                    variant="outlined"
+                    key={data.id}
+                  />
+                );
+              })}
+            </div>
+          ),
         },
         {
           field: "directPermission",
           headerName: "Direct Permission",
           width: 150,
           sortable: false,
+          renderCell: (params) => (
+            <div style={{ width: "100%", overflowX: "auto" }}>
+              {JSON.parse(params.row.directPermissions).map((data) => {
+                return (
+                  <Chip
+                    avatar={<Avatar alt="Natacha" src={data.photoLink} />}
+                    label={data.displayName}
+                    variant="outlined"
+                    key={data.id}
+                  />
+                );
+              })}
+            </div>
+          ),
         },
         {
           field: "sharingDifferences",
-          headerName: "Sharing Differnece",
+          headerName: "Sharing Difference",
           description:
             "The differences between the file’s permissions and the folder’s permissions.",
           sortable: false,
@@ -354,9 +442,7 @@ const Home = () => {
     setNewFileSnapshotName(e.target.value);
   };
 
-  //file snapshot get
-  const [files, setFiles] = useState([]);
-
+  //get file snapshot names
   useEffect(() => {
     console.log("get file names");
     getFileSnapshotNamesAPIMethod().then((data) => {
