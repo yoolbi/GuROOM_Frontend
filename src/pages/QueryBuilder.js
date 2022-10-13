@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTheme } from "@mui/material/styles";
-import TagFacesIcon from "@mui/icons-material/TagFaces";
+import Avatar from "@mui/material/Avatar";
 
 const ListItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),
@@ -60,7 +60,6 @@ const QueryBuilder = () => {
     { key: 0, label: "readableData" },
     { key: 1, label: "jQuery" },
     { key: 2, label: "Polymer" },
-    { key: 3, label: "React" },
     { key: 4, label: "Vue.js" },
   ]);
 
@@ -68,7 +67,6 @@ const QueryBuilder = () => {
     { key: 0, label: "Angular" },
     { key: 1, label: "writableData" },
     { key: 2, label: "Polymer" },
-    { key: 3, label: "React" },
     { key: 4, label: "Vue.js" },
   ]);
 
@@ -76,7 +74,6 @@ const QueryBuilder = () => {
     { key: 0, label: "Angular" },
     { key: 1, label: "jQuery" },
     { key: 2, label: "sharableData" },
-    { key: 3, label: "React" },
     { key: 4, label: "Vue.js" },
   ]);
 
@@ -203,22 +200,18 @@ const QueryBuilder = () => {
             listStyle: "none",
             p: 0.5,
             m: 0,
-            width: "545px",
-            marginBottom: "15px",
+            width: "536px",
+            marginBottom: "20px",
           }}
           component="ul"
         >
           {readableData.map((data) => {
-            let icon;
-
-            if (data.label === "React") {
-              icon = <TagFacesIcon />;
-            }
-
             return (
               <ListItem key={data.key}>
                 <Chip
-                  icon={icon}
+                  avatar={
+                    <Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />
+                  }
                   label={data.label}
                   onDelete={
                     data.label === "React"
@@ -247,22 +240,18 @@ const QueryBuilder = () => {
             listStyle: "none",
             p: 0.5,
             m: 0,
-            width: "545px",
-            marginBottom: "15px",
+            width: "536px",
+            marginBottom: "20px",
           }}
           component="ul"
         >
           {writableData.map((data) => {
-            let icon;
-
-            if (data.label === "React") {
-              icon = <TagFacesIcon />;
-            }
-
             return (
               <ListItem key={data.key}>
                 <Chip
-                  icon={icon}
+                  avatar={
+                    <Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />
+                  }
                   label={data.label}
                   onDelete={
                     data.label === "React"
@@ -291,22 +280,18 @@ const QueryBuilder = () => {
             listStyle: "none",
             p: 0.5,
             m: 0,
-            width: "545px",
-            marginBottom: "15px",
+            width: "536px",
+            marginBottom: "20px",
           }}
           component="ul"
         >
           {sharableData.map((data) => {
-            let icon;
-
-            if (data.label === "React") {
-              icon = <TagFacesIcon />;
-            }
-
             return (
               <ListItem key={data.key}>
                 <Chip
-                  icon={icon}
+                  avatar={
+                    <Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />
+                  }
                   label={data.label}
                   onDelete={
                     data.label === "React"
@@ -326,8 +311,8 @@ const QueryBuilder = () => {
             p: "2px 4px",
             display: "flex",
             alignItems: "center",
-            width: "545px",
-            marginBottom: "15px",
+            width: "536px",
+            marginBottom: "20px",
           }}
         >
           <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -378,18 +363,17 @@ const QueryBuilder = () => {
             id="outlined-basic"
             label="(file) Name"
             variant="outlined"
+            style={{ width: "416px" }}
           />
 
-          <FormControl>
+          <FormControl style={{ width: "130px" }}>
             <InputLabel id="demo-multiple-name-label">Name</InputLabel>
             <Select
-              labelId="demo-multiple-name-label"
-              id="demo-multiple-name"
-              multiple
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
               value={fileType}
               onChange={handleChangeFileType}
-              input={<OutlinedInput label="Name" />}
-              MenuProps={MenuProps}
+              label="Name"
             >
               {fileTypes.map((name) => (
                 <MenuItem
