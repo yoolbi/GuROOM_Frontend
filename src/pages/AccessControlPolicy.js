@@ -4,7 +4,6 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { Button } from "@mui/material";
 
 const AccessControlPolicy = () => {
   const [accessControlPolicies, setAccessControlPolicies] = React.useState("");
@@ -55,28 +54,6 @@ const AccessControlPolicy = () => {
           </Select>
         </FormControl>
       </Box>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          width: "545px",
-          marginBottom: "15px",
-        }}
-      >
-        <Button variant="contained">APPLY</Button>
-        <div style={{ width: "10px" }}></div>
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "#E0E0E0",
-            color: "black",
-            "&:hover": { backgroundColor: "#E0E0E0" },
-          }}
-        >
-          CANCEL
-        </Button>
-      </div>
     </div>
   );
 };

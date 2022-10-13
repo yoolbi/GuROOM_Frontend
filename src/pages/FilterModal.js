@@ -6,8 +6,10 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import QueryBuilder from "./QueryBuilder";
 import AccessControlPolicy from "./AccessControlPolicy";
+import { Button } from "@mui/material";
 
-const FilterModal = () => {
+// eslint-disable-next-line react/prop-types
+const FilterModal = ({ handleClose }) => {
   const [value, setValue] = React.useState("1");
 
   const handleChange = (event, newValue) => {
@@ -31,6 +33,32 @@ const FilterModal = () => {
             <AccessControlPolicy />
           </TabPanel>
         </TabContext>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          {value === "1" ? (
+            <Button variant="contained">GENERATE</Button>
+          ) : (
+            <Button variant="contained">APPLY</Button>
+          )}
+
+          <div style={{ width: "10px" }}></div>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#E0E0E0",
+              color: "black",
+              "&:hover": { backgroundColor: "#E0E0E0" },
+            }}
+            onClick={handleClose}
+          >
+            CANCEL
+          </Button>
+        </div>
       </Box>
     </>
   );
