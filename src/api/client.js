@@ -191,3 +191,23 @@ export const getSharedDriveAPIMethod = async (snapshot_name) => {
     }
   );
 };
+
+export const getFileFolderSharingDifferencesSearchAPIMethod = async (
+  snapshot_name,
+  query
+) => {
+  return await axios.get(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/google/files/search"
+    ),
+    {
+      credentials: "include",
+      withCredentials: true,
+      params: {
+        snapshot_name: snapshot_name,
+        query: query,
+      },
+    }
+  );
+};
