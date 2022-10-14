@@ -52,18 +52,20 @@ const FileDetailModal = ({ eachFileDetailData }) => {
             startAdornment: (
               <InputAdornment position="start">
                 <Stack direction="row" spacing={1}>
-                  <Chip
-                    avatar={
-                      <Avatar alt="Natacha" src={detail.owner["photoLink"]} />
-                    }
-                    label={
-                      detail.owner["displayName"] === null
-                        ? "Anyone"
-                        : detail.owner["displayName"]
-                    }
-                    variant="outlined"
-                    key={detail.id}
-                  />
+                  {detail.owner["displayName"] !== undefined && (
+                    <Chip
+                      avatar={
+                        <Avatar alt="Natacha" src={detail.owner["photoLink"]} />
+                      }
+                      label={
+                        detail.owner["displayName"] === null
+                          ? "Anyone"
+                          : detail.owner["displayName"]
+                      }
+                      variant="outlined"
+                      key={detail.id}
+                    />
+                  )}
                 </Stack>
               </InputAdornment>
             ),

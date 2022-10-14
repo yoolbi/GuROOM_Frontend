@@ -96,16 +96,19 @@ const Home = () => {
     setFileSnapshot(event.target.value);
     fileSnapshotLet = event.target.value;
     getSharedDriveAPIMethod(fileSnapshotLet).then((res) => {
-      console.log(res.body);
+      let tempRows = [
+        {
+          id: 1,
+          name: "My Drive",
+          type: "folder",
+        },
+        { id: 2, name: "Shared With Me", type: "folder" },
+      ];
+      res.data.map((data) => {
+        tempRows.push({ id: data.id, name: data.id, type: "shared_drive" });
+      });
+      setRows(tempRows);
     });
-
-    setRows([
-      {
-        id: 1,
-        name: "My Drive",
-      },
-      { id: 2, name: "Shared With Me" },
-    ]);
     setColumns([
       {
         field: "name",
@@ -114,7 +117,9 @@ const Home = () => {
         renderCell: (params) => (
           <div
             style={{ textDecoration: "underline", cursor: "pointer" }}
-            onClick={() => handleClickCell(params.row.name)}
+            onClick={() =>
+              handleClickCell(params.row.name, params.row.type, params.row.id)
+            }
           >
             {params.row.name}
           </div>
@@ -133,7 +138,9 @@ const Home = () => {
       renderCell: (params) => (
         <div
           style={{ textDecoration: "underline", cursor: "pointer" }}
-          onClick={() => handleClickCell(params.row.name)}
+          onClick={() =>
+            handleClickCell(params.row.name, params.row.type, params.row.id)
+          }
         >
           {params.row.name}
         </div>
@@ -232,13 +239,20 @@ const Home = () => {
       // setMyDrive(true);
       my_drive = true;
       shared_with_me = false;
+      shared_drive = false;
     } else if (name === "Shared With Me") {
       // setMyDrive(false);
       my_drive = false;
       shared_with_me = true;
+      shared_drive = false;
+    } else if (type === "shared_drive") {
+      my_drive = false;
+      shared_with_me = false;
+      shared_drive = true;
     } else {
       my_drive = false;
       shared_with_me = false;
+      shared_drive = false;
     }
     let fileRow = [];
     getFileSnapshotAPIMethod(
@@ -250,6 +264,7 @@ const Home = () => {
       shared_drive,
       id
     ).then((res) => {
+      console.log(res.data);
       // setFiles(res.data.files);
       // setPermissions(res.data.permissions);
       permissionsLet = res.data.permissions;
@@ -305,8 +320,8 @@ const Home = () => {
           name: data.name,
           type: data.mimeType.split(".")[2],
           owner: {
-            displayName: data.owners[0].displayName,
-            photoLink: data.owners[0].photoLink,
+            displayName: data.owners[0]?.displayName,
+            photoLink: data.owners[0]?.photoLink,
           },
           inheritPermissions: JSON.stringify(inheritPermissionsLet),
           directPermissions: JSON.stringify(directPermissionsLet),
@@ -375,14 +390,16 @@ const Home = () => {
           sortable: false,
           renderCell: (params) => (
             <div style={{ width: "100%", overflowX: "auto" }}>
-              <Chip
-                avatar={
-                  <Avatar alt="Natacha" src={params.row.owner["photoLink"]} />
-                }
-                label={params.row.owner["displayName"]}
-                variant="outlined"
-                key={params.row.id}
-              />
+              {params.row.owner["displayName"] !== undefined && (
+                <Chip
+                  avatar={
+                    <Avatar alt="Natacha" src={params.row.owner["photoLink"]} />
+                  }
+                  label={params.row.owner["displayName"]}
+                  variant="outlined"
+                  key={params.row.id}
+                />
+              )}
             </div>
           ),
         },
@@ -557,6 +574,22 @@ const Home = () => {
       setCount(data.body.length + 1);
       setFileSnapshot(data.body[0].name);
       fileSnapshotLet = data.body[0].name;
+
+      getSharedDriveAPIMethod(fileSnapshotLet).then((res) => {
+        let tempRows = [
+          {
+            id: 1,
+            name: "My Drive",
+            type: "folder",
+          },
+          { id: 2, name: "Shared With Me", type: "folder" },
+        ];
+        res.data.map((data) => {
+          tempRows.push({ id: data.id, name: data.name, type: "shared_drive" });
+        });
+        setRows(tempRows);
+        console.log(tempRows);
+      });
     });
   }, [openTakingSnapshot, editedFileSnapshotName]);
 
