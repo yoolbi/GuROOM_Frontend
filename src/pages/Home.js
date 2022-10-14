@@ -222,6 +222,7 @@ const Home = () => {
               writer: fileWriter,
               commenter: commenter,
               reader: reader,
+              path: data.path,
             });
           });
           setRows(fileRowSearch);
@@ -574,6 +575,7 @@ const Home = () => {
           writer: fileWriter,
           commenter: commenter,
           reader: reader,
+          path: data.path,
         });
       });
       setRows(fileRow);
@@ -979,6 +981,7 @@ const Home = () => {
               selectedFileFolderSharingDifferences={
                 selectedFileFolderSharingDifferences
               }
+              fileSnapshot={fileSnapshot}
             ></SharingDifferenceModal>
           </Box>
         </Modal>
