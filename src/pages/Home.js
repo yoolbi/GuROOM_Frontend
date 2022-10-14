@@ -179,6 +179,36 @@ const Home = () => {
     }
   };
 
+  const getRole = (data) => {
+    let roleListTemp = [];
+    for (var key in permissionsLet) {
+      for (var key2 in permissionsLet[key]["direct_permissions"]) {
+        let role = permissionsLet[key]["direct_permissions"][key2]["role"];
+        if (role === data) {
+          roleListTemp.push(permissionsLet[key]["direct_permissions"][key2]);
+        }
+      }
+    }
+    for (var key3 in permissionsLet) {
+      for (var key4 in permissionsLet[key3]["inherit_permissions"]) {
+        let role = permissionsLet[key3]["inherit_permissions"][key4]["role"];
+        if (role === data) {
+          roleListTemp.push(permissionsLet[key3]["inherit_permissions"][key4]);
+        }
+      }
+    }
+    console.log("get ", data, ": ", roleListTemp);
+    return roleListTemp;
+  };
+
+  const getRoleForEachFile = (fileWriterAll, id, fileWriter) => {
+    for (var keyWriter in fileWriterAll) {
+      if (fileWriterAll[keyWriter]["file_id"] === id) {
+        fileWriter.push(fileWriterAll[keyWriter]);
+      }
+    }
+  };
+
   //onClick folder name in table
   const handleClickCell = (name, type, id) => {
     console.log("click", name);
@@ -210,19 +240,38 @@ const Home = () => {
       removeOwnerFromPermissions();
       removeOwnerFromInheritPermissions();
 
+      let organizerAll = getRole("organizer");
+      let fileOrganizerAll = getRole("fileOrganizer");
+      let fileWriterAll = getRole("writer");
+      let commenterAll = getRole("commenter");
+      let readerAll = getRole("reader");
+
       console.log(res.data);
       console.log(permissionsLet);
 
       res.data.files.map((data) => {
         let inheritPermissionsLet = [];
         let directPermissionsLet = [];
+        let organizer = [];
+        let fileOrganizer = [];
+        let fileWriter = [];
+        let commenter = [];
+        let reader = [];
 
+        //get inherit and direct permissions for each file
         for (var key in permissionsLet) {
           if (key === data.id) {
             inheritPermissionsLet = permissionsLet[key]["inherit_permissions"];
             directPermissionsLet = permissionsLet[key]["direct_permissions"];
           }
         }
+
+        getRoleForEachFile(organizerAll, data.id, organizer);
+        getRoleForEachFile(fileOrganizerAll, data.id, fileOrganizer);
+        getRoleForEachFile(fileWriterAll, data.id, fileWriter);
+        getRoleForEachFile(commenterAll, data.id, commenter);
+        getRoleForEachFile(readerAll, data.id, reader);
+
         fileRow.push({
           id: data.id,
           name: data.name,
@@ -243,6 +292,11 @@ const Home = () => {
             ", " +
             new Date(data.modifiedTime).toString().split(" ")[3],
           size: data.size,
+          organizer: "organizer",
+          fileOrganizer: "fileOrganizer",
+          writer: fileWriter,
+          commenter: "commenter",
+          reader: "reader",
         });
       });
       setRows(fileRow);
@@ -439,14 +493,13 @@ const Home = () => {
 
   //show detail information for each files when double clicked
   const handleDoubleClickRow = (data) => {
-    console.log("double click row: ", data);
+    console.log("double click row: ", data.writer);
   };
 
   //get file snapshot names
   useEffect(() => {
-    console.log("get file names");
     getFileSnapshotNamesAPIMethod().then((data) => {
-      console.log(data.body);
+      console.log("get file snapshot names: ", data.body);
       setFileSnapshotNames(data.body.reverse());
       setCount(data.body.length + 1);
       setFileSnapshot(data.body[0].name);
