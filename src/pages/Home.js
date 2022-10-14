@@ -40,6 +40,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import SharingDifferenceModal from "./SharingDifferenceModal";
 import HomeIcon from "@mui/icons-material/Home";
+import FileDetailModal from "./FileDetailModal";
 
 const style = {
   position: "absolute",
@@ -84,6 +85,10 @@ const Home = () => {
 
   const openSharingDifferenceModal = () => setSharingDifferenceModal(true);
   const closeSharingDifferenceModal = () => setSharingDifferenceModal(false);
+
+  const [fileDetailModal, setFileDetailModal] = useState(false);
+  const openFileDetailModal = () => setFileDetailModal(true);
+  const closeFileDetailModal = () => setFileDetailModal(false);
 
   let fileSnapshotLet = "";
   const handleChange = (event) => {
@@ -286,7 +291,10 @@ const Home = () => {
           id: data.id,
           name: data.name,
           type: data.mimeType.split(".")[2],
-          owner: data.owners[0].emailAddress,
+          owner: {
+            displayName: data.owners[0].displayName,
+            photoLink: data.owners[0].photoLink,
+          },
           inheritPermissions: JSON.stringify(inheritPermissionsLet),
           directPermissions: JSON.stringify(directPermissionsLet),
           created:
@@ -302,11 +310,11 @@ const Home = () => {
             ", " +
             new Date(data.modifiedTime).toString().split(" ")[3],
           size: data.size,
-          organizer: "organizer",
-          fileOrganizer: "fileOrganizer",
+          organizer: organizer,
+          fileOrganizer: fileOrganizer,
           writer: fileWriter,
-          commenter: "commenter",
-          reader: "reader",
+          commenter: commenter,
+          reader: reader,
         });
       });
       setRows(fileRow);
@@ -352,6 +360,18 @@ const Home = () => {
           headerName: "Owner",
           width: 130,
           sortable: false,
+          renderCell: (params) => (
+            <div style={{ width: "100%", overflowX: "auto" }}>
+              <Chip
+                avatar={
+                  <Avatar alt="Natacha" src={params.row.owner["photoLink"]} />
+                }
+                label={params.row.owner["displayName"]}
+                variant="outlined"
+                key={params.row.id}
+              />
+            </div>
+          ),
         },
         {
           field: "inheritPermissions",
@@ -506,8 +526,11 @@ const Home = () => {
   };
 
   //show detail information for each files when double clicked
+  const [eachFileDetailData, setEachFileDetailData] = useState();
   const handleDoubleClickRow = (data) => {
-    console.log("double click row: ", data.writer);
+    console.log("double click row: ", data);
+    setEachFileDetailData(data);
+    openFileDetailModal();
   };
 
   //get file snapshot names
@@ -818,6 +841,16 @@ const Home = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Modal
+        open={fileDetailModal}
+        onClose={closeFileDetailModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styleforSharingDifferenceModal} style={{ overflowY: "auto" }}>
+          <FileDetailModal eachFileDetailData={eachFileDetailData} />
+        </Box>
+      </Modal>
     </div>
   );
 };
