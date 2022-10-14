@@ -85,7 +85,14 @@ const Home = () => {
   const openFilePermissionEditModal = () => setOpenEditModal(true);
   const closeFilePermissionEditModal = () => setOpenEditModal(false);
 
-  const openSharingDifferenceModal = () => setSharingDifferenceModal(true);
+  const [
+    selectedFileFolderSharingDifferences,
+    setSelectedFileFolderSharingDifferences,
+  ] = useState([]);
+  const openSharingDifferenceModal = (rowData) => {
+    setSelectedFileFolderSharingDifferences(rowData);
+    setSharingDifferenceModal(true);
+  };
   const closeSharingDifferenceModal = () => setSharingDifferenceModal(false);
 
   const [fileDetailModal, setFileDetailModal] = useState(false);
@@ -960,13 +967,6 @@ const Home = () => {
             })}
           </Breadcrumbs>
         </div>
-        <Button
-          variant="contained"
-          size="small"
-          onClick={openSharingDifferenceModal}
-        >
-          Sharing Differences
-        </Button>
         <Modal
           open={sharingDifferenceModal}
           onClose={closeSharingDifferenceModal}
@@ -976,6 +976,9 @@ const Home = () => {
           <Box sx={styleforSharingDifferenceModal}>
             <SharingDifferenceModal
               closeSharingDifferenceModal={closeSharingDifferenceModal}
+              selectedFileFolderSharingDifferences={
+                selectedFileFolderSharingDifferences
+              }
             ></SharingDifferenceModal>
           </Box>
         </Modal>
@@ -1020,7 +1023,9 @@ const Home = () => {
             disableSelectionOnClick
             onCellDoubleClick={(params, event) => {
               event.defaultMuiPrevented = true;
-              handleDoubleClickRow(params.row);
+              searchInput === "is:file_folder_diff"
+                ? openSharingDifferenceModal(params.row)
+                : handleDoubleClickRow(params.row);
             }}
           />
         </div>
