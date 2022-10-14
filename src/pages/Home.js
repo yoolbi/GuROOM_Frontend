@@ -114,6 +114,7 @@ const Home = () => {
         field: "name",
         headerName: "Name",
         width: 200,
+        description: "Select a drive to see files",
         renderCell: (params) => (
           <div
             style={{ textDecoration: "underline", cursor: "pointer" }}
@@ -135,6 +136,7 @@ const Home = () => {
       field: "name",
       headerName: "Name",
       width: 200,
+      description: "Select a drive to see files",
       renderCell: (params) => (
         <div
           style={{ textDecoration: "underline", cursor: "pointer" }}
@@ -351,6 +353,7 @@ const Home = () => {
           field: "name",
           headerName: "Name",
           width: 200,
+          description: "File/folder name",
           renderCell: (params) =>
             params.row.type === "folder" ? (
               <div
@@ -382,12 +385,14 @@ const Home = () => {
           headerName: "Type",
           width: 130,
           sortable: false,
+          description: "File/folder type",
         },
         {
           field: "owner",
           headerName: "Owner",
           width: 130,
           sortable: false,
+          description: "File/folder owner",
           renderCell: (params) => (
             <div style={{ width: "100%", overflowX: "auto" }}>
               {params.row.owner["displayName"] !== undefined && (
@@ -408,6 +413,7 @@ const Home = () => {
           headerName: "Inherit Permission",
           width: 150,
           sortable: false,
+          description: "Permissions inherited from parent folder",
           renderCell: (params) => (
             <div style={{ width: "100%", overflowX: "auto" }}>
               {JSON.parse(params.row.inheritPermissions).map((data) => {
@@ -428,6 +434,7 @@ const Home = () => {
           headerName: "Direct Permission",
           width: 150,
           sortable: false,
+          description: "Permissions given directly",
           renderCell: (params) => (
             <div style={{ width: "100%", overflowX: "auto" }}>
               {JSON.parse(params.row.directPermissions).map((data) => {
@@ -453,16 +460,19 @@ const Home = () => {
         {
           field: "created",
           headerName: "Created",
+          description: "Created date",
           width: 120,
         },
         {
           field: "modified",
           headerName: "Modified",
+          description: "Modified date",
           width: 120,
         },
         {
           field: "size",
           headerName: "Size",
+          description: "File size (bytes)",
           width: 100,
         },
       ]);
