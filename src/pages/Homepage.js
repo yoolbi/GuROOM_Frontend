@@ -29,6 +29,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import PeopleIcon from "@mui/icons-material/People";
 import {
+  deleteLogoutAPIMethod,
   getAuthorizeAPIMethod,
   getUserAPIMethod,
   postRefreshAPIMethod,
@@ -87,6 +88,19 @@ const Homepage = () => {
   };
   const handleCloseLogout = () => {
     setOpenLogout(false);
+  };
+  const handleLogout = () => {
+    console.log("logout");
+    deleteLogoutAPIMethod().then((res) => {
+      console.log(res);
+      if (res.status === 200) {
+        window.location.replace(
+          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/")
+        );
+      } else {
+        console.log("logout failed: ", res);
+      }
+    });
   };
 
   //Alert Withdrawal
@@ -462,7 +476,7 @@ const Homepage = () => {
         </DialogTitle>
         <DialogActions>
           <Button onClick={handleCloseLogout}>Cancel</Button>
-          <Button onClick={handleCloseLogout} autoFocus>
+          <Button onClick={handleLogout} autoFocus>
             Logout
           </Button>
         </DialogActions>

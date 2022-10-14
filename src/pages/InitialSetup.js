@@ -204,7 +204,7 @@ const InitialSetup = () => {
                                         textAlignLast: "center",
                                       }}
                                     >
-                                      Taking Snapshot
+                                      Taking A Snapshot
                                     </div>
                                   </div>
                                 </Box>
