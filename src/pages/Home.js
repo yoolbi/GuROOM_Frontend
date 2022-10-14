@@ -20,7 +20,6 @@ import {
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
@@ -40,6 +39,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import SharingDifferenceModal from "./SharingDifferenceModal";
+import HomeIcon from "@mui/icons-material/Home";
 
 const style = {
   position: "absolute",
@@ -209,6 +209,9 @@ const Home = () => {
     }
   };
 
+  let currentPath = [];
+  const [showPath, setShowPath] = useState([]);
+
   //onClick folder name in table
   const handleClickCell = (name, type, id) => {
     console.log("click", name);
@@ -239,6 +242,13 @@ const Home = () => {
 
       removeOwnerFromPermissions();
       removeOwnerFromInheritPermissions();
+
+      console.log(res.data.files[0].path);
+      console.log(res.data.files[0].id);
+      currentPath = res.data.files[0].path.toString().split("/").slice(1);
+      console.log(currentPath);
+      console.log(showPath);
+      setShowPath(currentPath);
 
       let organizerAll = getRole("organizer");
       let fileOrganizerAll = getRole("fileOrganizer");
@@ -433,6 +443,10 @@ const Home = () => {
     event.preventDefault();
   }
 
+  const handleGotoPath = () => {
+    console.log("path");
+  };
+
   //file Snapshot name
   const [fileSnapshotNames, setFileSnapshotNames] = useState([]);
 
@@ -622,18 +636,21 @@ const Home = () => {
         <div role="presentation" onClick={handleClickOpenBreadcrumb}>
           <Breadcrumbs maxItems={2} aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
-              Home
+              <HomeIcon style={{ paddingTop: "5px" }} />
             </Link>
-            <Link underline="hover" color="inherit" href="#">
-              Catalog
-            </Link>
-            <Link underline="hover" color="inherit" href="#">
-              Accessories
-            </Link>
-            <Link underline="hover" color="inherit" href="#">
-              New Collection
-            </Link>
-            <Typography color="text.primary">Belts</Typography>
+            {showPath.map((data) => {
+              return (
+                <Link
+                  key={data}
+                  underline="hover"
+                  color="inherit"
+                  href="#"
+                  onClick={handleGotoPath}
+                >
+                  {data}
+                </Link>
+              );
+            })}
           </Breadcrumbs>
         </div>
         <Button
