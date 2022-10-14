@@ -231,3 +231,23 @@ export const getFileFolderSharingDifferencesAPIMethod = async (
     }
   );
 };
+
+export const getCompareSnapshotsAPIMethod = async (
+  base_snapshot_name,
+  compare_snapshot_name
+) => {
+  return await axios.get(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/google/files/differences"
+    ),
+    {
+      credentials: "include",
+      withCredentials: true,
+      params: {
+        base_snapshot_name: base_snapshot_name,
+        compare_snapshot_name: compare_snapshot_name,
+      },
+    }
+  );
+};

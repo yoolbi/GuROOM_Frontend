@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -8,15 +8,16 @@ import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import { Button, InputAdornment } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import {
+  getCompareSnapshotsAPIMethod,
+  getFileSnapshotNamesAPIMethod,
+} from "../api/client";
 
 const theme = createTheme({
   palette: {
@@ -48,17 +49,23 @@ const theme = createTheme({
 // };
 
 const CompareSnapshots = () => {
-  const [baseFileFirst, setBaseFileFisrt] = useState("");
-  const [baseFileSecond, setBaseFileSecond] = useState("");
+  const [baseFileFirst, setBaseFileFirst] = useState([]);
+  // const [baseFileSecond, setBaseFileSecond] = useState([]);
+
+  const [baseFileSnapshot, setBaseFileSnapshot] = useState("");
+  const [compareFileSnapshot, setCompareFileSnapshot] = useState("");
+
   const [compareButton, setCompareButton] = useState(false);
   const [openCompareBox, setOpenCompareBox] = useState(false);
 
+  // const [count, setCount] = useState(0);
+
   const handleChangeFirst = (event) => {
-    setBaseFileFisrt(event.target.value);
+    setBaseFileSnapshot(event.target.value);
   };
 
   const handleChangeSecond = (event) => {
-    setBaseFileSecond(event.target.value);
+    setCompareFileSnapshot(event.target.value);
   };
 
   const [selectedIndex, setSelectedIndex] = useState(1);
@@ -68,14 +75,34 @@ const CompareSnapshots = () => {
     setOpenCompareBox(true);
   };
 
-  function handleClickOpenBreadcrumb(event) {
-    event.preventDefault();
-    console.info("You clicked a breadcrumb.");
-  }
-
+  const [path, setPath] = useState([]);
+  const [fileName, setFileName] = useState("");
+  let pathLet = [];
   const clickCompareButton = () => {
     setCompareButton(true);
+    getCompareSnapshotsAPIMethod(baseFileSnapshot, compareFileSnapshot).then(
+      (res) => {
+        res.data.map((data) => {
+          console.log(data);
+          console.log(data.name);
+          console.log(data["additional_base_file_snapshot_permissions"]);
+          console.log(data["additional_compare_file_snapshot_permissions"]);
+
+          pathLet.push(data.path);
+          setPath(pathLet);
+
+          setFileName(data.name);
+        });
+      }
+    );
   };
+
+  useEffect(() => {
+    getFileSnapshotNamesAPIMethod().then((data) => {
+      console.log("get file snapshot names: ", data.body);
+      setBaseFileFirst(data.body.reverse());
+    });
+  }, []);
 
   return (
     <div>
@@ -84,15 +111,20 @@ const CompareSnapshots = () => {
           <FormControl sx={{ m: 1, minWidth: 250 }} size="small">
             <InputLabel id="baseFileSelect">Base File Snapshot</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={baseFileFirst}
+              labelId="BaseFileSnapshotLabelId"
+              id="BaseFileSnapshot"
               label="Base File Snapshot"
               onChange={handleChangeFirst}
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {baseFileFirst.map((data) => (
+                <MenuItem
+                  key={data.name}
+                  value={data.name}
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <div>{data.name}</div>
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -102,17 +134,22 @@ const CompareSnapshots = () => {
         />
         <Box sx={{ minWidth: 250 }}>
           <FormControl sx={{ m: 1, minWidth: 250 }} size="small">
-            <InputLabel id="baseFileSelect">Base File Snapshot</InputLabel>
+            <InputLabel id="baseFileSelect">Compare File Snapshot</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={baseFileSecond}
-              label="Base File Snapshot"
+              labelId="CompareFileSnapshotLabelId"
+              id="CompareFileSnapshot"
+              label="Compare File Snapshot"
               onChange={handleChangeSecond}
             >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {baseFileFirst.map((data) => (
+                <MenuItem
+                  key={data.name}
+                  value={data.name}
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <div>{data.name}</div>
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -132,60 +169,20 @@ const CompareSnapshots = () => {
               sx={{
                 width: "270px",
                 bgcolor: "background.paper",
-                paddingTop: "15px",
+                // paddingTop: "15px",
               }}
             >
-              <Divider />
               <List component="nav" aria-label="secondary mailbox folder">
-                <ListItemButton
-                  selected={selectedIndex === 1}
-                  onClick={(event) => handleListItemClick(event, 1)}
-                >
-                  <div role="presentation" onClick={handleClickOpenBreadcrumb}>
-                    <Breadcrumbs maxItems={2} aria-label="breadcrumb">
-                      <Link underline="hover" color="inherit" href="#">
-                        Home
-                      </Link>
-                      <Link underline="hover" color="inherit" href="#">
-                        Catalog
-                      </Link>
-                      <Link underline="hover" color="inherit" href="#">
-                        Accessories
-                      </Link>
-                      <Link underline="hover" color="inherit" href="#">
-                        New Collection
-                      </Link>
-                      <Typography color="text.primary">Belts</Typography>
-                    </Breadcrumbs>
-                  </div>
-                </ListItemButton>
                 <Divider />
-                <ListItemButton
-                  selected={selectedIndex === 2}
-                  onClick={(event) => handleListItemClick(event, 2)}
-                >
-                  <ListItemText primary="My Drive / ... / Lecture1.pdf" />
-                </ListItemButton>
-                <Divider />
-                <ListItemButton
-                  selected={selectedIndex === 3}
-                  onClick={(event) => handleListItemClick(event, 3)}
-                >
-                  <ListItemText primary="My Drive / ... / Lecture1.pdf" />
-                </ListItemButton>
-                <Divider />
-                <ListItemButton
-                  selected={selectedIndex === 4}
-                  onClick={(event) => handleListItemClick(event, 4)}
-                >
-                  <ListItemText primary="My Drive / ... / Lecture1.pdf" />
-                </ListItemButton>
-                <ListItemButton
-                  selected={selectedIndex === 5}
-                  onClick={(event) => handleListItemClick(event, 5)}
-                >
-                  <ListItemText primary="My Drive / ... / Lecture1.pdf" />
-                </ListItemButton>
+                {path.map((data, index) => (
+                  <ListItemButton
+                    key={data}
+                    selected={selectedIndex === index}
+                    onClick={(event) => handleListItemClick(event, index)}
+                  >
+                    <ListItemText primary={data} />
+                  </ListItemButton>
+                ))}
               </List>
             </Box>
           </div>
@@ -205,7 +202,7 @@ const CompareSnapshots = () => {
                 label="File Name"
                 multiline
                 maxRows={4}
-                value="{fileName}"
+                value={fileName}
                 InputProps={{
                   readOnly: true,
                 }}
@@ -347,7 +344,7 @@ const CompareSnapshots = () => {
                 label="File Name"
                 multiline
                 maxRows={4}
-                value="{fileName}"
+                value={fileName}
                 InputProps={{
                   readOnly: true,
                 }}
