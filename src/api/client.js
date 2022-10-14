@@ -137,9 +137,10 @@ export const getFileSnapshotAPIMethod = async (
   snapshot_name,
   offset,
   limit,
-  folder_id,
+  my_drive,
+  shared_with_me,
   shared_drive,
-  my_drive
+  folder_id
 ) => {
   return await axios.get(
     urlJoin(
@@ -153,9 +154,26 @@ export const getFileSnapshotAPIMethod = async (
         snapshot_name: snapshot_name,
         offset: offset,
         limit: limit,
-        folder_id: folder_id,
-        shared_drive: shared_drive,
         my_drive: my_drive,
+        shared_with_me: shared_with_me,
+        shared_drive: shared_drive,
+        folder_id: folder_id,
+      },
+    }
+  );
+};
+
+export const getSharedDriveAPIMethod = async (snapshot_name) => {
+  return await axios.get(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/google/files/drives"
+    ),
+    {
+      credentials: "include",
+      withCredentials: true,
+      params: {
+        snapshot_name: snapshot_name,
       },
     }
   );

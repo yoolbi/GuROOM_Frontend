@@ -33,6 +33,7 @@ import {
   getFileSnapshotAPIMethod,
   postFileSnapshotAPIMethod,
   putFileSnapshotNamesAPIMethod,
+  getSharedDriveAPIMethod,
 } from "../api/client";
 import FilePermissionEditModal from "./FilePermissionEditModal";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -94,6 +95,10 @@ const Home = () => {
   const handleChange = (event) => {
     setFileSnapshot(event.target.value);
     fileSnapshotLet = event.target.value;
+    getSharedDriveAPIMethod(fileSnapshotLet).then((res) => {
+      console.log(res.body);
+    });
+
     setRows([
       {
         id: 1,
@@ -153,7 +158,8 @@ const Home = () => {
   const [selectionModel, setSelectionModel] = useState([]); //added line
   const [startOffset, setStartOffset] = useState(0);
   let my_drive = false;
-  let shared_drive = false;
+  let shared_with_me = false;
+  let shared_drive = true;
 
   //file permissions
   // const [permissions, setPermissions] = useState([]);
@@ -216,6 +222,8 @@ const Home = () => {
 
   let currentPath = [];
   const [showPath, setShowPath] = useState([]);
+  let pathIdLet = "";
+  const [pathId, setPathId] = useState("");
 
   //onClick folder name in table
   const handleClickCell = (name, type, id) => {
@@ -223,23 +231,24 @@ const Home = () => {
     if (name === "My Drive") {
       // setMyDrive(true);
       my_drive = true;
-      shared_drive = false;
+      shared_with_me = false;
     } else if (name === "Shared With Me") {
       // setMyDrive(false);
       my_drive = false;
-      shared_drive = true;
+      shared_with_me = true;
     } else {
       my_drive = false;
-      shared_drive = false;
+      shared_with_me = false;
     }
     let fileRow = [];
     getFileSnapshotAPIMethod(
       fileSnapshotLet,
       0,
       10000,
-      id,
+      my_drive,
+      shared_with_me,
       shared_drive,
-      my_drive
+      id
     ).then((res) => {
       // setFiles(res.data.files);
       // setPermissions(res.data.permissions);
@@ -248,8 +257,12 @@ const Home = () => {
       removeOwnerFromPermissions();
       removeOwnerFromInheritPermissions();
 
-      console.log(res.data.files[0].path);
-      console.log(res.data.files[0].id);
+      pathIdLet = id;
+      console.log(pathIdLet);
+      setPathId(pathIdLet);
+      console.log(pathId);
+
+      console.log(res.data.files[0]);
       currentPath = res.data.files[0].path.toString().split("/").slice(1);
       console.log(currentPath);
       console.log(showPath);
@@ -463,8 +476,11 @@ const Home = () => {
     event.preventDefault();
   }
 
-  const handleGotoPath = () => {
-    console.log("path");
+  const handleGotoPath = (name, type, id) => {
+    console.log("name " + name);
+    console.log("type " + type);
+    console.log("id " + id);
+    handleClickCell(name);
   };
 
   //file Snapshot name
@@ -663,15 +679,15 @@ const Home = () => {
             </Link>
             {showPath.map((data) => {
               return (
-                <Link
+                <div
                   key={data}
-                  underline="hover"
-                  color="inherit"
-                  href="#"
-                  onClick={handleGotoPath}
+                  onClick={() =>
+                    handleGotoPath("Shared With Me", "folder", pathId)
+                  }
+                  style={{ cursor: "pointer", textDecorationLine: "underline" }}
                 >
                   {data}
-                </Link>
+                </div>
               );
             })}
           </Breadcrumbs>
