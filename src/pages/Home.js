@@ -39,6 +39,7 @@ import FilePermissionEditModal from "./FilePermissionEditModal";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
+import SharingDifferenceModal from "./SharingDifferenceModal";
 
 const style = {
   position: "absolute",
@@ -53,6 +54,19 @@ const style = {
   p: 4,
 };
 
+const styleforSharingDifferenceModal = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "60%",
+  height: "80%",
+  bgcolor: "background.paper",
+  borderRadius: "10px",
+  boxShadow: 24,
+  p: 4,
+};
+
 const Home = () => {
   const [fileSnapshot, setFileSnapshot] = useState("");
   const [open, setOpen] = useState(false);
@@ -60,11 +74,16 @@ const Home = () => {
   const [count, setCount] = useState(2);
   const [openEditModal, setOpenEditModal] = useState(false);
 
+  const [sharingDifferenceModal, setSharingDifferenceModal] = useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const openFilePermissionEditModal = () => setOpenEditModal(true);
   const closeFilePermissionEditModal = () => setOpenEditModal(false);
+
+  const openSharingDifferenceModal = () => setSharingDifferenceModal(true);
+  const closeSharingDifferenceModal = () => setSharingDifferenceModal(false);
 
   let fileSnapshotLet = "";
   const handleChange = (event) => {
@@ -328,14 +347,6 @@ const Home = () => {
           ),
         },
         {
-          field: "sharingDifferences",
-          headerName: "Sharing Difference",
-          description:
-            "The differences between the file’s permissions and the folder’s permissions.",
-          sortable: false,
-          width: 150,
-        },
-        {
           field: "deviantPermissions",
           headerName: "Deviant Permissions",
           description:
@@ -589,6 +600,26 @@ const Home = () => {
             <Typography color="text.primary">Belts</Typography>
           </Breadcrumbs>
         </div>
+        <Button
+          variant="contained"
+          size="small"
+          onClick={openSharingDifferenceModal}
+        >
+          Sharing Differences
+        </Button>
+        <Modal
+          open={sharingDifferenceModal}
+          onClose={closeSharingDifferenceModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={styleforSharingDifferenceModal}>
+            <SharingDifferenceModal
+              closeSharingDifferenceModal={closeSharingDifferenceModal}
+            ></SharingDifferenceModal>
+          </Box>
+        </Modal>
+
         <Button
           variant="contained"
           size="small"
