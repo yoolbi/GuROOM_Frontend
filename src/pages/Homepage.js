@@ -108,9 +108,7 @@ const Homepage = () => {
 
   useEffect(() => {
     getUserAPIMethod().then((user) => {
-      console.log(user);
-      console.log(user.status);
-      console.log(user.body);
+      console.log("get user: ", user);
       if (user.status === 200) {
         setUser(user.body);
       } else if (user.status === 201) {
@@ -152,7 +150,6 @@ const Homepage = () => {
         });
       }
     });
-    console.log(user);
   }, []);
 
   return (

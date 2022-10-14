@@ -89,7 +89,6 @@ const Home = () => {
   const handleChange = (event) => {
     setFileSnapshot(event.target.value);
     fileSnapshotLet = event.target.value;
-    console.log(fileSnapshot);
     setRows([
       {
         id: 1,
@@ -141,10 +140,10 @@ const Home = () => {
   ]);
 
   //file snapshot get
-  const [files, setFiles] = useState([]);
+  // const [files, setFiles] = useState([]);
 
   //True: My Drive. False: Shared With Me?
-  const [myDrive, setMyDrive] = useState(false);
+  // const [myDrive, setMyDrive] = useState(false);
   //Table checkbox selected
   const [selectionModel, setSelectionModel] = useState([]); //added line
   const [startOffset, setStartOffset] = useState(0);
@@ -152,13 +151,11 @@ const Home = () => {
   let shared_drive = false;
 
   //file permissions
-  const [permissions, setPermissions] = useState([]);
+  // const [permissions, setPermissions] = useState([]);
   let permissionsLet = [];
 
   //remove owner from permissions
   const removeOwnerFromPermissions = () => {
-    // let tempPermissions;
-    console.log(permissionsLet);
     for (var key in permissionsLet) {
       for (var key2 in permissionsLet[key]["direct_permissions"]) {
         let role = permissionsLet[key]["direct_permissions"][key2]["role"];
@@ -168,12 +165,9 @@ const Home = () => {
         }
       }
     }
-    console.log(permissionsLet);
   };
 
   const removeOwnerFromInheritPermissions = () => {
-    // let tempPermissions;
-    console.log(permissionsLet);
     for (var key in permissionsLet) {
       for (var key2 in permissionsLet[key]["inherit_permissions"]) {
         let role = permissionsLet[key]["inherit_permissions"][key2]["role"];
@@ -183,29 +177,23 @@ const Home = () => {
         }
       }
     }
-    console.log(permissionsLet);
   };
 
   //onClick folder name in table
   const handleClickCell = (name, type, id) => {
-    console.log(type);
-    console.log(id);
     console.log("click", name);
     if (name === "My Drive") {
-      setMyDrive(true);
+      // setMyDrive(true);
       my_drive = true;
       shared_drive = false;
     } else if (name === "Shared With Me") {
-      setMyDrive(false);
+      // setMyDrive(false);
       my_drive = false;
       shared_drive = true;
     } else {
       my_drive = false;
       shared_drive = false;
     }
-    console.log(myDrive);
-    console.log(my_drive);
-    console.log(fileSnapshot);
     let fileRow = [];
     getFileSnapshotAPIMethod(
       fileSnapshotLet,
@@ -215,31 +203,26 @@ const Home = () => {
       shared_drive,
       my_drive
     ).then((res) => {
-      setFiles(res.data.files);
-      setPermissions(res.data.permissions);
+      // setFiles(res.data.files);
+      // setPermissions(res.data.permissions);
       permissionsLet = res.data.permissions;
 
       removeOwnerFromPermissions();
       removeOwnerFromInheritPermissions();
 
       console.log(res.data);
-      console.log(res);
-      console.log(permissions);
       console.log(permissionsLet);
+
       res.data.files.map((data) => {
         let inheritPermissionsLet = [];
         let directPermissionsLet = [];
-        console.log(inheritPermissionsLet);
+
         for (var key in permissionsLet) {
           if (key === data.id) {
             inheritPermissionsLet = permissionsLet[key]["inherit_permissions"];
             directPermissionsLet = permissionsLet[key]["direct_permissions"];
           }
-          console.log(permissionsLet[key]["inherit_permissions"]);
         }
-        console.log(directPermissionsLet);
-        // console.log(directPermissionsLet.pop());
-        // console.log(inheritPermissionsLet.pop());
         fileRow.push({
           id: data.id,
           name: data.name,
@@ -377,7 +360,7 @@ const Home = () => {
   // take file snapshot
   const takingSnapshot = () => {
     setOpenTakingSnapshot(true);
-    console.log("open");
+    console.log("take file snapshot");
     postFileSnapshotAPIMethod("File Snapshot " + count).then((data) => {
       console.log(data);
       console.log(data.status);
@@ -389,12 +372,11 @@ const Home = () => {
 
   const takingSnapshotClose = () => {
     setOpenTakingSnapshot(false);
-    console.log("close");
   };
 
+  //click open path breadcrumb
   function handleClickOpenBreadcrumb(event) {
     event.preventDefault();
-    console.info("You clicked a breadcrumb.");
   }
 
   //file Snapshot name
@@ -409,7 +391,6 @@ const Home = () => {
 
   const handleClickOpenDeleteFileSnapshotName = (name) => {
     setOpenDeleteFileSnapshotName(true);
-    console.log(name);
     setSelectedEditFileSnapshotName(name);
   };
 
@@ -422,7 +403,7 @@ const Home = () => {
     handleCloseDeleteFileSnapshotName();
     deleteFileSnapshotNamesAPIMethod(selectedEditFileSnapshotName).then(
       (res) => {
-        console.log(res);
+        console.log("deleted file snapshot name", res);
         setEditedFileSnapshotName(!editedFileSnapshotName);
       }
     );
@@ -447,13 +428,18 @@ const Home = () => {
       selectedEditFileSnapshotName,
       newFileSnapshotName
     ).then((res) => {
-      console.log(res);
+      console.log("edited file snapshot name", res);
       setEditedFileSnapshotName(!editedFileSnapshotName);
     });
   };
 
   const handleChangeNewFileSnapshotName = (e) => {
     setNewFileSnapshotName(e.target.value);
+  };
+
+  //show detail information for each files when double clicked
+  const handleDoubleClickRow = (data) => {
+    console.log("double click row: ", data);
   };
 
   //get file snapshot names
@@ -465,10 +451,7 @@ const Home = () => {
       setCount(data.body.length + 1);
       setFileSnapshot(data.body[0].name);
       fileSnapshotLet = data.body[0].name;
-      console.log(fileSnapshotNames);
     });
-    console.log(fileSnapshotNames);
-    console.log(files);
   }, [openTakingSnapshot, editedFileSnapshotName]);
 
   return (
@@ -658,6 +641,10 @@ const Home = () => {
             }}
             selectionModel={selectionModel}
             disableSelectionOnClick
+            onCellDoubleClick={(params, event) => {
+              event.defaultMuiPrevented = true;
+              handleDoubleClickRow(params.row);
+            }}
           />
         </div>
       </div>
