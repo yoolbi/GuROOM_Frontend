@@ -42,6 +42,19 @@ export const postAccessTokenAPIMethod = (code) => {
   ).then(parseJSON);
 };
 
+export const deleteLogoutAPIMethod = () => {
+  return fetch(
+    urlJoin(process.env.REACT_APP_BACKEND_URL, "/apps/auth/v1/google/logout"),
+    {
+      credentials: "include",
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};
+
 export const deleteRevokeAPIMethod = () => {
   return fetch(
     urlJoin(process.env.REACT_APP_BACKEND_URL, "/apps/auth/v1/google/revoke"),
