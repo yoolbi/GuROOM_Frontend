@@ -1,27 +1,71 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import ClearIcon from "@mui/icons-material/Clear";
 import { DataGrid } from "@mui/x-data-grid";
+import { getFileFolderSharingDifferencesAPIMethod } from "../api/client";
 
 const SharingDifferenceModal = ({
   // eslint-disable-next-line react/prop-types
   closeSharingDifferenceModal,
   // eslint-disable-next-line react/prop-types
   selectedFileFolderSharingDifferences,
+  // eslint-disable-next-line react/prop-types
+  fileSnapshot,
 }) => {
-  console.log(selectedFileFolderSharingDifferences);
+  let differentPermissions = [];
+
+  useEffect(() => {
+    getFileFolderSharingDifferencesAPIMethod(
+      fileSnapshot,
+      // eslint-disable-next-line react/prop-types
+      selectedFileFolderSharingDifferences["id"]
+    ).then((res) => {
+      console.log(res);
+      for (let key in res.data) {
+        if (key === "additional_folder_permissions") {
+          res.data[key].map((data) => {
+            differentPermissions.push({
+              id: data["id"],
+              name: data["emailAddress"],
+              folderPermission: data["role"],
+              filePermission: "X",
+            });
+          });
+        } else if (key === "additional_file_permissions") {
+          res.data[key].map((data) => {
+            differentPermissions.push({
+              id: data["id"],
+              name: data["emailAddress"],
+              folderPermission: "X",
+              filePermission: data["role"],
+            });
+          });
+        } else if (key === "changed_permissions") {
+          res.data[key].map((data) => {
+            differentPermissions.push({
+              id: data["from"]["id"],
+              name: data["from"]["emailAddress"],
+              folderPermission: data["from"]["role"],
+              filePermission: data["to"]["role"],
+            });
+          });
+        }
+      }
+      setRows(differentPermissions);
+    });
+  }, []);
+
   const columns = [
-    { field: "id", headerName: "ID", width: 100 },
     { field: "name", headerName: "Name", width: 250 },
     { field: "folderPermission", headerName: "Folder Permission", width: 250 },
     { field: "filePermission", headerName: "File Permission", width: 250 },
   ];
 
-  const rows = [
+  const [rows, setRows] = useState([
     {
       id: 1,
     },
-  ];
+  ]);
 
   return (
     <div>
@@ -37,7 +81,11 @@ const SharingDifferenceModal = ({
         <TextField
           id="outlined-read-only-input"
           label="Folder Name"
-          defaultValue="Folder Name"
+          /* eslint-disable-next-line react/prop-types */
+          defaultValue={selectedFileFolderSharingDifferences["path"]
+            // eslint-disable-next-line react/prop-types
+            .split("/")
+            .slice(-1)}
           InputProps={{
             readOnly: true,
           }}
@@ -61,7 +109,12 @@ const SharingDifferenceModal = ({
         />
       </div>
       <div style={{ height: 550, width: "100%", marginTop: "10px" }}>
-        <DataGrid rows={rows} columns={columns} pageSize={10} />
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[10]}
+        />
       </div>
     </div>
   );
