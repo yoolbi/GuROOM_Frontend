@@ -251,3 +251,60 @@ export const getCompareSnapshotsAPIMethod = async (
     }
   );
 };
+
+// export const postGroupAPIMethod = (
+//   file,
+//   group_name,
+//   group_email,
+//   create_time
+// ) => {
+//   var data = new FormData();
+//   data.append("file", file);
+//   data.append("group_name", group_name);
+//   data.append("group_email", group_email);
+//   data.append("create_time", create_time);
+//   return fetch(
+//     urlJoin(
+//       process.env.REACT_APP_BACKEND_URL + "/apps/snapshot/v1/google/groups"
+//     ),
+//     {
+//       credentials: "include",
+//       method: "POST",
+//       body: data,
+//       // body: JSON.stringify({
+//       //   file: file,
+//       //   group_name: group_name,
+//       //   group_email: group_email,
+//       //   create_time: create_time,
+//       // }),
+//       headers: {
+//         "Content-Type": "form-data; charset=UTF-8",
+//       },
+//     }
+//   ).then(parseJSON);
+// };
+
+export const postGroupAPIMethod = (formData) => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL + "/apps/snapshot/v1/google/groups"
+    ),
+    {
+      credentials: "include",
+      method: "POST",
+      body: formData,
+    }
+  ).then(parseJSON);
+};
+
+export const getGroupAPIMethod = async () => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/google/groups"
+    ),
+    {
+      credentials: "include",
+    }
+  ).then(parseJSON);
+};
