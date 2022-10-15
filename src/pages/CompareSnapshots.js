@@ -41,50 +41,62 @@ const CompareSnapshots = () => {
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
     setOpenCompareBox(true);
+    getCompareSnapshotsAPIMethod(baseFileSnapshot, compareFileSnapshot).then(
+      (res) => {
+        console.log(res);
+        console.log(res.data[0]);
+        res.data[index]["additional_base_file_snapshot_permissions"].map(
+          (data) => {
+            differentPermissions.push({
+              id: data["id"],
+              name: data["emailAddress"],
+              baseSnapshotPermission: data["role"],
+              compareSnapshotPermission: "X",
+            });
+          }
+        );
+        res.data[index]["additional_compare_file_snapshot_permissions"].map(
+          (data) => {
+            differentPermissions.push({
+              id: data["id"],
+              name: data["emailAddress"],
+              baseSnapshotPermission: "X",
+              compareSnapshotPermission: data["role"],
+            });
+          }
+        );
+        res.data[index]["changed_permissions"].map((data) => {
+          differentPermissions.push({
+            id: data["from"]["id"],
+            name: data["from"]["emailAddress"],
+            baseSnapshotPermission: data["from"]["role"],
+            compareSnapshotPermission: data["to"]["role"],
+          });
+        });
+        setRows(differentPermissions);
+      }
+    );
   };
 
   const [path, setPath] = useState([]);
   const [fileName, setFileName] = useState("");
   let pathLet = [];
+  let pathLetWithName = "";
   let differentPermissions = [];
   const clickCompareButton = () => {
     setCompareButton(true);
     getCompareSnapshotsAPIMethod(baseFileSnapshot, compareFileSnapshot).then(
       (res) => {
         res.data.map((res) => {
-          console.log(res);
-          console.log(res["additional_base_file_snapshot_permissions"]);
-          console.log(res["additional_compare_file_snapshot_permissions"]);
-
-          pathLet.push(res.path);
+          pathLetWithName =
+            res.path + "/" + res.name + "." + res.mimeType.split(".")[2];
+          console.log(pathLetWithName);
+          pathLet.push(pathLetWithName);
           setPath(pathLet);
 
           setFileName(res.name);
           console.log(fileName);
-
-          for (let key in res) {
-            if (key === "additional_base_file_snapshot_permissions") {
-              res[key].map((data) => {
-                differentPermissions.push({
-                  id: data["id"],
-                  name: data["emailAddress"],
-                  baseSnapshotPermission: data["role"],
-                  compareSnapshotPermission: "X",
-                });
-              });
-            } else if (key === "additional_compare_file_snapshot_permissions") {
-              res[key].map((data) => {
-                differentPermissions.push({
-                  id: data["id"],
-                  name: data["emailAddress"],
-                  baseSnapshotPermission: "X",
-                  compareSnapshotPermission: data["role"],
-                });
-              });
-            }
-          }
         });
-        setRows(differentPermissions);
       }
     );
   };
