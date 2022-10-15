@@ -31,12 +31,21 @@ import PeopleIcon from "@mui/icons-material/People";
 import {
   deleteLogoutAPIMethod,
   getAuthorizeAPIMethod,
+  getGroupAPIMethod,
   getUserAPIMethod,
+  postGroupAPIMethod,
+  // postGroupAPIMethod,
   postRefreshAPIMethod,
 } from "../api/client";
 import urlJoin from "url-join";
 // import { Link } from "react-router-dom";
 import Modal from "@mui/material/Modal";
+import ClearIcon from "@mui/icons-material/Clear";
+import dayjs from "dayjs";
+import TextField from "@mui/material/TextField";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
 const style = {
   position: "absolute",
@@ -48,6 +57,19 @@ const style = {
   border: "2px solid #000",
   boxShadow: 24,
   // p: 4,
+};
+
+const styleForGroupCreationModal = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "40%",
+  height: "30%",
+  bgcolor: "background.paper",
+  borderRadius: "10px",
+  boxShadow: 24,
+  p: 4,
 };
 
 const Homepage = () => {
@@ -70,6 +92,50 @@ const Homepage = () => {
   const [group, setGroup] = useState("");
   const handleSelectGroup = (event) => {
     setGroup(event.target.value);
+  };
+
+  // group creation modal
+  const [openGroupCreationModal, setOpenGroupCreationModal] = useState(false);
+  const handleOpenGroupCreationModal = () => setOpenGroupCreationModal(true);
+  const handleCloseGroupCreationModal = () => setOpenGroupCreationModal(false);
+  const [createGroupName, setCreateGroupName] = useState("");
+  const [createGroupEmail, setCreateGroupEmail] = useState("");
+  const [createGroupDate, setCreateGroupDate] = useState(dayjs(new Date()));
+  const [createGroupFile, setCreateGroupFile] = useState();
+
+  const handleChangeCreateGroupName = (e) => {
+    setCreateGroupName(e.target.value);
+  };
+
+  const handleChangeCreateGroupEmail = (e) => {
+    setCreateGroupEmail(e.target.value);
+  };
+
+  const handleCreateGroupFile = (e) => {
+    setCreateGroupFile(e.target.value);
+  };
+
+  const handleClickCreateGroup = () => {
+    console.log(
+      createGroupFile,
+      createGroupName,
+      createGroupEmail,
+      createGroupDate
+    );
+    const formData = new FormData();
+    formData.append("file", createGroupFile);
+    formData.append("group_name", createGroupName);
+    formData.append("group_email", createGroupEmail);
+    formData.append("create_time", createGroupDate);
+    postGroupAPIMethod(
+      // createGroupFile,
+      // createGroupName,
+      // createGroupEmail,
+      // createGroupDate
+      formData
+    ).then((res) => {
+      console.log(res);
+    });
   };
 
   const handleClickLogo = () => {
@@ -166,6 +232,13 @@ const Homepage = () => {
     });
   }, []);
 
+  //getGroup
+  useEffect(() => {
+    getGroupAPIMethod().then((data) => {
+      console.log(data);
+    });
+  }, []);
+
   return (
     <div
       style={{
@@ -218,83 +291,99 @@ const Homepage = () => {
                 onClick={handleClickOpenGroup}
               ></img>
             </div>
-            <div className="groupSelect">
-              <Box
-                sx={{ width: "96.5%" }}
-                style={{ margin: "20px 0px 15px 13px" }}
+            <div
+              style={{
+                height: "90%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
+              <div className="groupSelect">
+                <Box
+                  sx={{ width: "96.5%" }}
+                  style={{ margin: "20px 0px 15px 13px" }}
+                >
+                  <FormControl sx={{ width: "96.5%" }} size="small">
+                    <InputLabel id="baseFileSelect">Group Snapshot</InputLabel>
+                    <Select
+                      labelId="group-select"
+                      id="group-select"
+                      value={group}
+                      label="group snapshot"
+                      onChange={handleSelectGroup}
+                    >
+                      <MenuItem value={10}>Ten</MenuItem>
+                      <MenuItem value={20}>Twenty</MenuItem>
+                      <MenuItem value={30}>Thirty</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+                <Paper
+                  component="form"
+                  sx={{
+                    width: "93%",
+                    height: 40,
+                  }}
+                  style={{ marginLeft: "13px" }}
+                >
+                  <IconButton type="button" aria-label="search">
+                    <SearchIcon />
+                  </IconButton>
+                  <InputBase
+                    sx={{ width: "80%" }}
+                    placeholder="Group name, domain, user"
+                    inputProps={{ "aria-label": "search google maps" }}
+                  />
+                </Paper>
+                <List
+                  sx={{
+                    width: "100%",
+                    maxWidth: 360,
+                    bgcolor: "background.paper",
+                    marginTop: "10px",
+                  }}
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                >
+                  <ListItemButton onClick={handleClick}>
+                    <ListItemIcon>
+                      <PeopleIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Group Name" />
+                    {open ? <ExpandLess /> : <ExpandMore />}
+                  </ListItemButton>
+                  <Collapse in={open} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      <ListItemButton sx={{ pl: 4, marginLeft: "40px" }}>
+                        <ListItemText
+                          style={{ marginBottom: "10px" }}
+                          primary="people email #1"
+                        />
+                      </ListItemButton>
+                      <ListItemButton sx={{ pl: 4, marginLeft: "40px" }}>
+                        <ListItemText
+                          style={{ marginBottom: "10px" }}
+                          primary="people email #2"
+                        />
+                      </ListItemButton>
+                      <ListItemButton sx={{ pl: 4, marginLeft: "40px" }}>
+                        <ListItemText
+                          style={{ marginBottom: "10px" }}
+                          primary="people email #3"
+                        />
+                      </ListItemButton>
+                    </List>
+                  </Collapse>
+                </List>
+              </div>
+              <Button
+                variant="contained"
+                style={{ width: "60%", margin: "0px 20%" }}
+                onClick={handleOpenGroupCreationModal}
               >
-                <FormControl sx={{ width: "96.5%" }} size="small">
-                  <InputLabel id="baseFileSelect">Group Snapshot</InputLabel>
-                  <Select
-                    labelId="group-select"
-                    id="group-select"
-                    value={group}
-                    label="group snapshot"
-                    onChange={handleSelectGroup}
-                  >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
-              <Paper
-                component="form"
-                sx={{
-                  width: "93%",
-                  height: 40,
-                }}
-                style={{ marginLeft: "13px" }}
-              >
-                <IconButton type="button" aria-label="search">
-                  <SearchIcon />
-                </IconButton>
-                <InputBase
-                  sx={{ width: "80%" }}
-                  placeholder="Group name, domain, user"
-                  inputProps={{ "aria-label": "search google maps" }}
-                />
-              </Paper>
-              <List
-                sx={{
-                  width: "100%",
-                  maxWidth: 360,
-                  bgcolor: "background.paper",
-                  marginTop: "10px",
-                }}
-                component="nav"
-                aria-labelledby="nested-list-subheader"
-              >
-                <ListItemButton onClick={handleClick}>
-                  <ListItemIcon>
-                    <PeopleIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Group Name" />
-                  {open ? <ExpandLess /> : <ExpandMore />}
-                </ListItemButton>
-                <Collapse in={open} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4, marginLeft: "40px" }}>
-                      <ListItemText
-                        style={{ marginBottom: "10px" }}
-                        primary="people email #1"
-                      />
-                    </ListItemButton>
-                    <ListItemButton sx={{ pl: 4, marginLeft: "40px" }}>
-                      <ListItemText
-                        style={{ marginBottom: "10px" }}
-                        primary="people email #2"
-                      />
-                    </ListItemButton>
-                    <ListItemButton sx={{ pl: 4, marginLeft: "40px" }}>
-                      <ListItemText
-                        style={{ marginBottom: "10px" }}
-                        primary="people email #3"
-                      />
-                    </ListItemButton>
-                  </List>
-                </Collapse>
-              </List>
+                Take group snapshot
+              </Button>
             </div>
           </div>
         ) : (
@@ -497,6 +586,94 @@ const Homepage = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Modal
+        open={openGroupCreationModal}
+        onClose={handleCloseGroupCreationModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styleForGroupCreationModal}>
+          <form>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <h2 style={{ margin: "0px" }}>Create Group</h2>
+              <ClearIcon
+                fontSize="medium"
+                onClick={handleCloseGroupCreationModal}
+                style={{ cursor: "pointer" }}
+              />
+            </div>
+            <div
+              style={{
+                width: "100%",
+                marginTop: "30px",
+                marginBottom: "30px",
+              }}
+            >
+              <TextField
+                id="outlined-read-only-input"
+                label="Group Name"
+                style={{ marginBottom: "15px", width: "95%" }}
+                onChange={handleChangeCreateGroupName}
+              />
+              <TextField
+                id="outlined-read-only-input"
+                label="Group Email"
+                style={{ marginBottom: "15px", width: "95%" }}
+                onChange={handleChangeCreateGroupEmail}
+              />
+              <div
+                style={{
+                  width: "95%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <LocalizationProvider
+                  dateAdapter={AdapterDayjs}
+                  style={{ marginBottom: "15px", width: "95%" }}
+                >
+                  <DateTimePicker
+                    renderInput={(props) => <TextField {...props} />}
+                    label="Created Date"
+                    value={createGroupDate}
+                    onChange={(newValue) => {
+                      console.log(newValue);
+                      setCreateGroupDate(newValue);
+                    }}
+                    maxDateTime={dayjs(new Date())}
+                  />
+                </LocalizationProvider>
+                <div>
+                  <Button
+                    variant="contained"
+                    component="label"
+                    style={{ marginTop: "10px", height: "35px" }}
+                  >
+                    Upload File
+                    <input
+                      hidden
+                      accept="text/html"
+                      multiple
+                      type="file"
+                      onChange={handleCreateGroupFile}
+                    />
+                  </Button>
+                  <div style={{ marginTop: "5px" }}>{createGroupFile}</div>
+                </div>
+
+                <Button
+                  variant="contained"
+                  component="label"
+                  style={{ marginTop: "10px", height: "35px" }}
+                  onClick={handleClickCreateGroup}
+                >
+                  Create
+                </Button>
+              </div>
+            </div>
+          </form>
+        </Box>
+      </Modal>
     </div>
   );
 };
