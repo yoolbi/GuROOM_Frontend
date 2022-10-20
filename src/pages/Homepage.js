@@ -101,7 +101,8 @@ const Homepage = () => {
   const [createGroupName, setCreateGroupName] = useState("");
   const [createGroupEmail, setCreateGroupEmail] = useState("");
   const [createGroupDate, setCreateGroupDate] = useState(dayjs(new Date()));
-  const [createGroupFile, setCreateGroupFile] = useState();
+  const [createGroupFile, setCreateGroupFile] = useState({});
+  const [createGroupFileValue, setCreateGroupFileValue] = useState("");
 
   const handleChangeCreateGroupName = (e) => {
     setCreateGroupName(e.target.value);
@@ -112,28 +113,17 @@ const Homepage = () => {
   };
 
   const handleCreateGroupFile = (e) => {
-    setCreateGroupFile(e.target.value);
+    setCreateGroupFileValue(e.target.value);
+    setCreateGroupFile(e.target.files[0]);
   };
 
   const handleClickCreateGroup = () => {
-    console.log(
-      createGroupFile,
-      createGroupName,
-      createGroupEmail,
-      createGroupDate
-    );
     const formData = new FormData();
     formData.append("file", createGroupFile);
     formData.append("group_name", createGroupName);
     formData.append("group_email", createGroupEmail);
-    formData.append("create_time", createGroupDate);
-    postGroupAPIMethod(
-      // createGroupFile,
-      // createGroupName,
-      // createGroupEmail,
-      // createGroupDate
-      formData
-    ).then((res) => {
+    formData.append("create_time", createGroupDate.format());
+    postGroupAPIMethod(formData).then((res) => {
       console.log(res);
     });
   };
@@ -158,7 +148,6 @@ const Homepage = () => {
   const handleLogout = () => {
     console.log("logout");
     deleteLogoutAPIMethod().then((res) => {
-      console.log(res);
       if (res.status === 200) {
         window.location.replace(
           urlJoin(process.env.REACT_APP_FRONTEND_URL, "/")
@@ -197,7 +186,7 @@ const Homepage = () => {
         );
         setUser(user.body);
       } else {
-        //Todo: create refresh, refresh 가 실패시 authorize. refresh가 성공하면 다시 getUser
+        //create refresh, refresh 가 실패시 authorize. refresh가 성공하면 다시 getUser
         //check if the token has expired
         postRefreshAPIMethod().then((data) => {
           if (data.status === 200) {
@@ -212,18 +201,12 @@ const Homepage = () => {
                 );
               } else {
                 getAuthorizeAPIMethod().then((data) => {
-                  console.log("authorize data: " + JSON.stringify(data));
-                  console.log(
-                    "authorize data.body: " + JSON.stringify(data.body)
-                  );
                   window.location.replace(data.body);
                 });
               }
             });
           } else {
             getAuthorizeAPIMethod().then((data) => {
-              console.log("authorize data: " + JSON.stringify(data));
-              console.log("authorize data.body: " + JSON.stringify(data.body));
               window.location.replace(data.body);
             });
           }
@@ -647,18 +630,23 @@ const Homepage = () => {
                   <Button
                     variant="contained"
                     component="label"
-                    style={{ marginTop: "10px", height: "35px" }}
+                    style={{
+                      marginTop: "10px",
+                      height: "35px",
+                      marginLeft: "10px",
+                    }}
                   >
                     Upload File
                     <input
                       hidden
                       accept="text/html"
-                      multiple
                       type="file"
                       onChange={handleCreateGroupFile}
                     />
                   </Button>
-                  <div style={{ marginTop: "5px" }}>{createGroupFile}</div>
+                  <div style={{ marginTop: "5px", marginLeft: "10px" }}>
+                    {createGroupFileValue}
+                  </div>
                 </div>
 
                 <Button
