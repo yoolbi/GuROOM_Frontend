@@ -24,9 +24,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import Collapse from "@mui/material/Collapse";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
+// import Collapse from "@mui/material/Collapse";
+// import ExpandLess from "@mui/icons-material/ExpandLess";
+// import ExpandMore from "@mui/icons-material/ExpandMore";
 import PeopleIcon from "@mui/icons-material/People";
 import {
   deleteLogoutAPIMethod,
@@ -89,11 +89,6 @@ const Homepage = () => {
     console.log(openGroup);
   };
 
-  const [group, setGroup] = useState("");
-  const handleSelectGroup = (event) => {
-    setGroup(event.target.value);
-  };
-
   // group creation modal
   const [openGroupCreationModal, setOpenGroupCreationModal] = useState(false);
   const handleOpenGroupCreationModal = () => setOpenGroupCreationModal(true);
@@ -124,7 +119,9 @@ const Homepage = () => {
     formData.append("group_email", createGroupEmail);
     formData.append("create_time", createGroupDate.format());
     postGroupAPIMethod(formData).then((res) => {
-      console.log(res);
+      if (res.status === 201) {
+        handleCloseGroupCreationModal();
+      }
     });
   };
 
@@ -169,12 +166,6 @@ const Homepage = () => {
 
   const [user, setUser] = useState(null);
 
-  const [open, setOpen] = React.useState(true);
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
-
   useEffect(() => {
     getUserAPIMethod().then((user) => {
       console.log("get user: ", user);
@@ -215,12 +206,15 @@ const Homepage = () => {
     });
   }, []);
 
+  const [groups, setGroups] = useState([]);
   //getGroup
   useEffect(() => {
     getGroupAPIMethod().then((data) => {
+      setGroups(data.body);
       console.log(data);
+      console.log(groups);
     });
-  }, []);
+  }, [openGroupCreationModal]);
 
   return (
     <div
@@ -282,26 +276,11 @@ const Homepage = () => {
                 justifyContent: "space-between",
               }}
             >
-              <div className="groupSelect">
+              <div className="groupSelect" style={{ height: "93%" }}>
                 <Box
                   sx={{ width: "96.5%" }}
                   style={{ margin: "20px 0px 15px 13px" }}
-                >
-                  <FormControl sx={{ width: "96.5%" }} size="small">
-                    <InputLabel id="baseFileSelect">Group Snapshot</InputLabel>
-                    <Select
-                      labelId="group-select"
-                      id="group-select"
-                      value={group}
-                      label="group snapshot"
-                      onChange={handleSelectGroup}
-                    >
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
+                ></Box>
                 <Paper
                   component="form"
                   sx={{
@@ -321,43 +300,61 @@ const Homepage = () => {
                 </Paper>
                 <List
                   sx={{
-                    width: "100%",
-                    maxWidth: 360,
-                    bgcolor: "background.paper",
-                    marginTop: "10px",
+                    height: "90%",
+                    overflowY: "auto",
                   }}
-                  component="nav"
-                  aria-labelledby="nested-list-subheader"
                 >
-                  <ListItemButton onClick={handleClick}>
-                    <ListItemIcon>
-                      <PeopleIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Group Name" />
-                    {open ? <ExpandLess /> : <ExpandMore />}
-                  </ListItemButton>
-                  <Collapse in={open} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                      <ListItemButton sx={{ pl: 4, marginLeft: "40px" }}>
-                        <ListItemText
-                          style={{ marginBottom: "10px" }}
-                          primary="people email #1"
-                        />
-                      </ListItemButton>
-                      <ListItemButton sx={{ pl: 4, marginLeft: "40px" }}>
-                        <ListItemText
-                          style={{ marginBottom: "10px" }}
-                          primary="people email #2"
-                        />
-                      </ListItemButton>
-                      <ListItemButton sx={{ pl: 4, marginLeft: "40px" }}>
-                        <ListItemText
-                          style={{ marginBottom: "10px" }}
-                          primary="people email #3"
-                        />
-                      </ListItemButton>
-                    </List>
-                  </Collapse>
+                  {groups.map((data, i) => {
+                    return (
+                      <List
+                        sx={{
+                          width: "90%",
+                          // maxWidth: 560,
+                          bgcolor: "background.paper",
+                          marginTop: "10px",
+                          maxHeight: "200px",
+                        }}
+                        component="nav"
+                        aria-labelledby="nested-list-subheader"
+                        key={i}
+                      >
+                        <ListItem key={i}>
+                          <ListItemIcon>
+                            <PeopleIcon />
+                          </ListItemIcon>
+                          <ListItemText primary={data["group_name"]} />
+                        </ListItem>
+                        <List
+                          sx={{
+                            maxHeight: "150px",
+                            overflowY: "auto",
+                          }}
+                        >
+                          {data["memberships"].map(
+                            (membership, membershipIndex) => {
+                              return (
+                                <List
+                                  component="div"
+                                  disablePadding
+                                  key={membershipIndex}
+                                >
+                                  <ListItem
+                                    sx={{ pl: 4, marginLeft: "40px" }}
+                                    key={membershipIndex}
+                                  >
+                                    <ListItemText
+                                      style={{ marginBottom: "10px" }}
+                                      primary={membership["member"]}
+                                    />
+                                  </ListItem>
+                                </List>
+                              );
+                            }
+                          )}
+                        </List>
+                      </List>
+                    );
+                  })}
                 </List>
               </div>
               <Button
@@ -393,23 +390,27 @@ const Homepage = () => {
                 onClick={handleClickOpenGroup}
               />
             </div>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <img
-                src="/img/groupSelected.png"
-                style={{
-                  width: "35px",
-                  height: "25px",
-                  margin: "5px 0px 5px 24px",
-                }}
-              />
-              <img
-                src="/img/groupUnselected.png"
-                style={{
-                  width: "35px",
-                  height: "25px",
-                  margin: "5px 0px 5px 24px",
-                }}
-              />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "90%",
+                overflowY: "auto",
+              }}
+            >
+              {groups.map((data) => {
+                return (
+                  <img
+                    src="/img/groupSelected.png"
+                    style={{
+                      width: "35px",
+                      height: "25px",
+                      margin: "5px 0px 30px 24px",
+                    }}
+                    key={data["group_name"]}
+                  />
+                );
+              })}
             </div>
           </div>
         )
