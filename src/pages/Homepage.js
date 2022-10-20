@@ -312,7 +312,7 @@ const Homepage = () => {
                           // maxWidth: 560,
                           bgcolor: "background.paper",
                           marginTop: "10px",
-                          maxHeight: "200px",
+                          maxHeight: "170px",
                         }}
                         component="nav"
                         aria-labelledby="nested-list-subheader"

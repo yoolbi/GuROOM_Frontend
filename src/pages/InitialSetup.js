@@ -185,7 +185,7 @@ const InitialSetup = () => {
                                       alignItems: "center",
                                       top: "-10px",
                                       position: "absolute",
-                                      left: "18%",
+                                      left: "14%",
                                     }}
                                   >
                                     <lord-icon

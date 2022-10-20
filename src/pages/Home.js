@@ -113,7 +113,7 @@ const Home = () => {
         { id: 2, name: "Shared With Me", type: "folder" },
       ];
       res.data.map((data) => {
-        tempRows.push({ id: data.id, name: data.id, type: "shared_drive" });
+        tempRows.push({ id: data.id, name: data.name, type: "shared_drive" });
       });
       setRows(tempRows);
     });
