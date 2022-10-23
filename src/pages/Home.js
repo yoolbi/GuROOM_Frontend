@@ -160,6 +160,7 @@ const Home = () => {
   // search file-folder sharing differences
   const onClickFileFolderSharingDifferences = () => {
     setSearchInput("is:file_folder_diff");
+    setShowPath([]);
     getFileFolderSharingDifferencesSearchAPIMethod(
       fileSnapshot,
       "is:file_folder_diff"
@@ -235,6 +236,17 @@ const Home = () => {
       });
       setRows(fileRowSearch);
       setColumns([
+        {
+          field: "path",
+          headerName: "Path",
+          width: 200,
+          sortable: false,
+          renderCell: (params) => (
+            <div style={{ width: "100%", overflowX: "auto" }}>
+              {params.row.path}
+            </div>
+          ),
+        },
         {
           field: "name",
           headerName: "Name",
