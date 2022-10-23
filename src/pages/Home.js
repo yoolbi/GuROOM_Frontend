@@ -4,6 +4,7 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import TuneIcon from "@mui/icons-material/Tune";
+import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -103,7 +104,11 @@ const Home = () => {
   const handleChange = (event) => {
     setFileSnapshot(event.target.value);
     fileSnapshotLet = event.target.value;
-    getSharedDriveAPIMethod(fileSnapshotLet).then((res) => {
+    homeTable(fileSnapshotLet);
+  };
+
+  const homeTable = (fileSnapshotParam) => {
+    getSharedDriveAPIMethod(fileSnapshotParam).then((res) => {
       let tempRows = [
         {
           id: 1,
@@ -142,6 +147,11 @@ const Home = () => {
   const handleChangeSearchbar = (event) => {
     setSearchInput(event.target.value);
     console.log(searchInput);
+  };
+
+  const handleClickCloseSearch = () => {
+    setSearchInput("");
+    homeTable(fileSnapshot);
   };
 
   let permissionsLetSearch = [];
@@ -446,7 +456,6 @@ const Home = () => {
         }
       }
     }
-    console.log("get ", data, ": ", roleListTemp);
     return roleListTemp;
   };
 
@@ -862,6 +871,11 @@ const Home = () => {
             onChange={handleChangeSearchbar}
             onKeyDown={onKeyPressEnter}
           />
+          {searchInput && (
+            <IconButton type="button" aria-label="close">
+              <CloseIcon onClick={handleClickCloseSearch} />
+            </IconButton>
+          )}
           <IconButton
             type="button"
             sx={{ p: "10px" }}
@@ -951,7 +965,10 @@ const Home = () => {
         <div role="presentation" onClick={handleClickOpenBreadcrumb}>
           <Breadcrumbs maxItems={2} aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
-              <HomeIcon style={{ paddingTop: "5px" }} />
+              <HomeIcon
+                style={{ paddingTop: "5px" }}
+                onClick={() => homeTable(fileSnapshot)}
+              />
             </Link>
             {showPath.map((data) => {
               return (
