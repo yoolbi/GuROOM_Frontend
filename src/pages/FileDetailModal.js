@@ -11,7 +11,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
   const detail = eachFileDetailData;
 
   return (
-    <div>
+    <div style={{ width: "100%", height: "100%" }}>
       <div
         style={{
           display: "grid",
@@ -51,7 +51,11 @@ const FileDetailModal = ({ eachFileDetailData }) => {
             readOnly: true,
             startAdornment: (
               <InputAdornment position="start">
-                <Stack direction="row" spacing={1}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  style={{ width: "100%", overflowX: "auto" }}
+                >
                   {detail.owner["displayName"] !== undefined && (
                     <Chip
                       avatar={
@@ -80,8 +84,12 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           InputProps={{
             readOnly: true,
             startAdornment: (
-              <InputAdornment position="start">
-                <Stack direction="row" spacing={1}>
+              <InputAdornment position="start" style={{ width: "100%" }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  style={{ width: "100%", overflowX: "auto" }}
+                >
                   {detail.organizer.map((data) => {
                     return (
                       <Chip
@@ -112,8 +120,12 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           InputProps={{
             readOnly: true,
             startAdornment: (
-              <InputAdornment position="start">
-                <Stack direction="row" spacing={1}>
+              <InputAdornment position="start" style={{ width: "100%" }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  style={{ width: "100%", overflowX: "auto" }}
+                >
                   {detail.fileOrganizer.map((data) => {
                     return (
                       <Chip
@@ -144,8 +156,12 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           InputProps={{
             readOnly: true,
             startAdornment: (
-              <InputAdornment position="start">
-                <Stack direction="row" spacing={1}>
+              <InputAdornment position="start" style={{ width: "100%" }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  style={{ width: "100%", overflowX: "auto" }}
+                >
                   {detail.writer.map((data) => {
                     return (
                       <Chip
@@ -176,8 +192,12 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           InputProps={{
             readOnly: true,
             startAdornment: (
-              <InputAdornment position="start">
-                <Stack direction="row" spacing={1}>
+              <InputAdornment position="start" style={{ width: "100%" }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  style={{ width: "100%", overflowX: "auto" }}
+                >
                   {detail.commenter.map((data) => {
                     return (
                       <Chip
@@ -208,8 +228,12 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           InputProps={{
             readOnly: true,
             startAdornment: (
-              <InputAdornment position="start">
-                <Stack direction="row" spacing={1}>
+              <InputAdornment position="start" style={{ width: "100%" }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  style={{ width: "100%", overflowX: "auto" }}
+                >
                   {detail.reader.map((data) => {
                     return (
                       <Chip
@@ -240,8 +264,12 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           InputProps={{
             readOnly: true,
             startAdornment: (
-              <InputAdornment position="start">
-                <Stack direction="row" spacing={1}>
+              <InputAdornment position="start" style={{ width: "100%" }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  style={{ width: "100%", overflowX: "auto" }}
+                >
                   {JSON.parse(detail.inheritPermissions).map((data) => {
                     return (
                       <Chip
@@ -272,8 +300,12 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           InputProps={{
             readOnly: true,
             startAdornment: (
-              <InputAdornment position="start">
-                <Stack direction="row" spacing={1}>
+              <InputAdornment position="start" style={{ width: "100%" }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  style={{ width: "100%", overflowX: "auto" }}
+                >
                   {JSON.parse(detail.directPermissions).map((data) => {
                     return (
                       <Chip

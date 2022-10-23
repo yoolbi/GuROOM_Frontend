@@ -203,6 +203,7 @@ const CompareSnapshots = () => {
                     key={data}
                     selected={selectedIndex === index}
                     onClick={(event) => handleListItemClick(event, index)}
+                    style={{ overflowWrap: "break-word" }}
                   >
                     <ListItemText primary={data} />
                   </ListItemButton>
