@@ -469,8 +469,6 @@ const Home = () => {
 
   let currentPath = [];
   const [showPath, setShowPath] = useState([]);
-  let pathIdLet = "";
-  const [pathId, setPathId] = useState("");
 
   //onClick folder name in table
   const handleClickCell = (name, type, id) => {
@@ -505,22 +503,12 @@ const Home = () => {
       id
     ).then((res) => {
       console.log(res.data);
-      // setFiles(res.data.files);
-      // setPermissions(res.data.permissions);
       permissionsLet = res.data.permissions;
 
       removeOwnerFromPermissions(permissionsLet);
       removeOwnerFromInheritPermissions(permissionsLet);
 
-      pathIdLet = id;
-      console.log(pathIdLet);
-      setPathId(pathIdLet);
-      console.log(pathId);
-
-      console.log(res.data.files[0]);
       currentPath = res.data.files[0].path.toString().split("/").slice(1);
-      console.log(currentPath);
-      console.log(showPath);
       setShowPath(currentPath);
 
       let organizerAll = getRole(permissionsLet, "organizer");
@@ -528,9 +516,6 @@ const Home = () => {
       let fileWriterAll = getRole(permissionsLet, "writer");
       let commenterAll = getRole(permissionsLet, "commenter");
       let readerAll = getRole(permissionsLet, "reader");
-
-      console.log(res.data);
-      console.log(permissionsLet);
 
       res.data.files.map((data) => {
         let inheritPermissionsLet = [];
@@ -741,13 +726,6 @@ const Home = () => {
   function handleClickOpenBreadcrumb(event) {
     event.preventDefault();
   }
-
-  const handleGotoPath = (name, type, id) => {
-    console.log("name " + name);
-    console.log("type " + type);
-    console.log("id " + id);
-    handleClickCell(name);
-  };
 
   //file Snapshot name
   const [fileSnapshotNames, setFileSnapshotNames] = useState([]);
@@ -971,17 +949,7 @@ const Home = () => {
               />
             </Link>
             {showPath.map((data) => {
-              return (
-                <div
-                  key={data}
-                  onClick={() =>
-                    handleGotoPath("Shared With Me", "folder", pathId)
-                  }
-                  style={{ cursor: "pointer", textDecorationLine: "underline" }}
-                >
-                  {data}
-                </div>
-              );
+              return <div key={data}>{data}</div>;
             })}
           </Breadcrumbs>
         </div>
