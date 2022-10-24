@@ -73,15 +73,15 @@ const styleforSharingDifferenceModal = {
 
 const Home = () => {
   const [fileSnapshot, setFileSnapshot] = useState("");
-  const [open, setOpen] = useState(false);
+  const [openSearchFilter, setOpenSearchFilter] = useState(false);
   const [openTakingSnapshot, setOpenTakingSnapshot] = useState(false);
   const [count, setCount] = useState(2);
   const [openEditModal, setOpenEditModal] = useState(false);
 
   const [sharingDifferenceModal, setSharingDifferenceModal] = useState(false);
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpenSearchFilter = () => setOpenSearchFilter(true);
+  const handleCloseSearchFilter = () => setOpenSearchFilter(false);
 
   const openFilePermissionEditModal = () => setOpenEditModal(true);
   const closeFilePermissionEditModal = () => setOpenEditModal(false);
@@ -146,7 +146,12 @@ const Home = () => {
   const [searchInput, setSearchInput] = useState("");
   const handleChangeSearchbar = (event) => {
     setSearchInput(event.target.value);
-    console.log(searchInput);
+  };
+
+  const handleClickSearchIcon = () => {
+    if (searchInput === "is:file_folder_diff") {
+      onClickFileFolderSharingDifferences();
+    }
   };
 
   const handleClickCloseSearch = () => {
@@ -851,7 +856,7 @@ const Home = () => {
           }}
         >
           <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-            <SearchIcon onClick={onClickFileFolderSharingDifferences} />
+            <SearchIcon onClick={handleClickSearchIcon} />
           </IconButton>
           <InputBase
             sx={{ ml: 1, flex: 1 }}
@@ -870,18 +875,21 @@ const Home = () => {
             type="button"
             sx={{ p: "10px" }}
             aria-label="tune"
-            onClick={handleOpen}
+            onClick={handleOpenSearchFilter}
           >
             <TuneIcon />
           </IconButton>
           <Modal
-            open={open}
-            onClose={handleClose}
+            open={openSearchFilter}
+            onClose={handleCloseSearchFilter}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <FilterModal handleClose={handleClose}></FilterModal>
+              <FilterModal
+                handleCloseSearchFilter={handleCloseSearchFilter}
+                setSearchInput={setSearchInput}
+              ></FilterModal>
             </Box>
           </Modal>
         </Paper>
