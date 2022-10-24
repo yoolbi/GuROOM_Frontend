@@ -19,6 +19,10 @@ const Authorization = () => {
         window.location.replace(
           urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
         );
+      } else if (res.status === 200) {
+        window.location.replace(
+          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/Homepage")
+        );
       } else {
         console.log("login error");
         window.location.replace(
