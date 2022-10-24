@@ -9,7 +9,7 @@ import AccessControlPolicy from "./AccessControlPolicy";
 import { Button } from "@mui/material";
 
 // eslint-disable-next-line react/prop-types
-const FilterModal = ({ handleClose }) => {
+const FilterModal = ({ handleCloseSearchFilter, setSearchInput }) => {
   const [value, setValue] = React.useState("1");
 
   const handleChange = (event, newValue) => {
@@ -26,8 +26,8 @@ const FilterModal = ({ handleClose }) => {
               <Tab label="ACCESS CONTROL POLICY" value="2" />
             </TabList>
           </Box>
-          <TabPanel value="1">
-            <QueryBuilder />
+          <TabPanel value="1" style={{ paddingTop: "10px" }}>
+            <QueryBuilder setSearchInput={setSearchInput} />
           </TabPanel>
           <TabPanel value="2">
             <AccessControlPolicy />
@@ -54,7 +54,7 @@ const FilterModal = ({ handleClose }) => {
               color: "black",
               "&:hover": { backgroundColor: "#E0E0E0" },
             }}
-            onClick={handleClose}
+            onClick={handleCloseSearchFilter}
           >
             CANCEL
           </Button>

@@ -312,7 +312,7 @@ const Homepage = () => {
                           // maxWidth: 560,
                           bgcolor: "background.paper",
                           marginTop: "10px",
-                          maxHeight: "170px",
+                          maxHeight: "185px",
                         }}
                         component="nav"
                         aria-labelledby="nested-list-subheader"
@@ -326,7 +326,7 @@ const Homepage = () => {
                         </ListItem>
                         <List
                           sx={{
-                            maxHeight: "150px",
+                            maxHeight: "125px",
                             overflowY: "auto",
                           }}
                         >
