@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { postAccessTokenAPIMethod } from "../api/client";
+import { getUserAPIMethod, postAccessTokenAPIMethod } from "../api/client";
 import urlJoin from "url-join";
 
 const Authorization = () => {
@@ -16,13 +16,21 @@ const Authorization = () => {
       console.log(res);
       console.log(res.status);
       if (res.status === 201) {
-        window.location.replace(
-          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
-        );
-      } else if (res.status === 200) {
-        window.location.replace(
-          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/Homepage")
-        );
+        getUserAPIMethod().then((data) => {
+          if (data.status === 201) {
+            window.location.replace(
+              urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
+            );
+          } else if (data.status === 200) {
+            window.location.replace(
+              urlJoin(process.env.REACT_APP_FRONTEND_URL, "/Homepage")
+            );
+          } else {
+            window.location.replace(
+              urlJoin(process.env.REACT_APP_FRONTEND_URL, "/LoginFailed")
+            );
+          }
+        });
       } else {
         console.log("login error");
         window.location.replace(
