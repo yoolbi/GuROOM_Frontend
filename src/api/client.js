@@ -308,3 +308,32 @@ export const getGroupAPIMethod = async () => {
     }
   ).then(parseJSON);
 };
+
+// export const getMembersAPIMethod = async () => {
+//   return fetch(
+//     urlJoin(
+//       process.env.REACT_APP_BACKEND_URL,
+//       "/apps/snapshot/v1/google/files/members"
+//     ),
+//     {
+//       credentials: "include",
+//     }
+//   ).then(parseJSON);
+// };
+
+export const getMembersAPIMethod = async (snapshot_name, is_groups) => {
+  return await axios.get(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/google/files/members"
+    ),
+    {
+      credentials: "include",
+      withCredentials: true,
+      params: {
+        snapshot_name: snapshot_name,
+        is_groups: is_groups,
+      },
+    }
+  );
+};

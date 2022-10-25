@@ -8,7 +8,14 @@ import QueryBuilder from "./QueryBuilder";
 import AccessControlPolicy from "./AccessControlPolicy";
 
 // eslint-disable-next-line react/prop-types
-const FilterModal = ({ handleCloseSearchFilter, setSearchInput }) => {
+const FilterModal = ({
+  // eslint-disable-next-line react/prop-types
+  handleCloseSearchFilter,
+  // eslint-disable-next-line react/prop-types
+  setSearchInput,
+  // eslint-disable-next-line react/prop-types
+  fileSnapshot,
+}) => {
   const [value, setValue] = React.useState("1");
 
   const handleChange = (event, newValue) => {
@@ -32,6 +39,7 @@ const FilterModal = ({ handleCloseSearchFilter, setSearchInput }) => {
             <QueryBuilder
               setSearchInput={setSearchInput}
               handleCloseSearchFilter={handleCloseSearchFilter}
+              fileSnapshot={fileSnapshot}
             />
           </TabPanel>
           <TabPanel value="2">
