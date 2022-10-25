@@ -889,6 +889,7 @@ const Home = () => {
               <FilterModal
                 handleCloseSearchFilter={handleCloseSearchFilter}
                 setSearchInput={setSearchInput}
+                fileSnapshot={fileSnapshot}
               ></FilterModal>
             </Box>
           </Modal>
