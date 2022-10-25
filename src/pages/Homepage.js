@@ -11,10 +11,6 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Paper from "@mui/material/Paper";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
-import InputBase from "@mui/material/InputBase";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -277,27 +273,6 @@ const Homepage = () => {
               }}
             >
               <div className="groupSelect" style={{ height: "93%" }}>
-                <Box
-                  sx={{ width: "96.5%" }}
-                  style={{ margin: "20px 0px 15px 13px" }}
-                ></Box>
-                <Paper
-                  component="form"
-                  sx={{
-                    width: "93%",
-                    height: 40,
-                  }}
-                  style={{ marginLeft: "13px" }}
-                >
-                  <IconButton type="button" aria-label="search">
-                    <SearchIcon />
-                  </IconButton>
-                  <InputBase
-                    sx={{ width: "80%" }}
-                    placeholder="Group name, domain, user"
-                    inputProps={{ "aria-label": "search google maps" }}
-                  />
-                </Paper>
                 <List
                   sx={{
                     height: "90%",
@@ -362,7 +337,7 @@ const Homepage = () => {
                 style={{ width: "60%", margin: "0px 20%" }}
                 onClick={handleOpenGroupCreationModal}
               >
-                Take group snapshot
+                Make a Group
               </Button>
             </div>
           </div>
