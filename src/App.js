@@ -5,6 +5,7 @@ import InitialSetup from "./pages/InitialSetup";
 import Homepage from "./pages/Homepage";
 import Authorization from "./pages/Authorization";
 import LoginFailed from "./pages/LoginFailed";
+import HomepageDropbox from "./pages/HomepageDropbox";
 
 import "./index.css";
 
@@ -17,6 +18,7 @@ function App() {
         <Route path="/Homepage" element={<Homepage />} />
         <Route path="/auth/oauth-callback" element={<Authorization />} />
         <Route path="/LoginFailed" element={<LoginFailed />} />
+        <Route path="/HomepageDropbox" element={<HomepageDropbox />} />
       </Routes>
     </Router>
   );

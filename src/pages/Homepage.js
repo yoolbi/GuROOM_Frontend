@@ -73,6 +73,11 @@ const Homepage = () => {
   const [drive, setDrive] = useState("google");
   const handleChange = (event) => {
     setDrive(event.target.value);
+    if (event.target.value === "dropbox") {
+      window.location.replace(
+        urlJoin(process.env.REACT_APP_FRONTEND_URL, "/HomepageDropbox")
+      );
+    }
   };
 
   //This is for the group membership snapshot.
@@ -464,7 +469,6 @@ const Homepage = () => {
                     </FormControl>
                   </Box>
                   <img
-                    // src="/img/profile_image.png"
                     src={user?.picture || "/img/profile_image_blank.png"}
                     style={{
                       width: "40px",
