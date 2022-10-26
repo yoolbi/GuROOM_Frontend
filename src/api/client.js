@@ -7,6 +7,7 @@ function parseJSON(response) {
     .then((data) => ({ status: response.status, body: data }));
 }
 
+//Authorize Request, retrieves url of google login. Create Google Auth.
 export const getAuthorizeAPIMethod = () => {
   console.log("authorize");
   return fetch(
@@ -19,6 +20,7 @@ export const getAuthorizeAPIMethod = () => {
   ).then(parseJSON);
 };
 
+//Retrieves user information, saves it into internal database if first time user. Get User.
 export const getUserAPIMethod = async () => {
   return fetch(
     urlJoin(process.env.REACT_APP_BACKEND_URL, "/apps/auth/v1/google/user"),
@@ -28,6 +30,7 @@ export const getUserAPIMethod = async () => {
   ).then(parseJSON);
 };
 
+//post access token to login
 export const postAccessTokenAPIMethod = (code) => {
   return fetch(
     urlJoin(process.env.REACT_APP_BACKEND_URL + "/apps/auth/v1/google/login"),
@@ -42,6 +45,7 @@ export const postAccessTokenAPIMethod = (code) => {
   ).then(parseJSON);
 };
 
+//logout user
 export const deleteLogoutAPIMethod = () => {
   return fetch(
     urlJoin(process.env.REACT_APP_BACKEND_URL, "/apps/auth/v1/google/logout"),
@@ -55,6 +59,7 @@ export const deleteLogoutAPIMethod = () => {
   ).then(parseJSON);
 };
 
+//delete the user account
 export const deleteRevokeAPIMethod = () => {
   return fetch(
     urlJoin(process.env.REACT_APP_BACKEND_URL, "/apps/auth/v1/google/revoke"),
@@ -68,6 +73,7 @@ export const deleteRevokeAPIMethod = () => {
   ).then(parseJSON);
 };
 
+//Take a file snapshot
 export const postFileSnapshotAPIMethod = async (name) => {
   return await fetch(
     urlJoin(
@@ -84,6 +90,7 @@ export const postFileSnapshotAPIMethod = async (name) => {
   ).then(parseJSON);
 };
 
+//Refresh token
 export const postRefreshAPIMethod = () => {
   return fetch(
     urlJoin(process.env.REACT_APP_BACKEND_URL + "/apps/auth/v1/google/refresh"),
@@ -97,6 +104,7 @@ export const postRefreshAPIMethod = () => {
   ).then(parseJSON);
 };
 
+//Get list of file snapshot names
 export const getFileSnapshotNamesAPIMethod = () => {
   return fetch(
     urlJoin(
@@ -109,6 +117,7 @@ export const getFileSnapshotNamesAPIMethod = () => {
   ).then(parseJSON);
 };
 
+//Delete a file snapshot name
 export const deleteFileSnapshotNamesAPIMethod = (name) => {
   return fetch(
     urlJoin(
@@ -126,6 +135,7 @@ export const deleteFileSnapshotNamesAPIMethod = (name) => {
   ).then(parseJSON);
 };
 
+//Edit a file snapshot name
 export const putFileSnapshotNamesAPIMethod = (oldName, newName) => {
   return fetch(
     urlJoin(
@@ -146,6 +156,7 @@ export const putFileSnapshotNamesAPIMethod = (oldName, newName) => {
   ).then(parseJSON);
 };
 
+//get all files of the selected file snapshot
 export const getFileSnapshotAPIMethod = async (
   snapshot_name,
   offset,
@@ -176,6 +187,7 @@ export const getFileSnapshotAPIMethod = async (
   );
 };
 
+//Get shared drives
 export const getSharedDriveAPIMethod = async (snapshot_name) => {
   return await axios.get(
     urlJoin(
@@ -192,10 +204,8 @@ export const getSharedDriveAPIMethod = async (snapshot_name) => {
   );
 };
 
-export const getFileFolderSharingDifferencesSearchAPIMethod = async (
-  snapshot_name,
-  query
-) => {
+//Get the results of search queries
+export const getSearchAPIMethod = async (snapshot_name, query) => {
   return await axios.get(
     urlJoin(
       process.env.REACT_APP_BACKEND_URL,
@@ -212,6 +222,7 @@ export const getFileFolderSharingDifferencesSearchAPIMethod = async (
   );
 };
 
+//Get file-folder sharing differences
 export const getFileFolderSharingDifferencesAPIMethod = async (
   snapshot_name,
   file_id
@@ -232,6 +243,7 @@ export const getFileFolderSharingDifferencesAPIMethod = async (
   );
 };
 
+//get differences of two snapshots. Comparing snapshots.
 export const getCompareSnapshotsAPIMethod = async (
   base_snapshot_name,
   compare_snapshot_name
@@ -252,6 +264,7 @@ export const getCompareSnapshotsAPIMethod = async (
   );
 };
 
+//Create a group
 export const postGroupAPIMethod = (formData) => {
   return fetch(
     urlJoin(
@@ -265,6 +278,7 @@ export const postGroupAPIMethod = (formData) => {
   ).then(parseJSON);
 };
 
+//Get groups
 export const getGroupAPIMethod = async () => {
   return fetch(
     urlJoin(
@@ -277,6 +291,7 @@ export const getGroupAPIMethod = async () => {
   ).then(parseJSON);
 };
 
+//Get unique members of a file snapshot
 export const getMembersAPIMethod = async (snapshot_name, is_groups) => {
   return await axios.get(
     urlJoin(
@@ -294,6 +309,7 @@ export const getMembersAPIMethod = async (snapshot_name, is_groups) => {
   );
 };
 
+//Get query logs
 export const getQueriesAPIMethod = () => {
   console.log("authorize");
   return fetch(

@@ -7,24 +7,26 @@ import {
 } from "../api/client";
 import urlJoin from "url-join";
 
+//Starting page of GuRoom where user selects to log in with Google or Dropbox
 const startPage = () => {
   const googleAuth = () => {
+    //get user info
     getUserAPIMethod().then((user) => {
-      console.log(user);
-      console.log(user.status);
-      console.log(user.body);
+      console.log(user); //log user info
+      //if user is valid and have a file snapshot, goto Homepage
       if (user.status === 200) {
         window.location.replace(
           urlJoin(process.env.REACT_APP_FRONTEND_URL, "/Homepage")
         );
       } else if (user.status === 201) {
+        //if the user is valid but do not have a file snapshot, goto initial setup
         window.location.replace(
           urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
         );
       } else {
-        //Todo: create refresh, refresh 가 실패시 authorize. refresh가 성공하면 다시 getUser
-        //check if the token has expired
+        //if the user is invalid, refresh the token to check if the token has expired
         postRefreshAPIMethod().then((data) => {
+          //if the token has successfully refreshed, get user info again
           if (data.status === 200) {
             getUserAPIMethod().then((user) => {
               if (user.status === 200) {
@@ -36,6 +38,7 @@ const startPage = () => {
                   urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
                 );
               } else {
+                //if the user is invalid, go to authorization
                 getAuthorizeAPIMethod().then((data) => {
                   console.log("authorize data: " + JSON.stringify(data));
                   console.log(
@@ -46,6 +49,7 @@ const startPage = () => {
               }
             });
           } else {
+            //if the token has failed refreshing, authorize
             getAuthorizeAPIMethod().then((data) => {
               console.log("authorize data: " + JSON.stringify(data));
               console.log("authorize data.body: " + JSON.stringify(data.body));

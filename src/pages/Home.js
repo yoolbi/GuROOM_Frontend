@@ -36,7 +36,7 @@ import {
   postFileSnapshotAPIMethod,
   putFileSnapshotNamesAPIMethod,
   getSharedDriveAPIMethod,
-  getFileFolderSharingDifferencesSearchAPIMethod,
+  getSearchAPIMethod,
   getQueriesAPIMethod,
 } from "../api/client";
 import FilterModal from "./FilterModal";
@@ -158,10 +158,7 @@ const Home = () => {
   const onClickFileFolderSharingDifferences = () => {
     setSearchInput("is:file_folder_diff");
     setShowPath([]);
-    getFileFolderSharingDifferencesSearchAPIMethod(
-      fileSnapshot,
-      "is:file_folder_diff"
-    ).then((res) => {
+    getSearchAPIMethod(fileSnapshot, "is:file_folder_diff").then((res) => {
       permissionsLetSearch = res.data.permissions;
 
       removeOwnerFromPermissions(permissionsLetSearch);

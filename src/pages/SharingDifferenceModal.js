@@ -4,6 +4,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { DataGrid } from "@mui/x-data-grid";
 import { getFileFolderSharingDifferencesAPIMethod } from "../api/client";
 
+//Modal to show details for file-folder sharing differences
 const SharingDifferenceModal = ({
   // eslint-disable-next-line react/prop-types
   closeSharingDifferenceModal,
@@ -14,6 +15,7 @@ const SharingDifferenceModal = ({
 }) => {
   let differentPermissions = [];
 
+  //get file-folder sharing differences info
   useEffect(() => {
     getFileFolderSharingDifferencesAPIMethod(
       fileSnapshot,
@@ -22,6 +24,7 @@ const SharingDifferenceModal = ({
     ).then((res) => {
       console.log(res);
       for (let key in res.data) {
+        //store data of different permissions
         if (key === "additional_folder_permissions") {
           res.data[key].map((data) => {
             differentPermissions.push({
@@ -32,6 +35,7 @@ const SharingDifferenceModal = ({
             });
           });
         } else if (key === "additional_file_permissions") {
+          //store data of additional file permissions
           res.data[key].map((data) => {
             differentPermissions.push({
               id: data["id"],
@@ -41,6 +45,7 @@ const SharingDifferenceModal = ({
             });
           });
         } else if (key === "changed_permissions") {
+          //store data of changed permissions
           res.data[key].map((data) => {
             differentPermissions.push({
               id: data["from"]["id"],
