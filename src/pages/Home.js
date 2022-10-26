@@ -1,33 +1,34 @@
 import React, { useState, useEffect } from "react";
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
-import TuneIcon from "@mui/icons-material/Tune";
-import CloseIcon from "@mui/icons-material/Close";
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import Modal from "@mui/material/Modal";
-import FilterModal from "./FilterModal";
-import { DataGrid } from "@mui/x-data-grid";
 import {
+  Paper,
+  IconButton,
+  Box,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  Modal,
   Button,
   CircularProgress,
   DialogContent,
   TextField,
+  Breadcrumbs,
+  Link,
+  Avatar,
+  Chip,
+  DialogTitle,
+  DialogActions,
+  Dialog,
+  Autocomplete,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import TuneIcon from "@mui/icons-material/Tune";
 import ClearIcon from "@mui/icons-material/Clear";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Link from "@mui/material/Link";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import FolderIcon from "@mui/icons-material/Folder";
-import Avatar from "@mui/material/Avatar";
-import Chip from "@mui/material/Chip";
-
+import HomeIcon from "@mui/icons-material/Home";
+import { DataGrid } from "@mui/x-data-grid";
 import {
   deleteFileSnapshotNamesAPIMethod,
   getFileSnapshotNamesAPIMethod,
@@ -36,13 +37,11 @@ import {
   putFileSnapshotNamesAPIMethod,
   getSharedDriveAPIMethod,
   getFileFolderSharingDifferencesSearchAPIMethod,
+  getQueriesAPIMethod,
 } from "../api/client";
+import FilterModal from "./FilterModal";
 import FilePermissionEditModal from "./FilePermissionEditModal";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogActions from "@mui/material/DialogActions";
-import Dialog from "@mui/material/Dialog";
 import SharingDifferenceModal from "./SharingDifferenceModal";
-import HomeIcon from "@mui/icons-material/Home";
 import FileDetailModal from "./FileDetailModal";
 
 const style = {
@@ -108,6 +107,7 @@ const Home = () => {
   };
 
   const homeTable = (fileSnapshotParam) => {
+    setShowPath([]);
     getSharedDriveAPIMethod(fileSnapshotParam).then((res) => {
       let tempRows = [
         {
@@ -144,19 +144,11 @@ const Home = () => {
 
   //search
   const [searchInput, setSearchInput] = useState("");
-  const handleChangeSearchbar = (event) => {
-    setSearchInput(event.target.value);
-  };
 
   const handleClickSearchIcon = () => {
     if (searchInput === "is:file_folder_diff") {
       onClickFileFolderSharingDifferences();
     }
-  };
-
-  const handleClickCloseSearch = () => {
-    setSearchInput("");
-    homeTable(fileSnapshot);
   };
 
   let permissionsLetSearch = [];
@@ -242,17 +234,6 @@ const Home = () => {
       setRows(fileRowSearch);
       setColumns([
         {
-          field: "path",
-          headerName: "Path",
-          width: 200,
-          sortable: false,
-          renderCell: (params) => (
-            <div style={{ width: "100%", overflowX: "auto" }}>
-              {params.row.path}
-            </div>
-          ),
-        },
-        {
           field: "name",
           headerName: "Name",
           width: 200,
@@ -281,6 +262,17 @@ const Home = () => {
             ) : (
               <div>{params.row.name}</div>
             ),
+        },
+        {
+          field: "path",
+          headerName: "Path",
+          width: 200,
+          sortable: false,
+          renderCell: (params) => (
+            <div style={{ width: "100%", overflowX: "auto" }}>
+              {params.row.path}
+            </div>
+          ),
         },
         {
           field: "type",
@@ -511,7 +503,7 @@ const Home = () => {
     }
     let fileRow = [];
     getFileSnapshotAPIMethod(
-      fileSnapshotLet,
+      fileSnapshotLet ? fileSnapshotLet : fileSnapshot,
       0,
       10000,
       my_drive,
@@ -525,7 +517,7 @@ const Home = () => {
       removeOwnerFromPermissions(permissionsLet);
       removeOwnerFromInheritPermissions(permissionsLet);
 
-      currentPath = res.data.files[0].path.toString().split("/").slice(1);
+      currentPath.push({ name: name, id: id });
       setShowPath(currentPath);
 
       let organizerAll = getRole(permissionsLet, "organizer");
@@ -744,6 +736,17 @@ const Home = () => {
     event.preventDefault();
   }
 
+  const handleClickPath = (data) => {
+    for (let i = 0; i < showPath.length; i++) {
+      if (showPath[i]["name"] === data.name) {
+        break;
+      }
+      currentPath.push(showPath[i]);
+    }
+    setShowPath(currentPath);
+    handleClickCell(data.name, "folder", data.id);
+  };
+
   //file Snapshot name
   const [fileSnapshotNames, setFileSnapshotNames] = useState([]);
 
@@ -810,6 +813,8 @@ const Home = () => {
     openFileDetailModal();
   };
 
+  const [queryLogs, setQueryLogs] = useState([]);
+
   //get file snapshot names
   useEffect(() => {
     getFileSnapshotNamesAPIMethod().then((data) => {
@@ -835,6 +840,11 @@ const Home = () => {
         console.log(tempRows);
       });
     });
+
+    getQueriesAPIMethod().then((res) => {
+      setQueryLogs(res.body);
+      console.log(res.body);
+    });
   }, [openTakingSnapshot, editedFileSnapshotName]);
 
   return (
@@ -844,6 +854,7 @@ const Home = () => {
           display: "flex",
           justifyContent: "space-between",
           height: "40px",
+          width: "100%",
         }}
       >
         <Paper
@@ -858,19 +869,27 @@ const Home = () => {
           <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
             <SearchIcon onClick={handleClickSearchIcon} />
           </IconButton>
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="ex) readable: webyte@gmail.com"
-            inputProps={{ "aria-label": "search google maps" }}
-            value={searchInput}
-            onChange={handleChangeSearchbar}
-            onKeyDown={onKeyPressEnter}
+          <Autocomplete
+            id="filter-demo"
+            options={queryLogs}
+            getOptionLabel={(option) =>
+              option.query ? option.query : searchInput
+            }
+            style={{ width: "100%" }}
+            freeSolo
+            onInputChange={(event, value) => {
+              setSearchInput(value);
+            }}
+            inputValue={searchInput}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder="ex) readable: webyte@gmail.com"
+                variant="standard"
+                onKeyDown={onKeyPressEnter}
+              />
+            )}
           />
-          {searchInput && (
-            <IconButton type="button" aria-label="close">
-              <CloseIcon onClick={handleClickCloseSearch} />
-            </IconButton>
-          )}
           <IconButton
             type="button"
             sx={{ p: "10px" }}
@@ -970,7 +989,15 @@ const Home = () => {
               />
             </Link>
             {showPath.map((data) => {
-              return <div key={data}>{data}</div>;
+              return (
+                <div
+                  key={data}
+                  onClick={() => handleClickPath(data)}
+                  style={{ textDecoration: "underline", cursor: "pointer" }}
+                >
+                  {data.name}
+                </div>
+              );
             })}
           </Breadcrumbs>
         </div>
