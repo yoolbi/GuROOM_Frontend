@@ -20,9 +20,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import ListItemIcon from "@mui/material/ListItemIcon";
-// import Collapse from "@mui/material/Collapse";
-// import ExpandLess from "@mui/icons-material/ExpandLess";
-// import ExpandMore from "@mui/icons-material/ExpandMore";
 import PeopleIcon from "@mui/icons-material/People";
 import {
   deleteLogoutAPIMethod,
@@ -30,11 +27,9 @@ import {
   getGroupAPIMethod,
   getUserAPIMethod,
   postGroupAPIMethod,
-  // postGroupAPIMethod,
   postRefreshAPIMethod,
 } from "../api/client";
 import urlJoin from "url-join";
-// import { Link } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import ClearIcon from "@mui/icons-material/Clear";
 import dayjs from "dayjs";
@@ -52,7 +47,6 @@ const style = {
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
-  // p: 4,
 };
 
 const styleForGroupCreationModal = {
@@ -68,17 +62,20 @@ const styleForGroupCreationModal = {
   p: 4,
 };
 
+//This is the Homepage of our website.
 const Homepage = () => {
   const [value, setValue] = useState("home");
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);
   };
 
+  //This is for the scalability: we are going to provide two drives: Google Drive and Dropbox.
   const [drive, setDrive] = useState("google");
   const handleChange = (event) => {
     setDrive(event.target.value);
   };
 
+  //This is for the group membership snapshot.
   const [openGroup, setOpenGroup] = useState(true);
   const handleClickOpenGroup = () => {
     setOpenGroup(!openGroup);
@@ -108,11 +105,14 @@ const Homepage = () => {
     setCreateGroupFile(e.target.files[0]);
   };
 
+  //The user clicks the "make a group" button, then the modal appears, and the user inputs the group name & email, and file.
+  //Then, the user clicks the "create" button, then the group membership snapshot is created.
   const handleClickCreateGroup = () => {
     const formData = new FormData();
     formData.append("file", createGroupFile);
     formData.append("group_name", createGroupName);
     formData.append("group_email", createGroupEmail);
+    //The dateTime will automatically set up.
     formData.append("create_time", createGroupDate.format());
     postGroupAPIMethod(formData).then((res) => {
       if (res.status === 201) {
@@ -121,6 +121,7 @@ const Homepage = () => {
     });
   };
 
+  //When the user clicks the logo on the top, then will go to the home table.
   const handleClickLogo = () => {
     setValue("home");
   };
@@ -162,6 +163,7 @@ const Homepage = () => {
 
   const [user, setUser] = useState(null);
 
+  //When the user enter the Homepage, we will automatically get the user information. If there are no information in the DB, then will show the initial page.
   useEffect(() => {
     getUserAPIMethod().then((user) => {
       console.log("get user: ", user);
@@ -229,9 +231,7 @@ const Homepage = () => {
             style={{
               borderRight: "1px solid #DBDBDB",
               width: "30%",
-              // minWidth: "420px",
             }}
-            // style={{ border: "1px solid black", width: "30%", minWidth: "250px" }}
           >
             <div
               style={{
@@ -264,6 +264,7 @@ const Homepage = () => {
                 onClick={handleClickOpenGroup}
               ></img>
             </div>
+            {/*show groups*/}
             <div
               style={{
                 height: "90%",
@@ -399,7 +400,6 @@ const Homepage = () => {
         </div>
       )}
 
-      {/*<div className="Tab" style={{ border: "1px solid red", width: "100%" }}>*/}
       <div className="Tab" style={{ width: "100%" }}>
         <Box sx={{ width: "100%", typography: "body1" }}>
           <TabContext value={value}>
@@ -409,6 +409,7 @@ const Homepage = () => {
                 borderColor: "divider",
               }}
             >
+              {/*tabs: Home, Access Control, Compare Snapshots*/}
               <TabList
                 onChange={handleChangeTab}
                 aria-label="lab API tabs example"
@@ -490,6 +491,7 @@ const Homepage = () => {
           </TabContext>
         </Box>
       </div>
+      {/*profile modal*/}
       <Modal
         open={openProfile}
         onClose={handleCloseProfile}
@@ -551,6 +553,7 @@ const Homepage = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
+        {/*Modal for taking group membership snapshots*/}
         <Box sx={styleForGroupCreationModal}>
           <form>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
