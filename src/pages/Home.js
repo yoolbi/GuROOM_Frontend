@@ -20,6 +20,7 @@ import {
   DialogActions,
   Dialog,
   Autocomplete,
+  Alert,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -151,6 +152,8 @@ const Home = () => {
   const handleClickSearchIcon = () => {
     if (searchInput === "is:file_folder_diff") {
       onClickFileFolderSharingDifferences();
+    } else {
+      search();
     }
   };
 
@@ -373,6 +376,19 @@ const Home = () => {
     setSelectionModel([]); //reset selected checkbox in table
   };
 
+  //search
+  const [searchAlertMessage, setSearchAlertMessage] = useState("");
+  const search = () => {
+    getSearchAPIMethod(fileSnapshot, searchInput)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        setAlertSearch(true);
+        setSearchAlertMessage(err.response.data);
+      });
+  };
+
   //search when pressing enter key
   const onKeyPressEnter = (event) => {
     if (event.keyCode === 13) {
@@ -381,8 +397,16 @@ const Home = () => {
         console.log(fileSnapshot);
         console.log(event.target.value);
         onClickFileFolderSharingDifferences();
+      } else {
+        search();
       }
     }
+  };
+
+  //search alert
+  const [alertSearch, setAlertSearch] = useState(false);
+  const closeAlertSearch = () => {
+    setAlertSearch(false);
   };
 
   //Initial Table
@@ -995,6 +1019,15 @@ const Home = () => {
           onClick={takingSnapshot}
         />
       </div>
+      {alertSearch && (
+        <Alert
+          onClose={closeAlertSearch}
+          severity="error"
+          style={{ marginTop: "5px" }}
+        >
+          {searchAlertMessage}
+        </Alert>
+      )}
       <div
         style={{
           marginTop: "10px",
