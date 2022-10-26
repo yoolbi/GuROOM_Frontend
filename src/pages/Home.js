@@ -99,6 +99,7 @@ const Home = () => {
   const openFileDetailModal = () => setFileDetailModal(true);
   const closeFileDetailModal = () => setFileDetailModal(false);
 
+  //set currently selected file snapshot
   let fileSnapshotLet = "";
   const handleChange = (event) => {
     setFileSnapshot(event.target.value);
@@ -106,6 +107,7 @@ const Home = () => {
     homeTable(fileSnapshotLet);
   };
 
+  //set the table to the initial table
   const homeTable = (fileSnapshotParam) => {
     setShowPath([]);
     getSharedDriveAPIMethod(fileSnapshotParam).then((res) => {
@@ -145,6 +147,7 @@ const Home = () => {
   //search
   const [searchInput, setSearchInput] = useState("");
 
+  //click search icon
   const handleClickSearchIcon = () => {
     if (searchInput === "is:file_folder_diff") {
       onClickFileFolderSharingDifferences();
@@ -158,12 +161,15 @@ const Home = () => {
   const onClickFileFolderSharingDifferences = () => {
     setSearchInput("is:file_folder_diff");
     setShowPath([]);
+    //get files from searching is:file_folder_diff
     getSearchAPIMethod(fileSnapshot, "is:file_folder_diff").then((res) => {
       permissionsLetSearch = res.data.permissions;
 
+      //remove owner from inherit permissions
       removeOwnerFromPermissions(permissionsLetSearch);
       removeOwnerFromInheritPermissions(permissionsLetSearch);
 
+      //get all permissions
       let organizerAll = getRole("organizer");
       let fileOrganizerAll = getRole("fileOrganizer");
       let fileWriterAll = getRole("writer");
@@ -172,6 +178,7 @@ const Home = () => {
 
       console.log(permissionsLetSearch);
 
+      //organize roles and permissions for each file
       res.data.files.map((data) => {
         let inheritPermissionsLet = [];
         let directPermissionsLet = [];
@@ -365,6 +372,8 @@ const Home = () => {
     });
     setSelectionModel([]); //reset selected checkbox in table
   };
+
+  //search when pressing enter key
   const onKeyPressEnter = (event) => {
     if (event.keyCode === 13) {
       event.preventDefault();
@@ -405,11 +414,6 @@ const Home = () => {
     { id: 2, name: "Shared With Me" },
   ]);
 
-  //file snapshot get
-  // const [files, setFiles] = useState([]);
-
-  //True: My Drive. False: Shared With Me?
-  // const [myDrive, setMyDrive] = useState(false);
   //Table checkbox selected
   const [selectionModel, setSelectionModel] = useState([]); //added line
   const [startOffset, setStartOffset] = useState(0);
@@ -418,7 +422,6 @@ const Home = () => {
   let shared_drive = true;
 
   //file permissions
-  // const [permissions, setPermissions] = useState([]);
   let permissionsLet = [];
 
   //remove owner from permissions
@@ -446,6 +449,7 @@ const Home = () => {
     }
   };
 
+  //get roles for direct and indirect permissions
   const getRole = (permissions, data) => {
     let roleListTemp = [];
     for (var key in permissions) {
@@ -467,6 +471,7 @@ const Home = () => {
     return roleListTemp;
   };
 
+  // get roles for each file
   const getRoleForEachFile = (fileWriterAll, id, fileWriter) => {
     for (var keyWriter in fileWriterAll) {
       if (fileWriterAll[keyWriter]["file_id"] === id) {
@@ -475,12 +480,14 @@ const Home = () => {
     }
   };
 
+  //variables to contain path
   let currentPath = [];
   const [showPath, setShowPath] = useState([]);
 
-  //onClick folder name in table
+  //onClick folder name in table. Change table when clicking the folder names.
   const handleClickCell = (name, type, id) => {
     console.log("click", name);
+    //Check what type of the selected folder is
     if (name === "My Drive") {
       // setMyDrive(true);
       my_drive = true;
@@ -501,6 +508,7 @@ const Home = () => {
       shared_drive = false;
     }
     let fileRow = [];
+    //get file snapshot files
     getFileSnapshotAPIMethod(
       fileSnapshotLet ? fileSnapshotLet : fileSnapshot,
       0,
@@ -513,18 +521,22 @@ const Home = () => {
       console.log(res.data);
       permissionsLet = res.data.permissions;
 
+      //remover owner from permmisions
       removeOwnerFromPermissions(permissionsLet);
       removeOwnerFromInheritPermissions(permissionsLet);
 
+      //add path for selected folder
       currentPath.push({ name: name, id: id });
       setShowPath(currentPath);
 
+      // get all roles
       let organizerAll = getRole(permissionsLet, "organizer");
       let fileOrganizerAll = getRole(permissionsLet, "fileOrganizer");
       let fileWriterAll = getRole(permissionsLet, "writer");
       let commenterAll = getRole(permissionsLet, "commenter");
       let readerAll = getRole(permissionsLet, "reader");
 
+      //organize permissions and roles for each file
       res.data.files.map((data) => {
         let inheritPermissionsLet = [];
         let directPermissionsLet = [];
@@ -714,7 +726,7 @@ const Home = () => {
     setSelectionModel([]); //reset selected checkbox in table
   };
 
-  // take file snapshot
+  // take a file snapshot
   const takingSnapshot = () => {
     setOpenTakingSnapshot(true);
     console.log("take file snapshot");
@@ -727,6 +739,7 @@ const Home = () => {
     });
   };
 
+  //close taking snapshot action modal
   const takingSnapshotClose = () => {
     setOpenTakingSnapshot(false);
   };
@@ -736,6 +749,7 @@ const Home = () => {
     event.preventDefault();
   }
 
+  //change table when clicking the path
   const handleClickPath = (data) => {
     for (let i = 0; i < showPath.length; i++) {
       if (showPath[i]["name"] === data.name) {
@@ -750,6 +764,7 @@ const Home = () => {
   //file Snapshot name
   const [fileSnapshotNames, setFileSnapshotNames] = useState([]);
 
+  //selected file snapshot name to edit
   const [selectedEditFileSnapshotName, setSelectedEditFileSnapshotName] =
     useState("");
 
@@ -757,6 +772,7 @@ const Home = () => {
   const [openDeleteFileSnapshotName, setOpenDeleteFileSnapshotName] =
     useState(false);
 
+  //handle deleting file snapshot name
   const handleClickOpenDeleteFileSnapshotName = (name) => {
     setOpenDeleteFileSnapshotName(true);
     setSelectedEditFileSnapshotName(name);
@@ -813,10 +829,11 @@ const Home = () => {
     openFileDetailModal();
   };
 
+  //store data of query logs
   const [queryLogs, setQueryLogs] = useState([]);
 
-  //get file snapshot names
   useEffect(() => {
+    //get file snapshot names
     getFileSnapshotNamesAPIMethod().then((data) => {
       console.log("get file snapshot names: ", data.body);
       setFileSnapshotNames(data.body.reverse());
@@ -824,6 +841,7 @@ const Home = () => {
       setFileSnapshot(data.body[0].name);
       fileSnapshotLet = data.body[0].name;
 
+      //get shared drives
       getSharedDriveAPIMethod(fileSnapshotLet).then((res) => {
         let tempRows = [
           {
@@ -841,6 +859,7 @@ const Home = () => {
       });
     });
 
+    //get query logs
     getQueriesAPIMethod().then((res) => {
       setQueryLogs(res.body);
       console.log(res.body);
@@ -857,6 +876,7 @@ const Home = () => {
           width: "100%",
         }}
       >
+        {/*Search*/}
         <Paper
           component="form"
           sx={{
@@ -898,6 +918,7 @@ const Home = () => {
           >
             <TuneIcon />
           </IconButton>
+          {/*Modal for search filter*/}
           <Modal
             open={openSearchFilter}
             onClose={handleCloseSearchFilter}
@@ -915,6 +936,7 @@ const Home = () => {
         </Paper>
         <div style={{ width: "3%" }}></div>
         <Box style={{ width: "40%" }}>
+          {/*select file snapshot names from the dropdown*/}
           <FormControl sx={{ m: 1, width: "90%", margin: "0px" }} size="small">
             <InputLabel id="demo-select-small">File Snapshot</InputLabel>
             <Select
@@ -961,6 +983,7 @@ const Home = () => {
             </Select>
           </FormControl>
         </Box>
+        {/*icon for taking a new file snapshot*/}
         <img
           src="/img/snapshot_image.png"
           style={{
@@ -980,6 +1003,7 @@ const Home = () => {
           justifyContent: "space-between",
         }}
       >
+        {/*show current file paths*/}
         <div role="presentation" onClick={handleClickOpenBreadcrumb}>
           <Breadcrumbs maxItems={2} aria-label="breadcrumb">
             <Link underline="hover" color="inherit" href="#">
@@ -1001,6 +1025,7 @@ const Home = () => {
             })}
           </Breadcrumbs>
         </div>
+        {/*modal to show file-folder sharing differences*/}
         <Modal
           open={sharingDifferenceModal}
           onClose={closeSharingDifferenceModal}
@@ -1019,6 +1044,7 @@ const Home = () => {
         </Modal>
 
         <div>
+          {/*button to find file-folder sharing differences*/}
           <Button
             variant="contained"
             size="small"
@@ -1027,6 +1053,7 @@ const Home = () => {
           >
             File-Folder Sharing Differences
           </Button>
+          {/*button for editing file permissions*/}
           <Button
             variant="contained"
             size="small"
@@ -1035,6 +1062,7 @@ const Home = () => {
             EDIT
           </Button>
         </div>
+        {/*modal for editing file permissions*/}
         <Modal
           open={openEditModal}
           onClose={closeFilePermissionEditModal}
@@ -1050,6 +1078,7 @@ const Home = () => {
       </div>
       <div style={{ height: "100%", marginTop: "10px" }}>
         <div style={{ height: 630, width: "100%" }}>
+          {/*data table for files/folder*/}
           <DataGrid
             rows={rows}
             columns={columns}
@@ -1075,6 +1104,7 @@ const Home = () => {
           />
         </div>
       </div>
+      {/*modal to show progress of taking a snapshot*/}
       <Modal
         open={openTakingSnapshot}
         onClose={takingSnapshotClose}
@@ -1133,6 +1163,7 @@ const Home = () => {
           </div>
         </div>
       </Modal>
+      {/*alert of deleting a file snapshot name*/}
       <Dialog
         open={openDeleteFileSnapshotName}
         onClose={handleCloseDeleteFileSnapshotName}
@@ -1149,6 +1180,7 @@ const Home = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {/*alert to show editing a file snapshot name*/}
       <Dialog
         open={openEditFileSnapshotName}
         onClose={handleCloseEditFileSnapshotName}
@@ -1175,6 +1207,7 @@ const Home = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {/*modal to see details of the selected file*/}
       <Modal
         open={fileDetailModal}
         onClose={closeFileDetailModal}
