@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FormControlLabel,
   Checkbox,
@@ -27,21 +27,21 @@ const QueryBuilder = ({
   fileSnapshot,
 }) => {
   let query = "";
-  const [sharedDrive, setSharedDrive] = React.useState("");
-  const [owner, setOwner] = React.useState("");
-  const [creator, setCreator] = React.useState("");
-  const [sharedFrom, setSharedFrom] = React.useState("");
-  const [sharedTo, setSharedTo] = React.useState("");
-  const [name, setName] = React.useState("");
-  // const [readable, setReadable] = React.useState("");
-  // const [writeable, setWriteable] = React.useState("");
-  // const [sharable, setSharable] = React.useState("");
-  const [path, setPath] = React.useState("");
-  const [pathSelect, setPathSelect] = React.useState("");
-  const [sharingTypeSelect, setSharingTypeSelect] = React.useState("");
-  const [individual, setIndividual] = React.useState("");
-  const [domain, setDomain] = React.useState("");
-  const [members, setMembers] = React.useState([]);
+  const [sharedDrive, setSharedDrive] = useState("");
+  const [owner, setOwner] = useState("");
+  const [creator, setCreator] = useState("");
+  const [sharedFrom, setSharedFrom] = useState("");
+  const [sharedTo, setSharedTo] = useState("");
+  const [name, setName] = useState("");
+  const [readable, setReadable] = useState("");
+  const [writable, setWritable] = useState("");
+  const [sharable, setSharable] = useState("");
+  const [path, setPath] = useState("");
+  const [pathSelect, setPathSelect] = useState("");
+  const [sharingTypeSelect, setSharingTypeSelect] = useState("");
+  const [individual, setIndividual] = useState("");
+  const [domain, setDomain] = useState("");
+  const [members, setMembers] = useState([]);
 
   const handleChangeSharedDrive = (event) => {
     setSharedDrive(event.target.value);
@@ -67,31 +67,39 @@ const QueryBuilder = ({
     setName(event.target.value);
   };
 
-  let readable = "";
+  let readableLet = "";
   const handleChangeReadable = (event) => {
-    console.log(event.target.innerText);
     if (readable === "") {
-      readable = event.target.innerText;
+      readableLet = event.target.innerText;
+      setReadable(event.target.innerText);
     } else {
-      readable = readable + "," + event.target.innerText;
+      readableLet = readable;
+      readableLet = readableLet + "," + event.target.innerText;
+      setReadable(readableLet);
     }
   };
 
-  let writable = "";
+  let writableLet = "";
   const handleChangeWritable = (event) => {
     if (writable === "") {
-      writable = event.target.innerText;
+      writableLet = event.target.innerText;
+      setWritable(event.target.innerText);
     } else {
-      writable = writable + "," + event.target.innerText;
+      writableLet = writable;
+      writableLet = writableLet + "," + event.target.innerText;
+      setWritable(writableLet);
     }
   };
 
-  let sharable = "";
+  let sharableLet = "";
   const handleChangeSharable = (event) => {
     if (sharable === "") {
-      sharable = event.target.innerText;
+      sharableLet = event.target.innerText;
+      setSharable(event.target.innerText);
     } else {
-      sharable = sharable + "," + event.target.innerText;
+      sharableLet = sharable;
+      sharableLet = sharableLet + "," + event.target.innerText;
+      setSharable(sharableLet);
     }
   };
 
@@ -106,19 +114,19 @@ const QueryBuilder = ({
     setSharingTypeSelect(event.target.value);
   };
 
-  const [checkedMyDrive, setCheckedMyDrive] = React.useState(true);
+  const [checkedMyDrive, setCheckedMyDrive] = useState(true);
   const handleChangeCheckboxMyDrive = (event) => {
     setCheckedMyDrive(event.target.checked);
     setCheckedSharedDrive(!event.target.checked);
   };
 
-  const [checkedSharedDrive, setCheckedSharedDrive] = React.useState(false);
+  const [checkedSharedDrive, setCheckedSharedDrive] = useState(false);
   const handleChangeCheckboxSharedDrive = (event) => {
     setCheckedSharedDrive(event.target.checked);
     setCheckedMyDrive(!event.target.checked);
   };
 
-  const [checkedGroup, setCheckedGroup] = React.useState(false);
+  const [checkedGroup, setCheckedGroup] = useState(false);
   const handleChangeCheckedGroup = (event) => {
     setCheckedGroup(event.target.checked);
   };
@@ -131,6 +139,7 @@ const QueryBuilder = ({
     setDomain(event.target.value);
   };
 
+  //generate query from query builder
   const handleClickGenerate = () => {
     checkedMyDrive && (query = query + "drive:MyDrive and ");
     checkedSharedDrive && (query = query + "drive:" + sharedDrive + " and ");
@@ -157,6 +166,7 @@ const QueryBuilder = ({
     handleCloseSearchFilter();
   };
 
+  //get list of emails of members
   useEffect(() => {
     getMembersAPIMethod(fileSnapshot, checkedGroup).then((data) => {
       setMembers(data.data);
@@ -267,7 +277,7 @@ const QueryBuilder = ({
             multiple
             id="tags-outlined"
             options={members}
-            getOptionLabel={(option) => option.email}
+            getOptionLabel={(option) => (option.email ? option.email : "")}
             filterSelectedOptions
             onChange={handleChangeReadable}
             renderInput={(params) => (
@@ -283,7 +293,7 @@ const QueryBuilder = ({
             multiple
             id="tags-outlined"
             options={members}
-            getOptionLabel={(option) => option.email}
+            getOptionLabel={(option) => (option.email ? option.email : "")}
             filterSelectedOptions
             onChange={handleChangeWritable}
             renderInput={(params) => (
@@ -299,7 +309,7 @@ const QueryBuilder = ({
             multiple
             id="tags-outlined"
             options={members}
-            getOptionLabel={(option) => option.email}
+            getOptionLabel={(option) => (option.email ? option.email : "")}
             filterSelectedOptions
             onChange={handleChangeSharable}
             renderInput={(params) => (
