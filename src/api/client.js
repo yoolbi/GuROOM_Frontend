@@ -252,38 +252,6 @@ export const getCompareSnapshotsAPIMethod = async (
   );
 };
 
-// export const postGroupAPIMethod = (
-//   file,
-//   group_name,
-//   group_email,
-//   create_time
-// ) => {
-//   var data = new FormData();
-//   data.append("file", file);
-//   data.append("group_name", group_name);
-//   data.append("group_email", group_email);
-//   data.append("create_time", create_time);
-//   return fetch(
-//     urlJoin(
-//       process.env.REACT_APP_BACKEND_URL + "/apps/snapshot/v1/google/groups"
-//     ),
-//     {
-//       credentials: "include",
-//       method: "POST",
-//       body: data,
-//       // body: JSON.stringify({
-//       //   file: file,
-//       //   group_name: group_name,
-//       //   group_email: group_email,
-//       //   create_time: create_time,
-//       // }),
-//       headers: {
-//         "Content-Type": "form-data; charset=UTF-8",
-//       },
-//     }
-//   ).then(parseJSON);
-// };
-
 export const postGroupAPIMethod = (formData) => {
   return fetch(
     urlJoin(
@@ -309,18 +277,6 @@ export const getGroupAPIMethod = async () => {
   ).then(parseJSON);
 };
 
-// export const getMembersAPIMethod = async () => {
-//   return fetch(
-//     urlJoin(
-//       process.env.REACT_APP_BACKEND_URL,
-//       "/apps/snapshot/v1/google/files/members"
-//     ),
-//     {
-//       credentials: "include",
-//     }
-//   ).then(parseJSON);
-// };
-
 export const getMembersAPIMethod = async (snapshot_name, is_groups) => {
   return await axios.get(
     urlJoin(
@@ -336,4 +292,16 @@ export const getMembersAPIMethod = async (snapshot_name, is_groups) => {
       },
     }
   );
+};
+
+export const getQueriesAPIMethod = () => {
+  console.log("authorize");
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL + "/apps/snapshot/v1/google/queries"
+    ),
+    {
+      credentials: "include",
+    }
+  ).then(parseJSON);
 };
