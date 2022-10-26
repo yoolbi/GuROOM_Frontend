@@ -305,6 +305,8 @@ const Home = () => {
           headerName: "Inherit Permission",
           width: 150,
           sortable: false,
+          description:
+            "!Warning: some permissions listed only as inherited might also be directly assigned",
           renderCell: (params) => (
             <div style={{ width: "100%", overflowX: "auto" }}>
               {JSON.parse(params.row.inheritPermissions).map((data) => {
@@ -646,7 +648,8 @@ const Home = () => {
           headerName: "Inherit Permission",
           width: 150,
           sortable: false,
-          description: "Permissions inherited from parent folder",
+          description:
+            "Permissions inherited from parent folder. !Warning: some permissions listed only as inherited might also be directly assigned",
           renderCell: (params) => (
             <div style={{ width: "100%", overflowX: "auto" }}>
               {JSON.parse(params.row.inheritPermissions).map((data) => {
