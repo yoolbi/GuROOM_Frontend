@@ -5,6 +5,7 @@ import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
 import Avatar from "@mui/material/Avatar";
 
+//This is the Access Control Detail Modal. It appears when the user double clicks the access control table row,
 // eslint-disable-next-line react/prop-types
 const AccessControlDetailModal = ({ eachFileDetailData }) => {
   // eslint-disable-next-line react/prop-types

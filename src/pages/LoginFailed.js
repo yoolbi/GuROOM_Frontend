@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+//When the user fails to login, then we will show this page to try again on the main page.
 const LoginFailed = () => {
   return (
     <div>

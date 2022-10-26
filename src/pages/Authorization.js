@@ -2,7 +2,12 @@ import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getUserAPIMethod, postAccessTokenAPIMethod } from "../api/client";
 import urlJoin from "url-join";
+import { CircularProgress } from "@mui/material";
+import Box from "@mui/material/Box";
 
+//This is the management of authorization.
+//When the user is on the first time to use our website, then the status would be 201. The website will go to the initial setup page.
+//When the user already uses our website before, then the status would be 200. The website will go to the homepage.
 const Authorization = () => {
   const [searchParams] = useSearchParams();
 
@@ -42,7 +47,10 @@ const Authorization = () => {
 
   return (
     <div>
-      <h4>processing authorization...</h4>
+      {/*<h4>processing authorization...</h4>*/}
+      <Box sx={{ display: "flex" }}>
+        <CircularProgress />
+      </Box>
     </div>
   );
 };

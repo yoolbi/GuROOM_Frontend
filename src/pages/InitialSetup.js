@@ -21,9 +21,6 @@ const steps = [
     label: "Take Snapshot of Drive",
   },
   {
-    label: "Take Snapshot of Group",
-  },
-  {
     label: "Finished!",
   },
 ];
@@ -36,12 +33,12 @@ const style = {
   width: 600,
   height: 400,
   bgcolor: "background.paper",
-  // border: "2px solid #000",
-  // boxShadow: 24,
   borderRadius: "20px",
   p: 4,
 };
 
+//When the user is on the first time to use our website, then the website will go to the initial setup page.
+//The user can take the first file snapshot in this page.
 const InitialSetup = () => {
   const [open, setOpen] = React.useState(false);
   const [openDone, setOpenDone] = React.useState(false);
@@ -52,10 +49,11 @@ const InitialSetup = () => {
 
   const [activeStep, setActiveStep] = React.useState(0);
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
+  // const handleNext = () => {
+  //   setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  // };
+  //The modal with animation will appear while taking the first file snapshot.
+  //After taking the snapshot, the modal shows the "Done!" and automatically closes.
   const handleNextModal = () => {
     handleOpen();
     postFileSnapshotAPIMethod(fileSnapshot).then((data) => {
@@ -68,12 +66,6 @@ const InitialSetup = () => {
         }, 3000);
       }
     });
-    // setTimeout(() => {
-    //   handleOpenDone();
-    //   setTimeout(() => {
-    //     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    //   }, 3000);
-    // }, 15000);
   };
 
   const handleBack = () => {
@@ -81,6 +73,8 @@ const InitialSetup = () => {
   };
 
   const [fileSnapshot, setFileSnapshot] = useState("");
+
+  //The user can change the file snapshot name.
   const handleChangeFileSnapshot = (e) => {
     setFileSnapshot(e.target.value);
     console.log(fileSnapshot);
@@ -140,13 +134,6 @@ const InitialSetup = () => {
                             style={{ width: "100%", marginTop: "15px" }}
                             onChange={handleChangeFileSnapshot}
                           />
-                        ) : index === 1 ? (
-                          <TextField
-                            id="outlined-basic"
-                            label="Group snapshot name"
-                            variant="outlined"
-                            style={{ width: "100%", marginTop: "15px" }}
-                          />
                         ) : null}
 
                         <div style={{ marginTop: "15px" }}>
@@ -159,14 +146,6 @@ const InitialSetup = () => {
                                 GUROOM YOUR DRIVE
                               </Button>
                             </Link>
-                          ) : index === 0 ? (
-                            <Button
-                              variant="contained"
-                              onClick={handleNext}
-                              sx={{ mt: 1, mr: 1 }}
-                            >
-                              Continue
-                            </Button>
                           ) : (
                             <>
                               <Button
@@ -176,6 +155,7 @@ const InitialSetup = () => {
                               >
                                 Continue
                               </Button>
+                              {/*Here is the modal while taking the initial snapshot*/}
                               <Modal open={open}>
                                 <Box sx={style}>
                                   <div

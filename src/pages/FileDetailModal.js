@@ -5,6 +5,8 @@ import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
 import Avatar from "@mui/material/Avatar";
 
+//When the user wants to check the details of file in the table(which shows in the Homepage), he/she can check with double-clicking the file(row)
+//The modal shows file name, file type, owner, organizer, file organizer, writer, commenter, reader, inherit permissions, direct permissions, created & modified date and the file size.
 // eslint-disable-next-line react/prop-types
 const FileDetailModal = ({ eachFileDetailData }) => {
   // eslint-disable-next-line react/prop-types
@@ -20,6 +22,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           marginTop: "20px",
         }}
       >
+        {/*file name*/}
         <TextField
           id="outlined-multiline-flexible"
           label="File Name"
@@ -31,6 +34,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
+        {/*file type*/}
         <TextField
           id="outlined-multiline-flexible"
           label="File Type"
@@ -42,6 +46,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
+        {/*Owner: it shows with chips in MUI*/}
         <TextField
           id="outlined-multiline-flexible"
           label="Owner"
@@ -76,6 +81,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
+        {/*Organizer: it shows with chips in MUI*/}
         <TextField
           id="outlined-multiline-flexible"
           label="Organizer"
@@ -112,6 +118,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
+        {/*File Organizer: it shows with chips in MUI*/}
         <TextField
           id="outlined-multiline-flexible"
           label="File Organizer"
@@ -148,6 +155,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
+        {/*Writer: it shows with chips in MUI*/}
         <TextField
           id="outlined-multiline-flexible"
           label="Writer"
@@ -184,6 +192,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
+        {/*Commenter: it shows with chips in MUI*/}
         <TextField
           id="outlined-multiline-flexible"
           label="Commenter"
@@ -220,6 +229,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
+        {/*Reader: it shows with chips in MUI*/}
         <TextField
           id="outlined-multiline-flexible"
           label="Reader"
@@ -256,6 +266,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
+        {/*Inherit Permissions: it shows with chips in MUI*/}
         <TextField
           id="outlined-multiline-flexible"
           label="Inherit Permissions"
@@ -292,6 +303,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
+        {/*Direct Permissions: it shows with chips in MUI*/}
         <TextField
           id="outlined-multiline-flexible"
           label="Direct Permissions"
@@ -328,6 +340,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
+        {/*Deviant Permissions: it shows with chips in MUI*/}
         <TextField
           id="outlined-multiline-flexible"
           label="Deviant Permissions"
@@ -338,6 +351,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
+        {/*Created date*/}
         <TextField
           id="outlined-multiline-flexible"
           label="Created Date"
@@ -348,6 +362,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
+        {/*Modified date*/}
         <TextField
           id="outlined-multiline-flexible"
           label="Modified Date"
@@ -358,6 +373,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
+        {/*file size*/}
         <TextField
           id="outlined-multiline-flexible"
           label="Size"

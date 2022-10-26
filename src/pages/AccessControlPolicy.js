@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import { Chip, ListItem, Paper } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 
+//This is the one of tabs from Filter Modal. It can manage access control.
 const AccessControlPolicy = () => {
   const [accessControlPolicies, setAccessControlPolicies] = React.useState("");
   const [query, setQuery] = React.useState("");

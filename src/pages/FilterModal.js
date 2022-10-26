@@ -7,6 +7,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import QueryBuilder from "./QueryBuilder";
 import AccessControlPolicy from "./AccessControlPolicy";
 
+//This is the modal that appears when the user clicks the filter icon on the search bar in the Homepage.
 // eslint-disable-next-line react/prop-types
 const FilterModal = ({
   // eslint-disable-next-line react/prop-types
@@ -22,6 +23,11 @@ const FilterModal = ({
     setValue(newValue);
   };
 
+  //There are two tabs: Query builder and access control policy changer.
+  //For the query builder, we pass the setSearchInput, handleCloseSearchFilter, and file snapshot.
+  //setSearchInput: for making the query builder, we should put the string in the search bar when the user makes a query,
+  //handleCloseSearchFilter: To close the modal after making a query or canceling to make.
+  //fileSnapshot: To set the Readable by, Writable by, and Sharable by, we need the information of people who are related to the file snapshot.
   return (
     <>
       <Box sx={{ width: 600, typography: "body1" }}>

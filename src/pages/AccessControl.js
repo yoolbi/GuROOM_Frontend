@@ -3,10 +3,13 @@ import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import Paper from "@mui/material/Paper";
+
 import { DataGrid } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
 
+//This is the access control tab from the Homepage.
 const AccessControl = () => {
+  //The table columns
   const columns = [
     { field: "name", headerName: "Name", width: 150 },
     {
@@ -51,6 +54,7 @@ const AccessControl = () => {
     },
   ];
 
+  //The table rows
   const rows = [{ id: 1, lastName: "Snow", firstName: "Jon", age: 35 }];
 
   return (
@@ -80,6 +84,7 @@ const AccessControl = () => {
             inputProps={{ "aria-label": "search google maps" }}
           />
         </Paper>
+        {/*The table*/}
         <div style={{ width: "1%" }}></div>
         <div style={{ minWidth: "90px", textAlign: "right" }}>
           <img
