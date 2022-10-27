@@ -166,6 +166,11 @@ const Home = () => {
     setShowPath([]);
     //get files from searching is:file_folder_diff
     getSearchAPIMethod(fileSnapshot, "is:file_folder_diff").then((res) => {
+      //get query logs
+      getQueriesAPIMethod().then((res) => {
+        setQueryLogs(res.body.reverse());
+        console.log(res.body);
+      });
       permissionsLetSearch = res.data.permissions;
 
       //remove owner from inherit permissions
@@ -381,7 +386,13 @@ const Home = () => {
   const search = () => {
     getSearchAPIMethod(fileSnapshot, searchInput)
       .then((res) => {
-        console.log(res);
+        //get query logs
+        getQueriesAPIMethod().then((res) => {
+          setQueryLogs(res.body.reverse());
+          console.log(res.body);
+        });
+        console.log(res.data);
+        displayTable(res);
       })
       .catch((err) => {
         setAlertSearch(true);
@@ -508,6 +519,205 @@ const Home = () => {
   let currentPath = [];
   const [showPath, setShowPath] = useState([]);
 
+  //display table
+  const displayTable = (res) => {
+    let fileRow = [];
+    permissionsLet = res.data.permissions;
+
+    //remover owner from permmisions
+    removeOwnerFromPermissions(permissionsLet);
+    removeOwnerFromInheritPermissions(permissionsLet);
+
+    // get all roles
+    let organizerAll = getRole(permissionsLet, "organizer");
+    let fileOrganizerAll = getRole(permissionsLet, "fileOrganizer");
+    let fileWriterAll = getRole(permissionsLet, "writer");
+    let commenterAll = getRole(permissionsLet, "commenter");
+    let readerAll = getRole(permissionsLet, "reader");
+
+    //organize permissions and roles for each file
+    res.data.files.map((data) => {
+      let inheritPermissionsLet = [];
+      let directPermissionsLet = [];
+      let organizer = [];
+      let fileOrganizer = [];
+      let fileWriter = [];
+      let commenter = [];
+      let reader = [];
+
+      //get inherit and direct permissions for each file
+      for (var key in permissionsLet) {
+        if (key === data.id) {
+          inheritPermissionsLet = permissionsLet[key]["inherit_permissions"];
+          directPermissionsLet = permissionsLet[key]["direct_permissions"];
+        }
+      }
+
+      getRoleForEachFile(organizerAll, data.id, organizer);
+      getRoleForEachFile(fileOrganizerAll, data.id, fileOrganizer);
+      getRoleForEachFile(fileWriterAll, data.id, fileWriter);
+      getRoleForEachFile(commenterAll, data.id, commenter);
+      getRoleForEachFile(readerAll, data.id, reader);
+
+      fileRow.push({
+        id: data.id,
+        name: data.name,
+        type: data.mimeType.split(".")[2],
+        owner: {
+          displayName: data.owners[0]?.displayName,
+          photoLink: data.owners[0]?.photoLink,
+        },
+        inheritPermissions: JSON.stringify(inheritPermissionsLet),
+        directPermissions: JSON.stringify(directPermissionsLet),
+        created:
+          new Date(data.createdTime).toString().split(" ")[1] +
+          " " +
+          new Date(data.createdTime).toString().split(" ")[2] +
+          ", " +
+          new Date(data.createdTime).toString().split(" ")[3],
+        modified:
+          new Date(data.modifiedTime).toString().split(" ")[1] +
+          " " +
+          new Date(data.modifiedTime).toString().split(" ")[2] +
+          ", " +
+          new Date(data.modifiedTime).toString().split(" ")[3],
+        size: data.size,
+        organizer: organizer,
+        fileOrganizer: fileOrganizer,
+        writer: fileWriter,
+        commenter: commenter,
+        reader: reader,
+        path: data.path,
+      });
+    });
+    setRows(fileRow);
+    setColumns([
+      {
+        field: "name",
+        headerName: "Name",
+        width: 200,
+        description: "File/folder name",
+        renderCell: (params) =>
+          params.row.type === "folder" ? (
+            <div
+              style={{
+                textDecoration: "underline",
+                cursor: "pointer",
+                display: "flex",
+              }}
+              onClick={() =>
+                handleClickCell(params.row.name, params.row.type, params.row.id)
+              }
+            >
+              <FolderIcon
+                color="disabled"
+                style={{ width: "20px", paddingRight: "5px" }}
+              />
+              {params.row.name}
+            </div>
+          ) : (
+            <div>{params.row.name}</div>
+          ),
+      },
+      {
+        field: "type",
+        headerName: "Type",
+        width: 130,
+        sortable: false,
+        description: "File/folder type",
+      },
+      {
+        field: "owner",
+        headerName: "Owner",
+        width: 130,
+        sortable: false,
+        description: "File/folder owner",
+        renderCell: (params) => (
+          <div style={{ width: "100%", overflowX: "auto" }}>
+            {params.row.owner["displayName"] !== undefined && (
+              <Chip
+                avatar={
+                  <Avatar alt="Natacha" src={params.row.owner["photoLink"]} />
+                }
+                label={params.row.owner["displayName"]}
+                variant="outlined"
+                key={params.row.id}
+              />
+            )}
+          </div>
+        ),
+      },
+      {
+        field: "inheritPermissions",
+        headerName: "Inherit Permission",
+        width: 150,
+        sortable: false,
+        description:
+          "Permissions inherited from parent folder. !Warning: some permissions listed only as inherited might also be directly assigned",
+        renderCell: (params) => (
+          <div style={{ width: "100%", overflowX: "auto" }}>
+            {JSON.parse(params.row.inheritPermissions).map((data) => {
+              return (
+                <Chip
+                  avatar={<Avatar alt="Natacha" src={data.photoLink} />}
+                  label={data.type === "anyone" ? "Anyone" : data.displayName}
+                  variant="outlined"
+                  key={data.id}
+                />
+              );
+            })}
+          </div>
+        ),
+      },
+      {
+        field: "directPermission",
+        headerName: "Direct Permission",
+        width: 150,
+        sortable: false,
+        description: "Permissions given directly",
+        renderCell: (params) => (
+          <div style={{ width: "100%", overflowX: "auto" }}>
+            {JSON.parse(params.row.directPermissions).map((data) => {
+              return (
+                <Chip
+                  avatar={<Avatar alt="Natacha" src={data.photoLink} />}
+                  label={data.type === "anyone" ? "Anyone" : data.displayName}
+                  variant="outlined"
+                  key={data.id}
+                />
+              );
+            })}
+          </div>
+        ),
+      },
+      {
+        field: "deviantPermissions",
+        headerName: "Deviant Permissions",
+        description:
+          "The differences between this file’s permissions and the permissions of most other files in the folder",
+        width: 200,
+      },
+      {
+        field: "created",
+        headerName: "Created",
+        description: "Created date",
+        width: 120,
+      },
+      {
+        field: "modified",
+        headerName: "Modified",
+        description: "Modified date",
+        width: 120,
+      },
+      {
+        field: "size",
+        headerName: "Size",
+        description: "File size (bytes)",
+        width: 100,
+      },
+    ]);
+  };
+
   //onClick folder name in table. Change table when clicking the folder names.
   const handleClickCell = (name, type, id) => {
     console.log("click", name);
@@ -531,7 +741,10 @@ const Home = () => {
       shared_with_me = false;
       shared_drive = false;
     }
-    let fileRow = [];
+    //add path for selected folder
+    currentPath.push({ name: name, id: id });
+    setShowPath(currentPath);
+
     //get file snapshot files
     getFileSnapshotAPIMethod(
       fileSnapshotLet ? fileSnapshotLet : fileSnapshot,
@@ -542,209 +755,8 @@ const Home = () => {
       shared_drive,
       id
     ).then((res) => {
+      displayTable(res);
       console.log(res.data);
-      permissionsLet = res.data.permissions;
-
-      //remover owner from permmisions
-      removeOwnerFromPermissions(permissionsLet);
-      removeOwnerFromInheritPermissions(permissionsLet);
-
-      //add path for selected folder
-      currentPath.push({ name: name, id: id });
-      setShowPath(currentPath);
-
-      // get all roles
-      let organizerAll = getRole(permissionsLet, "organizer");
-      let fileOrganizerAll = getRole(permissionsLet, "fileOrganizer");
-      let fileWriterAll = getRole(permissionsLet, "writer");
-      let commenterAll = getRole(permissionsLet, "commenter");
-      let readerAll = getRole(permissionsLet, "reader");
-
-      //organize permissions and roles for each file
-      res.data.files.map((data) => {
-        let inheritPermissionsLet = [];
-        let directPermissionsLet = [];
-        let organizer = [];
-        let fileOrganizer = [];
-        let fileWriter = [];
-        let commenter = [];
-        let reader = [];
-
-        //get inherit and direct permissions for each file
-        for (var key in permissionsLet) {
-          if (key === data.id) {
-            inheritPermissionsLet = permissionsLet[key]["inherit_permissions"];
-            directPermissionsLet = permissionsLet[key]["direct_permissions"];
-          }
-        }
-
-        getRoleForEachFile(organizerAll, data.id, organizer);
-        getRoleForEachFile(fileOrganizerAll, data.id, fileOrganizer);
-        getRoleForEachFile(fileWriterAll, data.id, fileWriter);
-        getRoleForEachFile(commenterAll, data.id, commenter);
-        getRoleForEachFile(readerAll, data.id, reader);
-
-        fileRow.push({
-          id: data.id,
-          name: data.name,
-          type: data.mimeType.split(".")[2],
-          owner: {
-            displayName: data.owners[0]?.displayName,
-            photoLink: data.owners[0]?.photoLink,
-          },
-          inheritPermissions: JSON.stringify(inheritPermissionsLet),
-          directPermissions: JSON.stringify(directPermissionsLet),
-          created:
-            new Date(data.createdTime).toString().split(" ")[1] +
-            " " +
-            new Date(data.createdTime).toString().split(" ")[2] +
-            ", " +
-            new Date(data.createdTime).toString().split(" ")[3],
-          modified:
-            new Date(data.modifiedTime).toString().split(" ")[1] +
-            " " +
-            new Date(data.modifiedTime).toString().split(" ")[2] +
-            ", " +
-            new Date(data.modifiedTime).toString().split(" ")[3],
-          size: data.size,
-          organizer: organizer,
-          fileOrganizer: fileOrganizer,
-          writer: fileWriter,
-          commenter: commenter,
-          reader: reader,
-          path: data.path,
-        });
-      });
-      setRows(fileRow);
-      setColumns([
-        {
-          field: "name",
-          headerName: "Name",
-          width: 200,
-          description: "File/folder name",
-          renderCell: (params) =>
-            params.row.type === "folder" ? (
-              <div
-                style={{
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                  display: "flex",
-                }}
-                onClick={() =>
-                  handleClickCell(
-                    params.row.name,
-                    params.row.type,
-                    params.row.id
-                  )
-                }
-              >
-                <FolderIcon
-                  color="disabled"
-                  style={{ width: "20px", paddingRight: "5px" }}
-                />
-                {params.row.name}
-              </div>
-            ) : (
-              <div>{params.row.name}</div>
-            ),
-        },
-        {
-          field: "type",
-          headerName: "Type",
-          width: 130,
-          sortable: false,
-          description: "File/folder type",
-        },
-        {
-          field: "owner",
-          headerName: "Owner",
-          width: 130,
-          sortable: false,
-          description: "File/folder owner",
-          renderCell: (params) => (
-            <div style={{ width: "100%", overflowX: "auto" }}>
-              {params.row.owner["displayName"] !== undefined && (
-                <Chip
-                  avatar={
-                    <Avatar alt="Natacha" src={params.row.owner["photoLink"]} />
-                  }
-                  label={params.row.owner["displayName"]}
-                  variant="outlined"
-                  key={params.row.id}
-                />
-              )}
-            </div>
-          ),
-        },
-        {
-          field: "inheritPermissions",
-          headerName: "Inherit Permission",
-          width: 150,
-          sortable: false,
-          description:
-            "Permissions inherited from parent folder. !Warning: some permissions listed only as inherited might also be directly assigned",
-          renderCell: (params) => (
-            <div style={{ width: "100%", overflowX: "auto" }}>
-              {JSON.parse(params.row.inheritPermissions).map((data) => {
-                return (
-                  <Chip
-                    avatar={<Avatar alt="Natacha" src={data.photoLink} />}
-                    label={data.type === "anyone" ? "Anyone" : data.displayName}
-                    variant="outlined"
-                    key={data.id}
-                  />
-                );
-              })}
-            </div>
-          ),
-        },
-        {
-          field: "directPermission",
-          headerName: "Direct Permission",
-          width: 150,
-          sortable: false,
-          description: "Permissions given directly",
-          renderCell: (params) => (
-            <div style={{ width: "100%", overflowX: "auto" }}>
-              {JSON.parse(params.row.directPermissions).map((data) => {
-                return (
-                  <Chip
-                    avatar={<Avatar alt="Natacha" src={data.photoLink} />}
-                    label={data.type === "anyone" ? "Anyone" : data.displayName}
-                    variant="outlined"
-                    key={data.id}
-                  />
-                );
-              })}
-            </div>
-          ),
-        },
-        {
-          field: "deviantPermissions",
-          headerName: "Deviant Permissions",
-          description:
-            "The differences between this file’s permissions and the permissions of most other files in the folder",
-          width: 200,
-        },
-        {
-          field: "created",
-          headerName: "Created",
-          description: "Created date",
-          width: 120,
-        },
-        {
-          field: "modified",
-          headerName: "Modified",
-          description: "Modified date",
-          width: 120,
-        },
-        {
-          field: "size",
-          headerName: "Size",
-          description: "File size (bytes)",
-          width: 100,
-        },
-      ]);
     });
 
     setSelectionModel([]); //reset selected checkbox in table
@@ -885,7 +897,7 @@ const Home = () => {
 
     //get query logs
     getQueriesAPIMethod().then((res) => {
-      setQueryLogs(res.body);
+      setQueryLogs(res.body.reverse());
       console.log(res.body);
     });
   }, [openTakingSnapshot, editedFileSnapshotName]);

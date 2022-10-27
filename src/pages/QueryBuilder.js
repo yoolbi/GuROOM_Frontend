@@ -224,7 +224,7 @@ const QueryBuilder = ({
             <TextField
               id="outlined-textareas"
               label="Owner"
-              placeholder="username"
+              placeholder="Email"
               multiline
               value={owner}
               onChange={handleChangeOwner}
@@ -235,7 +235,7 @@ const QueryBuilder = ({
             <TextField
               id="outlined-textareas"
               label="Creator"
-              placeholder="username"
+              placeholder="Email"
               multiline
               value={creator}
               onChange={handleChangeCreator}
@@ -284,7 +284,7 @@ const QueryBuilder = ({
               <TextField
                 {...params}
                 label="Readable by"
-                placeholder="Email/Name"
+                placeholder="Email"
                 sx={{ width: "545px", marginBottom: "20px" }}
               />
             )}
@@ -300,7 +300,7 @@ const QueryBuilder = ({
               <TextField
                 {...params}
                 label="Writable by"
-                placeholder="Email/Name"
+                placeholder="Email"
                 sx={{ width: "545px", marginBottom: "20px" }}
               />
             )}
@@ -316,7 +316,7 @@ const QueryBuilder = ({
               <TextField
                 {...params}
                 label="Sharable by"
-                placeholder="Email/Name"
+                placeholder="Email"
                 sx={{ width: "545px", marginBottom: "20px" }}
               />
             )}
