@@ -7,6 +7,7 @@ function parseJSON(response) {
     .then((data) => ({ status: response.status, body: data }));
 }
 
+//Google
 //Authorize Request, retrieves url of google login. Create Google Auth.
 export const getAuthorizeAPIMethod = () => {
   console.log("authorize");
@@ -45,6 +46,20 @@ export const postAccessTokenAPIMethod = (code) => {
   ).then(parseJSON);
 };
 
+//Refresh token
+export const postRefreshAPIMethod = () => {
+  return fetch(
+    urlJoin(process.env.REACT_APP_BACKEND_URL + "/apps/auth/v1/google/refresh"),
+    {
+      credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};
+
 //logout user
 export const deleteLogoutAPIMethod = () => {
   return fetch(
@@ -73,6 +88,89 @@ export const deleteRevokeAPIMethod = () => {
   ).then(parseJSON);
 };
 
+//Dropbox
+//Authorize Request, retrieves url of dropbox login. Create Dropbox Auth.
+export const getAuthorizeDropboxAPIMethod = () => {
+  console.log("authorize");
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL + "/apps/auth/v1/dropbox/authorize"
+    ),
+    {
+      credentials: "include",
+    }
+  ).then(parseJSON);
+};
+
+//Retrieves user information, saves it into internal database if first time user. Get User.
+export const getUserDropboxAPIMethod = async () => {
+  return fetch(
+    urlJoin(process.env.REACT_APP_BACKEND_URL, "/apps/auth/v1/dropbox/user"),
+    {
+      credentials: "include",
+    }
+  ).then(parseJSON);
+};
+
+//post access token to login
+export const postAccessTokenDropboxAPIMethod = (code) => {
+  return fetch(
+    urlJoin(process.env.REACT_APP_BACKEND_URL + "/apps/auth/v1/dropbox/login"),
+    {
+      credentials: "include",
+      method: "POST",
+      body: JSON.stringify({ code: code }),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};
+
+//Refresh token
+export const postRefreshDropboxAPIMethod = () => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL + "/apps/auth/v1/dropbox/refresh"
+    ),
+    {
+      credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};
+
+//logout user
+export const deleteLogoutDropboxAPIMethod = () => {
+  return fetch(
+    urlJoin(process.env.REACT_APP_BACKEND_URL, "/apps/auth/v1/dropbox/logout"),
+    {
+      credentials: "include",
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};
+
+//delete the user account
+export const deleteRevokeDropboxAPIMethod = () => {
+  return fetch(
+    urlJoin(process.env.REACT_APP_BACKEND_URL, "/apps/auth/v1/dropbox/revoke"),
+    {
+      credentials: "include",
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};
+
 //Take a file snapshot
 export const postFileSnapshotAPIMethod = async (name) => {
   return await fetch(
@@ -83,20 +181,6 @@ export const postFileSnapshotAPIMethod = async (name) => {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({ snapshot_name: name }),
-      headers: {
-        "Content-Type": "application/json; charset=UTF-8",
-      },
-    }
-  ).then(parseJSON);
-};
-
-//Refresh token
-export const postRefreshAPIMethod = () => {
-  return fetch(
-    urlJoin(process.env.REACT_APP_BACKEND_URL + "/apps/auth/v1/google/refresh"),
-    {
-      credentials: "include",
-      method: "POST",
       headers: {
         "Content-Type": "application/json; charset=UTF-8",
       },
