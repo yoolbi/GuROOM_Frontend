@@ -17,7 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<StartPage />} />
         <Route path="/InitialSetup" element={<InitialSetup />} />
-        <Route path="/InitialSetup" element={<InitialSetupDropbox />} />
+        <Route path="/InitialSetupDropbox" element={<InitialSetupDropbox />} />
         <Route path="/Homepage" element={<Homepage />} />
         <Route path="/auth/google/oauth-callback" element={<Authorization />} />
         <Route
