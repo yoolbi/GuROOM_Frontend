@@ -39,7 +39,7 @@ const style = {
 
 //When the user is on the first time to use our website, then the website will go to the initial setup page.
 //The user can take the first file snapshot in this page.
-const InitialSetup = () => {
+const InitialSetupDropbox = () => {
   const [open, setOpen] = React.useState(false);
   const [openDone, setOpenDone] = React.useState(false);
 
@@ -88,7 +88,7 @@ const InitialSetup = () => {
           justifyContent: "space-between",
         }}
       >
-        <Link to="/InitialSetup">
+        <Link to="/InitialSetupDropbox">
           <img
             src="/img/startpage_logo.png"
             style={{
@@ -138,7 +138,7 @@ const InitialSetup = () => {
                         <div style={{ marginTop: "15px" }}>
                           {index === steps.length - 1 ? (
                             <Link
-                              to={"/Homepage"}
+                              to={"/HomepageDropbox"}
                               style={{ textDecoration: "none" }}
                             >
                               <Button variant="contained" sx={{ mt: 1, mr: 1 }}>
@@ -243,4 +243,4 @@ const InitialSetup = () => {
   );
 };
 
-export default InitialSetup;
+export default InitialSetupDropbox;

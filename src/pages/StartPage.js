@@ -2,8 +2,11 @@ import { Link } from "react-router-dom";
 import React from "react";
 import {
   getAuthorizeAPIMethod,
+  getAuthorizeDropboxAPIMethod,
   getUserAPIMethod,
+  getUserDropboxAPIMethod,
   postRefreshAPIMethod,
+  postRefreshDropboxAPIMethod,
 } from "../api/client";
 import urlJoin from "url-join";
 
@@ -61,6 +64,57 @@ const startPage = () => {
     });
   };
 
+  const dropboxAuth = () => {
+    //get user info
+    getUserDropboxAPIMethod().then((user) => {
+      console.log(user); //log user info
+      //if user is valid and have a file snapshot, goto Homepage
+      if (user.status === 200) {
+        window.location.replace(
+          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/Homepage")
+        );
+      } else if (user.status === 201) {
+        //if the user is valid but do not have a file snapshot, goto initial setup
+        window.location.replace(
+          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
+        );
+      } else {
+        //if the user is invalid, refresh the token to check if the token has expired
+        postRefreshDropboxAPIMethod().then((data) => {
+          //if the token has successfully refreshed, get user info again
+          if (data.status === 200) {
+            getUserDropboxAPIMethod().then((user) => {
+              if (user.status === 200) {
+                window.location.replace(
+                  urlJoin(process.env.REACT_APP_FRONTEND_URL, "/Homepage")
+                );
+              } else if (user.status === 201) {
+                window.location.replace(
+                  urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
+                );
+              } else {
+                //if the user is invalid, go to authorization
+                getAuthorizeDropboxAPIMethod().then((data) => {
+                  console.log("authorize data: " + JSON.stringify(data));
+                  console.log(
+                    "authorize data.body: " + JSON.stringify(data.body)
+                  );
+                  window.location.replace(data.body);
+                });
+              }
+            });
+          } else {
+            //if the token has failed refreshing, authorize
+            getAuthorizeDropboxAPIMethod().then((data) => {
+              console.log("authorize data: " + JSON.stringify(data));
+              console.log("authorize data.body: " + JSON.stringify(data.body));
+              window.location.replace(data.body);
+            });
+          }
+        });
+      }
+    });
+  };
   return (
     <div style={{ height: "100vh" }}>
       <div
@@ -136,6 +190,7 @@ const startPage = () => {
           <img
             src="./img/signin_dropbox.png"
             style={{ height: "50px", cursor: "pointer" }}
+            onClick={dropboxAuth}
           ></img>
         </div>
       </div>
