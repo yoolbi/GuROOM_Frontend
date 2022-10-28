@@ -18,9 +18,9 @@ import AccessControl from "./AccessControl";
 import CompareSnapshots from "./CompareSnapshots";
 import urlJoin from "url-join";
 import {
-  getAuthorizeAPIMethod,
-  getUserAPIMethod,
-  postRefreshAPIMethod,
+  getAuthorizeDropboxAPIMethod,
+  getUserDropboxAPIMethod,
+  postRefreshDropboxAPIMethod,
 } from "../api/client";
 
 const style = {
@@ -65,21 +65,21 @@ const HomepageDropbox = () => {
 
   //When the user enter the Homepage, we will automatically get the user information. If there are no information in the DB, then will show the initial page.
   useEffect(() => {
-    getUserAPIMethod().then((user) => {
+    getUserDropboxAPIMethod().then((user) => {
       console.log("get user: ", user);
       if (user.status === 200) {
         setUser(user.body);
       } else if (user.status === 201) {
         window.location.replace(
-          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
+          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetupDropbox")
         );
         setUser(user.body);
       } else {
         //create refresh, refresh 가 실패시 authorize. refresh가 성공하면 다시 getUser
         //check if the token has expired
-        postRefreshAPIMethod().then((data) => {
+        postRefreshDropboxAPIMethod().then((data) => {
           if (data.status === 200) {
-            getUserAPIMethod().then((user) => {
+            getUserDropboxAPIMethod().then((user) => {
               if (user.status === 200) {
                 window.location.replace(
                   urlJoin(
@@ -89,16 +89,19 @@ const HomepageDropbox = () => {
                 );
               } else if (user.status === 201) {
                 window.location.replace(
-                  urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
+                  urlJoin(
+                    process.env.REACT_APP_FRONTEND_URL,
+                    "/InitialSetupDropbox"
+                  )
                 );
               } else {
-                getAuthorizeAPIMethod().then((data) => {
+                getAuthorizeDropboxAPIMethod().then((data) => {
                   window.location.replace(data.body);
                 });
               }
             });
           } else {
-            getAuthorizeAPIMethod().then((data) => {
+            getAuthorizeDropboxAPIMethod().then((data) => {
               window.location.replace(data.body);
             });
           }
