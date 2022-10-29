@@ -71,12 +71,12 @@ const startPage = () => {
       //if user is valid and have a file snapshot, goto Homepage
       if (user.status === 200) {
         window.location.replace(
-          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/Homepage")
+          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/HomepageDropbox")
         );
       } else if (user.status === 201) {
         //if the user is valid but do not have a file snapshot, goto initial setup
         window.location.replace(
-          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
+          urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetupDropbox")
         );
       } else {
         //if the user is invalid, refresh the token to check if the token has expired
@@ -86,11 +86,17 @@ const startPage = () => {
             getUserDropboxAPIMethod().then((user) => {
               if (user.status === 200) {
                 window.location.replace(
-                  urlJoin(process.env.REACT_APP_FRONTEND_URL, "/Homepage")
+                  urlJoin(
+                    process.env.REACT_APP_FRONTEND_URL,
+                    "/HomepageDropbox"
+                  )
                 );
               } else if (user.status === 201) {
                 window.location.replace(
-                  urlJoin(process.env.REACT_APP_FRONTEND_URL, "/InitialSetup")
+                  urlJoin(
+                    process.env.REACT_APP_FRONTEND_URL,
+                    "/InitialSetupDropbox"
+                  )
                 );
               } else {
                 //if the user is invalid, go to authorization

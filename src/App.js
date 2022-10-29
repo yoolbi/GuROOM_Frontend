@@ -4,12 +4,12 @@ import StartPage from "./pages/StartPage";
 import InitialSetup from "./pages/InitialSetup";
 import Homepage from "./pages/Homepage";
 import Authorization from "./pages/Authorization";
-import AuthorizationDropbox from "./pages/AuthorizationDropbox";
 import LoginFailed from "./pages/LoginFailed";
-import HomepageDropbox from "./pages/HomepageDropbox";
+import AuthorizationDropbox from "./dropbox/AuthorizationDropbox";
+import HomepageDropbox from "./dropbox/HomepageDropbox";
+import InitialSetupDropbox from "./dropbox/InitialSetupDropbox";
 
 import "./index.css";
-import InitialSetupDropbox from "./pages/InitialSetupDropbox";
 
 function App() {
   return (
