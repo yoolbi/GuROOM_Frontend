@@ -57,7 +57,7 @@ const AuthorizationDropbox = () => {
         sx={{ display: "flex", justifyContent: "center", marginTop: "200px" }}
       >
         <CircularProgress />
-        <h4>Processing authorization...</h4>
+        <h4 style={{ marginLeft: "10px" }}>Processing authorization...</h4>
       </Box>
     </div>
   );

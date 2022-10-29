@@ -13,9 +13,9 @@ import {
   ListItemText,
 } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import Home from "./Home";
-import AccessControl from "./AccessControl";
-import CompareSnapshots from "./CompareSnapshots";
+import Home from "../pages/Home";
+import AccessControl from "../pages/AccessControl";
+import CompareSnapshots from "../pages/CompareSnapshots";
 import urlJoin from "url-join";
 import {
   getAuthorizeDropboxAPIMethod,
