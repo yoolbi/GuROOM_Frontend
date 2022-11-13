@@ -1,306 +1,268 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import TextField from "@mui/material/TextField";
-import { Chip, ListItem, Paper } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  TextField,
+  FormControlLabel,
+  Switch,
+  Button,
+  Autocomplete,
+} from "@mui/material";
+import {
+  getMembersAPIMethod,
+  getQueriesAPIMethod,
+  postAccessControlAPIMethod,
+} from "../api/client";
 
 //This is the one of tabs from Filter Modal. It can manage access control.
-const AccessControlPolicy = () => {
-  const [accessControlPolicies, setAccessControlPolicies] = React.useState("");
-  const [query, setQuery] = React.useState("");
-  const [allowedReaders, setAllowedReaders] = React.useState("");
-  const [allowedWriters, setAllowedWriters] = React.useState("");
-  const [deniedReaders, setDeniedReaders] = React.useState("");
-  const [deniedWriters, setDeniedWriters] = React.useState("");
+// eslint-disable-next-line react/prop-types
+const AccessControlPolicy = ({ handleCloseSearchFilter, fileSnapshot }) => {
+  // const [accessControlPolicies, setAccessControlPolicies] = useState([
+  //   { name: "AccessControl 1" },
+  //   { name: "AccessControl 2" },
+  // ]);
+  const [accessControlPolicies, setAccessControlPolicies] = useState("");
+  const [allowedReaders, setAllowedReaders] = useState([]);
+  const [allowedWriters, setAllowedWriters] = useState([]);
+  const [deniedReaders, setDeniedReaders] = useState([]);
+  const [deniedWriters, setDeniedWriters] = useState([]);
+  const [checkedGroup, setCheckedGroup] = useState(false);
+  const [query, setQuery] = useState("");
+  const [queryLogs, setQueryLogs] = useState([]);
+  const [members, setMembers] = useState([]);
 
-  const [allowedReadersData, setAllowedReadersData] = React.useState([
-    { key: 0, label: "allowedReadersData" },
-    { key: 1, label: "jQuery" },
-    { key: 2, label: "Polymer" },
-    { key: 4, label: "Vue.js" },
-  ]);
-  const [allowedWritersData, setAllowedWritersData] = React.useState([
-    { key: 0, label: "allowedWritersData" },
-    { key: 1, label: "jQuery" },
-    { key: 2, label: "Polymer" },
-    { key: 4, label: "Vue.js" },
-  ]);
+  //check group
+  const handleChangeCheckedGroup = (event) => {
+    setCheckedGroup(event.target.checked);
+  };
 
-  const [deniedReadersData, setDeniedReadersData] = React.useState([
-    { key: 0, label: "hi" },
-    { key: 1, label: "jQuery" },
-    { key: 2, label: "deniedReadersData" },
-    { key: 4, label: "Vue.js" },
-  ]);
-
-  const [deniedWritersData, setDeniedWritersData] = React.useState([
-    { key: 0, label: "hallo" },
-    { key: 1, label: "jQuery" },
-    { key: 2, label: "Polymer" },
-    { key: 4, label: "deniedWritersData" },
-  ]);
-
+  //change name of access control
   const handleChangeAccessControlPolicies = (event) => {
     setAccessControlPolicies(event.target.value);
   };
+
+  //edit selection of query
   const handleChangeQuery = (event) => {
-    setQuery(event.target.value);
+    setQuery(event.target.innerText);
   };
 
-  const handleChangeAllowedReaders = (event) => {
-    setAllowedReaders(event.target.value);
+  //edit allowed readers
+  const handleChangeAllowedReaders = (newValue) => {
+    let allowedReadersLet = [];
+    newValue.map((value) => {
+      allowedReadersLet.push(value.email);
+    });
+    setAllowedReaders(allowedReadersLet);
   };
 
-  const handleChangeAllowedWriters = (event) => {
-    setAllowedWriters(event.target.value);
+  //edit allowed writers
+  const handleChangeAllowedWriters = (newValue) => {
+    let allowedWritersLet = [];
+    newValue.map((value) => {
+      allowedWritersLet.push(value.email);
+    });
+    setAllowedWriters(allowedWritersLet);
   };
 
-  const handleChangeDeniedReaders = (event) => {
-    setDeniedReaders(event.target.value);
+  //edit denied readers
+  const handleChangeDeniedReaders = (newValue) => {
+    let deniedReadersLet = [];
+    newValue.map((value) => {
+      deniedReadersLet.push(value.email);
+    });
+    setDeniedReaders(deniedReadersLet);
   };
 
-  const handleChangeDeniedWriters = (event) => {
-    setDeniedWriters(event.target.value);
+  //edit denied writers
+  const handleChangeDeniedWriters = (newValue) => {
+    let deniedWritersLet = [];
+    newValue.map((value) => {
+      deniedWritersLet.push(value.email);
+    });
+    setDeniedWriters(deniedWritersLet);
   };
 
-  //delete
-  const handleDeleteAllowedReadersData = (chipToDelete) => () => {
-    setAllowedReadersData((chips) =>
-      chips.filter((chip) => chip.key !== chipToDelete.key)
-    );
+  //apply access control
+  const handleClickApply = () => {
+    console.log("apply");
+    console.log(accessControlPolicies);
+    console.log(query);
+    console.log(allowedReaders);
+    console.log(allowedWriters);
+    console.log(deniedReaders);
+    console.log(deniedWriters);
+    console.log(checkedGroup);
+    postAccessControlAPIMethod(
+      accessControlPolicies,
+      query,
+      allowedReaders,
+      allowedWriters,
+      deniedReaders,
+      deniedReaders,
+      checkedGroup
+    ).then((res) => {
+      console.log(res);
+    });
+    handleCloseSearchFilter();
   };
-  const handleDeleteAllowedWritersData = (chipToDelete) => () => {
-    setAllowedWritersData((chips) =>
-      chips.filter((chip) => chip.key !== chipToDelete.key)
-    );
-  };
-  const handleDeleteDeniedReadersData = (chipToDelete) => () => {
-    setDeniedReadersData((chips) =>
-      chips.filter((chip) => chip.key !== chipToDelete.key)
-    );
-  };
-  const handleDeleteDeniedWritersData = (chipToDelete) => () => {
-    setDeniedWritersData((chips) =>
-      chips.filter((chip) => chip.key !== chipToDelete.key)
-    );
-  };
+
+  useEffect(() => {
+    //get list of queries
+    getQueriesAPIMethod().then((res) => {
+      setQueryLogs(res.body.reverse());
+    });
+  }, []);
+
+  //get list of emails of members
+  useEffect(() => {
+    getMembersAPIMethod(fileSnapshot, checkedGroup).then((data) => {
+      setMembers(data.data);
+      console.log(members);
+    });
+  }, [checkedGroup]);
 
   return (
     <div style={{ height: 570, overflowY: "scroll" }}>
-      <Box sx={{ width: "545px", marginBottom: "15px" }}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">
-            Access Control Policies
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={accessControlPolicies}
-            label="Access Control Policies"
-            onChange={handleChangeAccessControlPolicies}
-          >
-            <MenuItem value={10}>Access Control Policy #1</MenuItem>
-            <MenuItem value={20}>Access Control Policy #2</MenuItem>
-            <MenuItem value={30}>Access Control Policy #3</MenuItem>
-          </Select>
-        </FormControl>
+      <FormControlLabel
+        control={
+          <Switch checked={checkedGroup} onChange={handleChangeCheckedGroup} />
+        }
+        label="Group"
+      />
+      <Box sx={{ width: "545px" }}>
+        <TextField
+          id="filled-textarea"
+          label="Name"
+          placeholder="username"
+          multiline
+          variant="outlined"
+          value={accessControlPolicies}
+          onChange={handleChangeAccessControlPolicies}
+          sx={{ width: "545px", marginBottom: "20px" }}
+        />
+        {/*<Autocomplete*/}
+        {/*  disablePortal*/}
+        {/*  id="tags-outlined"*/}
+        {/*  options={accessControlPolicies}*/}
+        {/*  getOptionLabel={(option) => (option.name ? option.name : "")}*/}
+        {/*  onChange={handleChangeAccessControlPolicies}*/}
+        {/*  renderInput={(params) => (*/}
+        {/*    <TextField*/}
+        {/*      {...params}*/}
+        {/*      label="Access Control Requirements"*/}
+        {/*      placeholder="Access Control"*/}
+        {/*      sx={{ width: "545px", marginBottom: "20px" }}*/}
+        {/*    />*/}
+        {/*  )}*/}
+        {/*/>*/}
       </Box>
 
-      <Box sx={{ width: "545px", marginBottom: "15px" }}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Query</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={query}
-            label="Query"
-            onChange={handleChangeQuery}
-          >
-            <MenuItem value={10}>from: yooha.bae@stonybrook.edu</MenuItem>
-            <MenuItem value={20}>to: yoolbi.lee@stonybrook.edu</MenuItem>
-            <MenuItem value={30}>dddd</MenuItem>
-          </Select>
-        </FormControl>
+      <Box sx={{ width: "545px" }}>
+        <Autocomplete
+          disablePortal
+          id="tags-outlined"
+          options={queryLogs}
+          getOptionLabel={(option) => (option.query ? option.query : "")}
+          onChange={handleChangeQuery}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Query"
+              placeholder="Query"
+              sx={{ width: "545px", marginBottom: "20px" }}
+            />
+          )}
+        />
       </Box>
 
       <div>
-        <TextField
-          id="filled-textarea"
-          label="Allowed Readers"
-          placeholder="username"
-          multiline
-          variant="filled"
-          value={allowedReaders}
-          onChange={handleChangeAllowedReaders}
-          sx={{ width: "545px" }}
+        <Autocomplete
+          multiple
+          id="tags-outlined"
+          options={members}
+          getOptionLabel={(option) => (option.email ? option.email : "")}
+          filterSelectedOptions
+          onChange={(event, newValue) => handleChangeAllowedReaders(newValue)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Allowed Readers"
+              placeholder="Email"
+              sx={{ width: "545px", marginBottom: "20px" }}
+            />
+          )}
         />
-        <Paper
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            listStyle: "none",
-            p: 0.5,
-            m: 0,
-            width: "536px",
-            marginBottom: "20px",
-          }}
-          component="ul"
-        >
-          {allowedReadersData.map((data) => {
-            return (
-              <ListItem
-                key={data.key}
-                sx={{ width: "auto", padding: " 2px 4px 4px 2px " }}
-              >
-                <Chip
-                  avatar={
-                    <Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />
-                  }
-                  label={data.label}
-                  onDelete={
-                    data.label === "React"
-                      ? undefined
-                      : handleDeleteAllowedReadersData(data)
-                  }
-                />
-              </ListItem>
-            );
-          })}
-        </Paper>
+        <Autocomplete
+          multiple
+          id="tags-outlined"
+          options={members}
+          getOptionLabel={(option) => (option.email ? option.email : "")}
+          filterSelectedOptions
+          onChange={(event, newValue) => handleChangeAllowedWriters(newValue)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Allowed Writers"
+              placeholder="Email"
+              sx={{ width: "545px", marginBottom: "20px" }}
+            />
+          )}
+        />
+        <Autocomplete
+          multiple
+          id="tags-outlined"
+          options={members}
+          getOptionLabel={(option) => (option.email ? option.email : "")}
+          filterSelectedOptions
+          onChange={(event, newValue) => handleChangeDeniedReaders(newValue)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Denied Readers"
+              placeholder="Email"
+              sx={{ width: "545px", marginBottom: "20px" }}
+            />
+          )}
+        />
+        <Autocomplete
+          multiple
+          id="tags-outlined"
+          options={members}
+          getOptionLabel={(option) => (option.email ? option.email : "")}
+          filterSelectedOptions
+          onChange={(event, newValue) => handleChangeDeniedWriters(newValue)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Denied Writers"
+              placeholder="Email"
+              sx={{ width: "545px", marginBottom: "20px" }}
+            />
+          )}
+        />
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginTop: "30px",
+        }}
+      >
+        <Button variant="contained" onClick={handleClickApply}>
+          APPLY
+        </Button>
 
-        <TextField
-          id="filled-textarea"
-          label="Allowed Writers"
-          placeholder="username"
-          multiline
-          variant="filled"
-          value={allowedWriters}
-          onChange={handleChangeAllowedWriters}
-          sx={{ width: "545px" }}
-        />
-        <Paper
+        <div style={{ width: "10px" }}></div>
+        <Button
+          variant="contained"
           sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            listStyle: "none",
-            p: 0.5,
-            m: 0,
-            width: "536px",
-            marginBottom: "20px",
+            backgroundColor: "#E0E0E0",
+            color: "black",
+            "&:hover": { backgroundColor: "#E0E0E0" },
           }}
-          component="ul"
+          onClick={handleCloseSearchFilter}
         >
-          {allowedWritersData.map((data) => {
-            return (
-              <ListItem
-                key={data.key}
-                sx={{ width: "auto", padding: " 2px 4px 4px 2px " }}
-              >
-                <Chip
-                  avatar={
-                    <Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />
-                  }
-                  label={data.label}
-                  onDelete={
-                    data.label === "React"
-                      ? undefined
-                      : handleDeleteAllowedWritersData(data)
-                  }
-                />
-              </ListItem>
-            );
-          })}
-        </Paper>
-        <TextField
-          id="filled-textarea"
-          label="Denied Readers"
-          placeholder="username"
-          multiline
-          variant="filled"
-          value={deniedReaders}
-          onChange={handleChangeDeniedReaders}
-          sx={{ width: "545px" }}
-        />
-        <Paper
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            listStyle: "none",
-            p: 0.5,
-            m: 0,
-            width: "536px",
-            marginBottom: "20px",
-          }}
-          component="ul"
-        >
-          {deniedReadersData.map((data) => {
-            return (
-              <ListItem
-                key={data.key}
-                sx={{ width: "auto", padding: " 2px 4px 4px 2px " }}
-              >
-                <Chip
-                  avatar={
-                    <Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />
-                  }
-                  label={data.label}
-                  onDelete={
-                    data.label === "React"
-                      ? undefined
-                      : handleDeleteDeniedReadersData(data)
-                  }
-                />
-              </ListItem>
-            );
-          })}
-        </Paper>
-        <TextField
-          id="filled-textarea"
-          label="Denied Writers"
-          placeholder="username"
-          multiline
-          variant="filled"
-          value={deniedWriters}
-          onChange={handleChangeDeniedWriters}
-          sx={{ width: "545px" }}
-        />
-        <Paper
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            listStyle: "none",
-            p: 0.5,
-            m: 0,
-            width: "536px",
-            marginBottom: "20px",
-          }}
-          component="ul"
-        >
-          {deniedWritersData.map((data) => {
-            return (
-              <ListItem
-                key={data.key}
-                sx={{ width: "auto", padding: " 2px 4px 4px 2px " }}
-              >
-                <Chip
-                  avatar={
-                    <Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />
-                  }
-                  label={data.label}
-                  onDelete={
-                    data.label === "React"
-                      ? undefined
-                      : handleDeleteDeniedWritersData(data)
-                  }
-                />
-              </ListItem>
-            );
-          })}
-        </Paper>
+          CANCEL
+        </Button>
       </div>
     </div>
   );

@@ -1,14 +1,16 @@
-import React from "react";
-import IconButton from "@mui/material/IconButton";
+import React, { useEffect, useState } from "react";
+import { IconButton, InputBase, Paper, Box, Chip, Button } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import InputBase from "@mui/material/InputBase";
-import Paper from "@mui/material/Paper";
-
 import { DataGrid } from "@mui/x-data-grid";
-import Box from "@mui/material/Box";
+import { getAccessControlAPIMethod } from "../api/client";
 
 //This is the access control tab from the Homepage.
 const AccessControl = () => {
+  //click use
+  const handleClickUse = (params) => {
+    console.log(params);
+  };
+
   //The table columns
   const columns = [
     { field: "name", headerName: "Name", width: 150 },
@@ -16,6 +18,11 @@ const AccessControl = () => {
       field: "query",
       headerName: "Query",
       width: 250,
+      renderCell: (params) => (
+        <div style={{ width: "100%", overflowX: "auto" }}>
+          {params.row.query}
+        </div>
+      ),
     },
     {
       field: "group",
@@ -26,36 +33,92 @@ const AccessControl = () => {
       field: "allowedReaders",
       headerName: "Allowed Readers",
       width: 150,
+      renderCell: (params) => (
+        <div style={{ width: "100%", overflowX: "auto" }}>
+          {JSON.parse(params.row.allowedReaders).map((data) => {
+            return <Chip label={data} variant="outlined" key={data} />;
+          })}
+        </div>
+      ),
     },
     {
       field: "allowedWriters",
       headerName: "Allowed Writers",
       width: 150,
+      renderCell: (params) => (
+        <div style={{ width: "100%", overflowX: "auto" }}>
+          {JSON.parse(params.row.allowedWriters).map((data) => {
+            return <Chip label={data} variant="outlined" key={data} />;
+          })}
+        </div>
+      ),
     },
     {
       field: "deniedReaders",
       headerName: "Denied Readers",
       width: 150,
+      renderCell: (params) => (
+        <div style={{ width: "100%", overflowX: "auto" }}>
+          {JSON.parse(params.row.deniedReaders).map((data) => {
+            return <Chip label={data} variant="outlined" key={data} />;
+          })}
+        </div>
+      ),
     },
     {
       field: "deniedWriters",
       headerName: "Denied Writers",
       width: 150,
-    },
-    {
-      field: "created",
-      headerName: "Created",
-      width: 100,
+      renderCell: (params) => (
+        <div style={{ width: "100%", overflowX: "auto" }}>
+          {JSON.parse(params.row.deniedWriters).map((data) => {
+            return <Chip label={data} variant="outlined" key={data} />;
+          })}
+        </div>
+      ),
     },
     {
       field: "useButton",
       headerName: "",
       width: 80,
+      renderCell: (params) => {
+        return (
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => handleClickUse(params)}
+          >
+            USE
+          </Button>
+        );
+      },
     },
   ];
 
   //The table rows
-  const rows = [{ id: 1, lastName: "Snow", firstName: "Jon", age: 35 }];
+  // const rows = [{ id: 1, lastName: "Snow", firstName: "Jon", age: 35 }];
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    //get access control requirements
+    getAccessControlAPIMethod().then((res) => {
+      console.log(res);
+      let tempRows = [];
+      res.body.map((data) => {
+        tempRows.push({
+          id: data.name,
+          name: data.name,
+          query: data.query,
+          group: data.Grp,
+          allowedReaders: JSON.stringify(data.AR),
+          allowedWriters: JSON.stringify(data.AW),
+          deniedReaders: JSON.stringify(data.DR),
+          deniedWriters: JSON.stringify(data.DW),
+        });
+      });
+      setRows(tempRows);
+    });
+  }, []);
 
   return (
     <div>

@@ -312,10 +312,56 @@ export const getMembersAPIMethod = async (snapshot_name, is_groups) => {
 
 //Get query logs
 export const getQueriesAPIMethod = () => {
-  console.log("authorize");
   return fetch(
     urlJoin(
       process.env.REACT_APP_BACKEND_URL + "/apps/snapshot/v1/google/queries"
+    ),
+    {
+      credentials: "include",
+    }
+  ).then(parseJSON);
+};
+
+//Create Access Control
+export const postAccessControlAPIMethod = (
+  name,
+  query,
+  AR,
+  AW,
+  DR,
+  DW,
+  Grp
+) => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL +
+        "/apps/snapshot/v1/google/access-controls"
+    ),
+    {
+      credentials: "include",
+      method: "POST",
+      body: JSON.stringify({
+        name: name,
+        query: query,
+        AR: AR,
+        AW: AW,
+        DR: DR,
+        DW: DW,
+        Grp: Grp,
+      }),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};
+
+//get access control requirements
+export const getAccessControlAPIMethod = () => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL +
+        "/apps/snapshot/v1/google/access-controls"
     ),
     {
       credentials: "include",

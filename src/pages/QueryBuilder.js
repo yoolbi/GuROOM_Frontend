@@ -67,40 +67,40 @@ const QueryBuilder = ({
     setName(event.target.value);
   };
 
-  let readableLet = "";
-  const handleChangeReadable = (event) => {
-    if (readable === "") {
-      readableLet = event.target.innerText;
-      setReadable(event.target.innerText);
-    } else {
-      readableLet = readable;
-      readableLet = readableLet + "," + event.target.innerText;
-      setReadable(readableLet);
-    }
+  const handleChangeReadable = (newValue) => {
+    let readableLet = "";
+    newValue.map((value, index) => {
+      if (index === 0) {
+        readableLet = value.email;
+      } else {
+        readableLet = readableLet + "," + value.email;
+      }
+    });
+    setReadable(readableLet);
   };
 
-  let writableLet = "";
-  const handleChangeWritable = (event) => {
-    if (writable === "") {
-      writableLet = event.target.innerText;
-      setWritable(event.target.innerText);
-    } else {
-      writableLet = writable;
-      writableLet = writableLet + "," + event.target.innerText;
-      setWritable(writableLet);
-    }
+  const handleChangeWritable = (newValue) => {
+    let writableLet = "";
+    newValue.map((value, index) => {
+      if (index === 0) {
+        writableLet = value.email;
+      } else {
+        writableLet = writableLet + "," + value.email;
+      }
+    });
+    setWritable(writableLet);
   };
 
-  let sharableLet = "";
-  const handleChangeSharable = (event) => {
-    if (sharable === "") {
-      sharableLet = event.target.innerText;
-      setSharable(event.target.innerText);
-    } else {
-      sharableLet = sharable;
-      sharableLet = sharableLet + "," + event.target.innerText;
-      setSharable(sharableLet);
-    }
+  const handleChangeSharable = (newValue) => {
+    let sharableLet = "";
+    newValue.map((value, index) => {
+      if (index === 0) {
+        sharableLet = value.email;
+      } else {
+        sharableLet = sharableLet + "," + value.email;
+      }
+    });
+    setSharable(sharableLet);
   };
 
   const handleChangePath = (event) => {
@@ -172,7 +172,7 @@ const QueryBuilder = ({
       setMembers(data.data);
       console.log(members);
     });
-  }, []);
+  }, [checkedGroup]);
 
   return (
     <div style={{ height: "100%" }}>
@@ -279,7 +279,7 @@ const QueryBuilder = ({
             options={members}
             getOptionLabel={(option) => (option.email ? option.email : "")}
             filterSelectedOptions
-            onChange={handleChangeReadable}
+            onChange={(event, newValue) => handleChangeReadable(newValue)}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -295,7 +295,7 @@ const QueryBuilder = ({
             options={members}
             getOptionLabel={(option) => (option.email ? option.email : "")}
             filterSelectedOptions
-            onChange={handleChangeWritable}
+            onChange={(event, newValue) => handleChangeWritable(newValue)}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -311,7 +311,7 @@ const QueryBuilder = ({
             options={members}
             getOptionLabel={(option) => (option.email ? option.email : "")}
             filterSelectedOptions
-            onChange={handleChangeSharable}
+            onChange={(event, newValue) => handleChangeSharable(newValue)}
             renderInput={(params) => (
               <TextField
                 {...params}

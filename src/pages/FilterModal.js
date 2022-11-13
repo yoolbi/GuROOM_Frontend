@@ -49,7 +49,10 @@ const FilterModal = ({
             />
           </TabPanel>
           <TabPanel value="2">
-            <AccessControlPolicy />
+            <AccessControlPolicy
+              handleCloseSearchFilter={handleCloseSearchFilter}
+              fileSnapshot={fileSnapshot}
+            />
           </TabPanel>
         </TabContext>
       </Box>
