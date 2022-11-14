@@ -12,6 +12,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { DataGrid } from "@mui/x-data-grid";
 import { getAccessControlAPIMethod } from "../api/client";
 import AccessControlPolicy from "./AccessControlPolicy";
+import AccessControlDetailModal from "./AccessControlDetailModal";
 
 //style for modal
 const style = {
@@ -29,6 +30,7 @@ const style = {
 
 //This is the access control tab from the Homepage.
 const AccessControl = () => {
+  //open and close modal for creating access control
   const [openCreateAccessControlModal, setOpenCreateAccessControlModal] =
     useState(false);
   const handleOpenCreateAccessControlModal = () =>
@@ -36,9 +38,22 @@ const AccessControl = () => {
   const handleCloseCreateAccessControlModal = () =>
     setOpenCreateAccessControlModal(false);
 
+  //open and close modal for access control details
+  const [detailModal, setDetailModal] = useState(false);
+  const openDetailModal = () => setDetailModal(true);
+  const closeDetailModal = () => setDetailModal(false);
+
+  //show detail information when double-clicked
+  const [eachDetailData, setEachDetailData] = useState();
+  const handleDoubleClickRow = (data) => {
+    console.log("double click row: ", data);
+    setEachDetailData(data);
+    openDetailModal();
+  };
+
   //click use
   const handleClickUse = (params) => {
-    console.log(params);
+    console.log(params.row);
   };
 
   //The table columns
@@ -55,53 +70,53 @@ const AccessControl = () => {
       ),
     },
     {
-      field: "group",
+      field: "Grp",
       headerName: "Group",
       width: 120,
     },
     {
-      field: "allowedReaders",
+      field: "AR",
       headerName: "Allowed Readers",
       width: 150,
       renderCell: (params) => (
         <div style={{ width: "100%", overflowX: "auto" }}>
-          {JSON.parse(params.row.allowedReaders).map((data) => {
+          {params.row.AR.map((data) => {
             return <Chip label={data} variant="outlined" key={data} />;
           })}
         </div>
       ),
     },
     {
-      field: "allowedWriters",
+      field: "AW",
       headerName: "Allowed Writers",
       width: 150,
       renderCell: (params) => (
         <div style={{ width: "100%", overflowX: "auto" }}>
-          {JSON.parse(params.row.allowedWriters).map((data) => {
+          {params.row.AW.map((data) => {
             return <Chip label={data} variant="outlined" key={data} />;
           })}
         </div>
       ),
     },
     {
-      field: "deniedReaders",
+      field: "DR",
       headerName: "Denied Readers",
       width: 150,
       renderCell: (params) => (
         <div style={{ width: "100%", overflowX: "auto" }}>
-          {JSON.parse(params.row.deniedReaders).map((data) => {
+          {params.row.DR.map((data) => {
             return <Chip label={data} variant="outlined" key={data} />;
           })}
         </div>
       ),
     },
     {
-      field: "deniedWriters",
+      field: "DW",
       headerName: "Denied Writers",
       width: 150,
       renderCell: (params) => (
         <div style={{ width: "100%", overflowX: "auto" }}>
-          {JSON.parse(params.row.deniedWriters).map((data) => {
+          {params.row.DW.map((data) => {
             return <Chip label={data} variant="outlined" key={data} />;
           })}
         </div>
@@ -126,26 +141,64 @@ const AccessControl = () => {
   ];
 
   //The table rows
-  // const rows = [{ id: 1, lastName: "Snow", firstName: "Jon", age: 35 }];
   const [rows, setRows] = useState([]);
+
+  //search
+  const [searchInput, setSearchInput] = useState("");
+  const handleChangeSearch = (e) => {
+    setSearchInput(e.target.value);
+  };
+
+  //click search icon
+  const handleClickSearchIcon = () => {
+    getAccessControlAPIMethod().then((res) => {
+      let filtered,
+        tempRows = [];
+      filtered = res.body.filter((row) =>
+        row.name.toLowerCase().includes(searchInput.toLowerCase())
+      );
+      filtered.map((data, index) => {
+        tempRows.push({
+          id: index,
+          name: data.name,
+          query: data.query,
+          Grp: data.Grp,
+          AR: data.AR,
+          AW: data.AW,
+          DR: data.DR,
+          DW: data.DW,
+        });
+      });
+      setRows(tempRows);
+    });
+  };
+
+  //search when pressing enter key
+  const onKeyPressEnter = (event) => {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      handleClickSearchIcon();
+    }
+  };
 
   useEffect(() => {
     //get access control requirements
     getAccessControlAPIMethod().then((res) => {
       console.log(res);
       let tempRows = [];
-      res.body.map((data) => {
+      res.body.map((data, index) => {
         tempRows.push({
-          id: data.name,
+          id: index,
           name: data.name,
           query: data.query,
-          group: data.Grp,
-          allowedReaders: JSON.stringify(data.AR),
-          allowedWriters: JSON.stringify(data.AW),
-          deniedReaders: JSON.stringify(data.DR),
-          deniedWriters: JSON.stringify(data.DW),
+          Grp: data.Grp,
+          AR: data.AR,
+          AW: data.AW,
+          DR: data.DR,
+          DW: data.DW,
         });
       });
+      console.log(tempRows);
       setRows(tempRows);
     });
   }, [openCreateAccessControlModal]);
@@ -169,12 +222,14 @@ const AccessControl = () => {
           }}
         >
           <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-            <SearchIcon />
+            <SearchIcon onClick={handleClickSearchIcon} />
           </IconButton>
           <InputBase
             sx={{ ml: 1, flex: 1 }}
-            placeholder="ex) readable: webyte@gmail.com"
+            placeholder="Search by name. ex) Access Control #1"
             inputProps={{ "aria-label": "search google maps" }}
+            onChange={handleChangeSearch}
+            onKeyDown={onKeyPressEnter}
           />
         </Paper>
         {/*The table*/}
@@ -203,8 +258,13 @@ const AccessControl = () => {
           pageSize={10}
           rowsPerPageOptions={[10]}
           checkboxSelection
+          onCellDoubleClick={(params, event) => {
+            event.defaultMuiPrevented = true;
+            handleDoubleClickRow(params.row);
+          }}
         />
       </Box>
+      {/*modal for creating access control*/}
       <Modal
         open={openCreateAccessControlModal}
         onClose={handleCloseCreateAccessControlModal}
@@ -217,6 +277,17 @@ const AccessControl = () => {
               handleCloseCreateAccessControlModal
             }
           ></AccessControlPolicy>
+        </Box>
+      </Modal>
+      {/*modal for access control detail*/}
+      <Modal
+        open={detailModal}
+        onClose={closeDetailModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style} style={{ overflowY: "auto" }}>
+          <AccessControlDetailModal eachDetailData={eachDetailData} />
         </Box>
       </Modal>
     </div>
