@@ -7,19 +7,15 @@ import {
   Button,
   Autocomplete,
 } from "@mui/material";
-import {
-  getMembersAPIMethod,
-  getQueriesAPIMethod,
-  postAccessControlAPIMethod,
-} from "../api/client";
+import { getQueriesAPIMethod, postAccessControlAPIMethod } from "../api/client";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import Tab from "@mui/material/Tab";
+import TabPanel from "@mui/lab/TabPanel";
 
-//This is the one of tabs from Filter Modal. It can manage access control.
+//Content in the creating access control policy modal
 // eslint-disable-next-line react/prop-types
-const AccessControlPolicy = ({ handleCloseSearchFilter, fileSnapshot }) => {
-  // const [accessControlPolicies, setAccessControlPolicies] = useState([
-  //   { name: "AccessControl 1" },
-  //   { name: "AccessControl 2" },
-  // ]);
+const AccessControlPolicyModal = ({ handleCloseCreateAccessControlModal }) => {
   const [accessControlPolicies, setAccessControlPolicies] = useState("");
   const [allowedReaders, setAllowedReaders] = useState([]);
   const [allowedWriters, setAllowedWriters] = useState([]);
@@ -28,7 +24,6 @@ const AccessControlPolicy = ({ handleCloseSearchFilter, fileSnapshot }) => {
   const [checkedGroup, setCheckedGroup] = useState(false);
   const [query, setQuery] = useState("");
   const [queryLogs, setQueryLogs] = useState([]);
-  const [members, setMembers] = useState([]);
 
   //check group
   const handleChangeCheckedGroup = (event) => {
@@ -40,69 +35,40 @@ const AccessControlPolicy = ({ handleCloseSearchFilter, fileSnapshot }) => {
     setAccessControlPolicies(event.target.value);
   };
 
-  //edit selection of query
-  const handleChangeQuery = (event) => {
-    setQuery(event.target.innerText);
-  };
-
   //edit allowed readers
-  const handleChangeAllowedReaders = (newValue) => {
-    let allowedReadersLet = [];
-    newValue.map((value) => {
-      allowedReadersLet.push(value.email);
-    });
-    setAllowedReaders(allowedReadersLet);
+  const handleChangeAllowedReaders = (e) => {
+    setAllowedReaders(e.target.value);
   };
 
   //edit allowed writers
-  const handleChangeAllowedWriters = (newValue) => {
-    let allowedWritersLet = [];
-    newValue.map((value) => {
-      allowedWritersLet.push(value.email);
-    });
-    setAllowedWriters(allowedWritersLet);
+  const handleChangeAllowedWriters = (e) => {
+    setAllowedWriters(e.target.value);
   };
 
   //edit denied readers
-  const handleChangeDeniedReaders = (newValue) => {
-    let deniedReadersLet = [];
-    newValue.map((value) => {
-      deniedReadersLet.push(value.email);
-    });
-    setDeniedReaders(deniedReadersLet);
+  const handleChangeDeniedReaders = (e) => {
+    setDeniedReaders(e.target.value);
   };
 
   //edit denied writers
-  const handleChangeDeniedWriters = (newValue) => {
-    let deniedWritersLet = [];
-    newValue.map((value) => {
-      deniedWritersLet.push(value.email);
-    });
-    setDeniedWriters(deniedWritersLet);
+  const handleChangeDeniedWriters = (e) => {
+    setDeniedWriters(e.target.value);
   };
 
   //apply access control
-  const handleClickApply = () => {
-    console.log("apply");
-    console.log(accessControlPolicies);
-    console.log(query);
-    console.log(allowedReaders);
-    console.log(allowedWriters);
-    console.log(deniedReaders);
-    console.log(deniedWriters);
-    console.log(checkedGroup);
+  const handleClickCreate = () => {
     postAccessControlAPIMethod(
       accessControlPolicies,
       query,
-      allowedReaders,
-      allowedWriters,
-      deniedReaders,
-      deniedReaders,
+      allowedReaders.toString().split(", "),
+      allowedWriters.toString().split(", "),
+      deniedReaders.toString().split(", "),
+      deniedReaders.toString().split(", "),
       checkedGroup
     ).then((res) => {
       console.log(res);
+      handleCloseCreateAccessControlModal();
     });
-    handleCloseSearchFilter();
   };
 
   useEffect(() => {
@@ -111,15 +77,6 @@ const AccessControlPolicy = ({ handleCloseSearchFilter, fileSnapshot }) => {
       setQueryLogs(res.body.reverse());
     });
   }, []);
-
-  //get list of emails of members
-  useEffect(() => {
-    getMembersAPIMethod(fileSnapshot, checkedGroup).then((data) => {
-      setMembers(data.data);
-      console.log(members);
-    });
-  }, [checkedGroup]);
-
   return (
     <div style={{ height: 570, overflowY: "scroll" }}>
       <FormControlLabel
@@ -137,32 +94,22 @@ const AccessControlPolicy = ({ handleCloseSearchFilter, fileSnapshot }) => {
           variant="outlined"
           value={accessControlPolicies}
           onChange={handleChangeAccessControlPolicies}
-          sx={{ width: "545px", marginBottom: "20px" }}
+          sx={{ width: "545px", marginBottom: "20px", marginTop: "10px" }}
         />
-        {/*<Autocomplete*/}
-        {/*  disablePortal*/}
-        {/*  id="tags-outlined"*/}
-        {/*  options={accessControlPolicies}*/}
-        {/*  getOptionLabel={(option) => (option.name ? option.name : "")}*/}
-        {/*  onChange={handleChangeAccessControlPolicies}*/}
-        {/*  renderInput={(params) => (*/}
-        {/*    <TextField*/}
-        {/*      {...params}*/}
-        {/*      label="Access Control Requirements"*/}
-        {/*      placeholder="Access Control"*/}
-        {/*      sx={{ width: "545px", marginBottom: "20px" }}*/}
-        {/*    />*/}
-        {/*  )}*/}
-        {/*/>*/}
       </Box>
 
       <Box sx={{ width: "545px" }}>
         <Autocomplete
           disablePortal
-          id="tags-outlined"
+          id="filter-demo"
           options={queryLogs}
-          getOptionLabel={(option) => (option.query ? option.query : "")}
-          onChange={handleChangeQuery}
+          getOptionLabel={(option) => (option.query ? option.query : query)}
+          style={{ width: "100%" }}
+          onInputChange={(event, value) => {
+            setQuery(value);
+          }}
+          inputValue={query}
+          value={query}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -175,69 +122,41 @@ const AccessControlPolicy = ({ handleCloseSearchFilter, fileSnapshot }) => {
       </Box>
 
       <div>
-        <Autocomplete
-          multiple
-          id="tags-outlined"
-          options={members}
-          getOptionLabel={(option) => (option.email ? option.email : "")}
-          filterSelectedOptions
-          onChange={(event, newValue) => handleChangeAllowedReaders(newValue)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Allowed Readers"
-              placeholder="Email"
-              sx={{ width: "545px", marginBottom: "20px" }}
-            />
-          )}
+        <TextField
+          label="Allowed Readers"
+          placeholder="Email ex)abc@stonybrook.edu, def@stonybrook.edu"
+          multiline
+          variant="outlined"
+          value={allowedReaders}
+          onChange={handleChangeAllowedReaders}
+          sx={{ width: "545px", marginBottom: "20px" }}
         />
-        <Autocomplete
-          multiple
-          id="tags-outlined"
-          options={members}
-          getOptionLabel={(option) => (option.email ? option.email : "")}
-          filterSelectedOptions
-          onChange={(event, newValue) => handleChangeAllowedWriters(newValue)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Allowed Writers"
-              placeholder="Email"
-              sx={{ width: "545px", marginBottom: "20px" }}
-            />
-          )}
+        <TextField
+          label="Allowed Writers"
+          placeholder="Email ex)abc@stonybrook.edu, def@stonybrook.edu"
+          multiline
+          variant="outlined"
+          value={allowedWriters}
+          onChange={handleChangeAllowedWriters}
+          sx={{ width: "545px", marginBottom: "20px" }}
         />
-        <Autocomplete
-          multiple
-          id="tags-outlined"
-          options={members}
-          getOptionLabel={(option) => (option.email ? option.email : "")}
-          filterSelectedOptions
-          onChange={(event, newValue) => handleChangeDeniedReaders(newValue)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Denied Readers"
-              placeholder="Email"
-              sx={{ width: "545px", marginBottom: "20px" }}
-            />
-          )}
+        <TextField
+          label="Denied Readers"
+          placeholder="Email ex)abc@stonybrook.edu, def@stonybrook.edu"
+          multiline
+          variant="outlined"
+          value={deniedReaders}
+          onChange={handleChangeDeniedReaders}
+          sx={{ width: "545px", marginBottom: "20px" }}
         />
-        <Autocomplete
-          multiple
-          id="tags-outlined"
-          options={members}
-          getOptionLabel={(option) => (option.email ? option.email : "")}
-          filterSelectedOptions
-          onChange={(event, newValue) => handleChangeDeniedWriters(newValue)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Denied Writers"
-              placeholder="Email"
-              sx={{ width: "545px", marginBottom: "20px" }}
-            />
-          )}
+        <TextField
+          label="Denied Writers"
+          placeholder="Email ex)abc@stonybrook.edu, def@stonybrook.edu"
+          multiline
+          variant="outlined"
+          value={deniedWriters}
+          onChange={handleChangeDeniedWriters}
+          sx={{ width: "545px", marginBottom: "20px" }}
         />
       </div>
       <div
@@ -247,8 +166,8 @@ const AccessControlPolicy = ({ handleCloseSearchFilter, fileSnapshot }) => {
           marginTop: "30px",
         }}
       >
-        <Button variant="contained" onClick={handleClickApply}>
-          APPLY
+        <Button variant="contained" onClick={handleClickCreate}>
+          CREATE
         </Button>
 
         <div style={{ width: "10px" }}></div>
@@ -259,12 +178,42 @@ const AccessControlPolicy = ({ handleCloseSearchFilter, fileSnapshot }) => {
             color: "black",
             "&:hover": { backgroundColor: "#E0E0E0" },
           }}
-          onClick={handleCloseSearchFilter}
+          onClick={handleCloseCreateAccessControlModal}
         >
           CANCEL
         </Button>
       </div>
     </div>
+  );
+};
+
+// Modal for access control policy
+// eslint-disable-next-line react/prop-types
+const AccessControlPolicy = ({ handleCloseCreateAccessControlModal }) => {
+  const [value, setValue] = React.useState("1");
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+  return (
+    <Box sx={{ width: 600, typography: "body1" }}>
+      <TabContext value={value}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <TabList onChange={handleChange} aria-label="lab API tabs example">
+            <Tab label="CREATE ACCESS CONTROL REQUIREMENTS" value="1" />
+          </TabList>
+        </Box>
+        <TabPanel
+          value="1"
+          style={{ paddingTop: "10px", paddingBottom: "0px" }}
+        >
+          <AccessControlPolicyModal
+            handleCloseCreateAccessControlModal={
+              handleCloseCreateAccessControlModal
+            }
+          />
+        </TabPanel>
+      </TabContext>
+    </Box>
   );
 };
 
