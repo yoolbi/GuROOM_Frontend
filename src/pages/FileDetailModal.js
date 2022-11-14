@@ -96,7 +96,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.organizer.map((data) => {
+                  {detail.organizer.map((data, index) => {
                     return (
                       <Chip
                         avatar={
@@ -108,7 +108,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                             : data["displayName"]
                         }
                         variant="outlined"
-                        key={detail.id}
+                        key={index}
                       />
                     );
                   })}
@@ -133,7 +133,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.fileOrganizer.map((data) => {
+                  {detail.fileOrganizer.map((data, index) => {
                     return (
                       <Chip
                         avatar={
@@ -145,7 +145,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                             : data["displayName"]
                         }
                         variant="outlined"
-                        key={detail.id}
+                        key={index}
                       />
                     );
                   })}
@@ -170,7 +170,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.writer.map((data) => {
+                  {detail.writer.map((data, index) => {
                     return (
                       <Chip
                         avatar={
@@ -182,7 +182,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                             : data["displayName"]
                         }
                         variant="outlined"
-                        key={detail.id}
+                        key={index}
                       />
                     );
                   })}
@@ -207,7 +207,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.commenter.map((data) => {
+                  {detail.commenter.map((data, index) => {
                     return (
                       <Chip
                         avatar={
@@ -219,7 +219,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                             : data["displayName"]
                         }
                         variant="outlined"
-                        key={detail.id}
+                        key={index}
                       />
                     );
                   })}
@@ -244,7 +244,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.reader.map((data) => {
+                  {detail.reader.map((data, index) => {
                     return (
                       <Chip
                         avatar={
@@ -256,7 +256,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                             : data["displayName"]
                         }
                         variant="outlined"
-                        key={detail.id}
+                        key={index}
                       />
                     );
                   })}
@@ -281,7 +281,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {JSON.parse(detail.inheritPermissions).map((data) => {
+                  {JSON.parse(detail.inheritPermissions).map((data, index) => {
                     return (
                       <Chip
                         avatar={
@@ -293,7 +293,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                             : data["displayName"]
                         }
                         variant="outlined"
-                        key={detail.id}
+                        key={index}
                       />
                     );
                   })}
@@ -318,7 +318,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {JSON.parse(detail.directPermissions).map((data) => {
+                  {JSON.parse(detail.directPermissions).map((data, index) => {
                     return (
                       <Chip
                         avatar={
@@ -330,7 +330,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                             : data["displayName"]
                         }
                         variant="outlined"
-                        key={detail.id}
+                        key={index}
                       />
                     );
                   })}

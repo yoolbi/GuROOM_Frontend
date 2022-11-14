@@ -3,13 +3,12 @@ import TextField from "@mui/material/TextField";
 import { InputAdornment } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
-import Avatar from "@mui/material/Avatar";
 
-//This is the Access Control Detail Modal. It appears when the user double clicks the access control table row,
+//This is the Access Control Detail Modal. It appears when the user double-clicks the access control table row,
 // eslint-disable-next-line react/prop-types
-const AccessControlDetailModal = ({ eachFileDetailData }) => {
+const AccessControlDetailModal = ({ eachDetailData }) => {
   // eslint-disable-next-line react/prop-types
-  const detail = eachFileDetailData;
+  const detail = eachDetailData;
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
@@ -17,69 +16,47 @@ const AccessControlDetailModal = ({ eachFileDetailData }) => {
         style={{
           display: "grid",
           width: "100%",
-          marginLeft: "20px",
+          marginLeft: "10px",
           marginTop: "20px",
+          overflowY: "auto",
         }}
       >
         <TextField
           id="outlined-multiline-flexible"
-          label="File Name"
+          label="Name"
           multiline
           maxRows={4}
           value={detail.name}
           InputProps={{
             readOnly: true,
           }}
-          style={{ marginBottom: "15px", width: "95%" }}
+          style={{ marginBottom: "30px", width: "95%" }}
         />
         <TextField
           id="outlined-multiline-flexible"
-          label="File Type"
+          label="Query"
           multiline
           maxRows={4}
-          value={detail.type}
+          value={detail.query}
           InputProps={{
             readOnly: true,
           }}
-          style={{ marginBottom: "15px", width: "95%" }}
+          style={{ marginBottom: "30px", width: "95%" }}
         />
         <TextField
           id="outlined-multiline-flexible"
-          label="Owner"
+          label="Group"
           multiline
-          value=""
+          maxRows={4}
+          value={detail.Grp}
           InputProps={{
             readOnly: true,
-            startAdornment: (
-              <InputAdornment position="start">
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  style={{ width: "100%", overflowX: "auto" }}
-                >
-                  {detail.owner["displayName"] !== undefined && (
-                    <Chip
-                      avatar={
-                        <Avatar alt="Natacha" src={detail.owner["photoLink"]} />
-                      }
-                      label={
-                        detail.owner["displayName"] === null
-                          ? "Anyone"
-                          : detail.owner["displayName"]
-                      }
-                      variant="outlined"
-                      key={detail.id}
-                    />
-                  )}
-                </Stack>
-              </InputAdornment>
-            ),
           }}
-          style={{ marginBottom: "15px", width: "95%" }}
+          style={{ marginBottom: "30px", width: "95%" }}
         />
         <TextField
           id="outlined-multiline-flexible"
-          label="Organizer"
+          label="Allowed Readers"
           multiline
           value=""
           InputProps={{
@@ -91,31 +68,18 @@ const AccessControlDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.organizer.map((data) => {
-                    return (
-                      <Chip
-                        avatar={
-                          <Avatar alt="Natacha" src={data["photoLink"]} />
-                        }
-                        label={
-                          data["displayName"] === null
-                            ? "Anyone"
-                            : data["displayName"]
-                        }
-                        variant="outlined"
-                        key={detail.id}
-                      />
-                    );
+                  {detail.AR?.map((data, index) => {
+                    return <Chip label={data} variant="outlined" key={index} />;
                   })}
                 </Stack>
               </InputAdornment>
             ),
           }}
-          style={{ marginBottom: "15px", width: "95%" }}
+          style={{ marginBottom: "30px", width: "95%" }}
         />
         <TextField
           id="outlined-multiline-flexible"
-          label="File Organizer"
+          label="Allowed Writers"
           multiline
           value=""
           InputProps={{
@@ -127,31 +91,18 @@ const AccessControlDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.fileOrganizer.map((data) => {
-                    return (
-                      <Chip
-                        avatar={
-                          <Avatar alt="Natacha" src={data["photoLink"]} />
-                        }
-                        label={
-                          data["displayName"] === null
-                            ? "Anyone"
-                            : data["displayName"]
-                        }
-                        variant="outlined"
-                        key={detail.id}
-                      />
-                    );
+                  {detail.AW?.map((data, index) => {
+                    return <Chip label={data} variant="outlined" key={index} />;
                   })}
                 </Stack>
               </InputAdornment>
             ),
           }}
-          style={{ marginBottom: "15px", width: "95%" }}
+          style={{ marginBottom: "30px", width: "95%" }}
         />
         <TextField
           id="outlined-multiline-flexible"
-          label="Writer"
+          label="Denied Readers"
           multiline
           value=""
           InputProps={{
@@ -163,31 +114,18 @@ const AccessControlDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.writer.map((data) => {
-                    return (
-                      <Chip
-                        avatar={
-                          <Avatar alt="Natacha" src={data["photoLink"]} />
-                        }
-                        label={
-                          data["displayName"] === null
-                            ? "Anyone"
-                            : data["displayName"]
-                        }
-                        variant="outlined"
-                        key={detail.id}
-                      />
-                    );
+                  {detail.DR?.map((data, index) => {
+                    return <Chip label={data} variant="outlined" key={index} />;
                   })}
                 </Stack>
               </InputAdornment>
             ),
           }}
-          style={{ marginBottom: "15px", width: "95%" }}
+          style={{ marginBottom: "30px", width: "95%" }}
         />
         <TextField
           id="outlined-multiline-flexible"
-          label="Commenter"
+          label="Denied Writers "
           multiline
           value=""
           InputProps={{
@@ -199,175 +137,14 @@ const AccessControlDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.commenter.map((data) => {
-                    return (
-                      <Chip
-                        avatar={
-                          <Avatar alt="Natacha" src={data["photoLink"]} />
-                        }
-                        label={
-                          data["displayName"] === null
-                            ? "Anyone"
-                            : data["displayName"]
-                        }
-                        variant="outlined"
-                        key={detail.id}
-                      />
-                    );
+                  {detail.DW?.map((data, index) => {
+                    return <Chip label={data} variant="outlined" key={index} />;
                   })}
                 </Stack>
               </InputAdornment>
             ),
           }}
-          style={{ marginBottom: "15px", width: "95%" }}
-        />
-        <TextField
-          id="outlined-multiline-flexible"
-          label="Reader"
-          multiline
-          value=""
-          InputProps={{
-            readOnly: true,
-            startAdornment: (
-              <InputAdornment position="start" style={{ width: "100%" }}>
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  style={{ width: "100%", overflowX: "auto" }}
-                >
-                  {detail.reader.map((data) => {
-                    return (
-                      <Chip
-                        avatar={
-                          <Avatar alt="Natacha" src={data["photoLink"]} />
-                        }
-                        label={
-                          data["displayName"] === null
-                            ? "Anyone"
-                            : data["displayName"]
-                        }
-                        variant="outlined"
-                        key={detail.id}
-                      />
-                    );
-                  })}
-                </Stack>
-              </InputAdornment>
-            ),
-          }}
-          style={{ marginBottom: "15px", width: "95%" }}
-        />
-        <TextField
-          id="outlined-multiline-flexible"
-          label="Inherit Permissions"
-          multiline
-          value=""
-          InputProps={{
-            readOnly: true,
-            startAdornment: (
-              <InputAdornment position="start" style={{ width: "100%" }}>
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  style={{ width: "100%", overflowX: "auto" }}
-                >
-                  {JSON.parse(detail.inheritPermissions).map((data) => {
-                    return (
-                      <Chip
-                        avatar={
-                          <Avatar alt="Natacha" src={data["photoLink"]} />
-                        }
-                        label={
-                          data["displayName"] === null
-                            ? "Anyone"
-                            : data["displayName"]
-                        }
-                        variant="outlined"
-                        key={detail.id}
-                      />
-                    );
-                  })}
-                </Stack>
-              </InputAdornment>
-            ),
-          }}
-          style={{ marginBottom: "15px", width: "95%" }}
-        />
-        <TextField
-          id="outlined-multiline-flexible"
-          label="Direct Permissions"
-          multiline
-          value=""
-          InputProps={{
-            readOnly: true,
-            startAdornment: (
-              <InputAdornment position="start" style={{ width: "100%" }}>
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  style={{ width: "100%", overflowX: "auto" }}
-                >
-                  {JSON.parse(detail.directPermissions).map((data) => {
-                    return (
-                      <Chip
-                        avatar={
-                          <Avatar alt="Natacha" src={data["photoLink"]} />
-                        }
-                        label={
-                          data["displayName"] === null
-                            ? "Anyone"
-                            : data["displayName"]
-                        }
-                        variant="outlined"
-                        key={detail.id}
-                      />
-                    );
-                  })}
-                </Stack>
-              </InputAdornment>
-            ),
-          }}
-          style={{ marginBottom: "15px", width: "95%" }}
-        />
-        <TextField
-          id="outlined-multiline-flexible"
-          label="Deviant Permissions"
-          multiline
-          value=""
-          InputProps={{
-            readOnly: true,
-          }}
-          style={{ marginBottom: "15px", width: "95%" }}
-        />
-        <TextField
-          id="outlined-multiline-flexible"
-          label="Created Date"
-          multiline
-          value={detail.created}
-          InputProps={{
-            readOnly: true,
-          }}
-          style={{ marginBottom: "15px", width: "95%" }}
-        />
-        <TextField
-          id="outlined-multiline-flexible"
-          label="Modified Date"
-          multiline
-          value={detail.modified}
-          InputProps={{
-            readOnly: true,
-          }}
-          style={{ marginBottom: "15px", width: "95%" }}
-        />
-        <TextField
-          id="outlined-multiline-flexible"
-          label="Size"
-          multiline
-          value={detail.size}
-          InputProps={{
-            readOnly: true,
-          }}
-          style={{ marginBottom: "15px", width: "95%" }}
+          style={{ marginBottom: "30px", width: "95%" }}
         />
       </div>
     </div>
