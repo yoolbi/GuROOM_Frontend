@@ -1,11 +1,41 @@
 import React, { useEffect, useState } from "react";
-import { IconButton, InputBase, Paper, Box, Chip, Button } from "@mui/material";
+import {
+  IconButton,
+  InputBase,
+  Paper,
+  Box,
+  Chip,
+  Button,
+  Modal,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { DataGrid } from "@mui/x-data-grid";
 import { getAccessControlAPIMethod } from "../api/client";
+import AccessControlPolicy from "./AccessControlPolicy";
+
+//style for modal
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 600,
+  height: 700,
+  bgcolor: "background.paper",
+  borderRadius: "10px",
+  boxShadow: 24,
+  p: 4,
+};
 
 //This is the access control tab from the Homepage.
 const AccessControl = () => {
+  const [openCreateAccessControlModal, setOpenCreateAccessControlModal] =
+    useState(false);
+  const handleOpenCreateAccessControlModal = () =>
+    setOpenCreateAccessControlModal(true);
+  const handleCloseCreateAccessControlModal = () =>
+    setOpenCreateAccessControlModal(false);
+
   //click use
   const handleClickUse = (params) => {
     console.log(params);
@@ -118,7 +148,7 @@ const AccessControl = () => {
       });
       setRows(tempRows);
     });
-  }, []);
+  }, [openCreateAccessControlModal]);
 
   return (
     <div>
@@ -156,11 +186,13 @@ const AccessControl = () => {
               width: "40px",
               height: "40px",
               marginRight: "8px",
+              cursor: "pointer",
             }}
+            onClick={handleOpenCreateAccessControlModal}
           />
           <img
             src="/img/delete_button.png"
-            style={{ width: "40px", height: "40px" }}
+            style={{ width: "40px", height: "40px", cursor: "pointer" }}
           />
         </div>
       </div>
@@ -173,6 +205,20 @@ const AccessControl = () => {
           checkboxSelection
         />
       </Box>
+      <Modal
+        open={openCreateAccessControlModal}
+        onClose={handleCloseCreateAccessControlModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <AccessControlPolicy
+            handleCloseCreateAccessControlModal={
+              handleCloseCreateAccessControlModal
+            }
+          ></AccessControlPolicy>
+        </Box>
+      </Modal>
     </div>
   );
 };

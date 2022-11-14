@@ -5,7 +5,6 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import QueryBuilder from "./QueryBuilder";
-import AccessControlPolicy from "./AccessControlPolicy";
 
 //This is the modal that appears when the user clicks the filter icon on the search bar in the Homepage.
 // eslint-disable-next-line react/prop-types
@@ -35,7 +34,6 @@ const FilterModal = ({
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <TabList onChange={handleChange} aria-label="lab API tabs example">
               <Tab label="QUERY BUILDER" value="1" />
-              <Tab label="ACCESS CONTROL POLICY" value="2" />
             </TabList>
           </Box>
           <TabPanel
@@ -44,12 +42,6 @@ const FilterModal = ({
           >
             <QueryBuilder
               setSearchInput={setSearchInput}
-              handleCloseSearchFilter={handleCloseSearchFilter}
-              fileSnapshot={fileSnapshot}
-            />
-          </TabPanel>
-          <TabPanel value="2">
-            <AccessControlPolicy
               handleCloseSearchFilter={handleCloseSearchFilter}
               fileSnapshot={fileSnapshot}
             />
