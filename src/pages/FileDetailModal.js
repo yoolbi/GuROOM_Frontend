@@ -18,7 +18,7 @@ const DisplayValidation = ({ eachFileDetailData }) => {
     let validationForEachFile = [];
     detail["validation"]?.map((data, index) => {
       if (data.file_id === detail.id) {
-        validationForEachFile = detail["validation"][index];
+        validationForEachFile.push(detail["validation"][index]);
       }
     });
     setValidation(validationForEachFile);
@@ -26,20 +26,38 @@ const DisplayValidation = ({ eachFileDetailData }) => {
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
-      <TextField
-        id="outlined-multiline-flexible"
-        label={validation.email_address}
-        multiline
-        maxRows={4}
-        value={JSON.stringify(validation.violationType)
-          ?.replace(/"/g, "")
-          .replace("[", "")
-          .replace("]", "")}
-        InputProps={{
-          readOnly: true,
-        }}
-        style={{ marginBottom: "15px", width: "95%" }}
-      />
+      {validation.map((data, index) => {
+        return (
+          <div key={index} style={{ display: "flex" }}>
+            <TextField
+              id="outlined-multiline-flexible"
+              label="Violated Email"
+              multiline
+              maxRows={4}
+              value={data.email_address}
+              InputProps={{
+                readOnly: true,
+              }}
+              style={{ marginBottom: "15px", width: "45%", marginRight: "5%" }}
+            />
+            <TextField
+              id="outlined-multiline-flexible"
+              label="Violation Type"
+              multiline
+              maxRows={4}
+              value={JSON.stringify(data.violationType)
+                ?.replace(/"/g, "")
+                .replace("[", "")
+                .replace("]", "")
+                .replace(",", ", ")}
+              InputProps={{
+                readOnly: true,
+              }}
+              style={{ marginBottom: "15px", width: "45%" }}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 };
