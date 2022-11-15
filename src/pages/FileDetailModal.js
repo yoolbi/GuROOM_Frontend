@@ -7,6 +7,8 @@ import Avatar from "@mui/material/Avatar";
 
 //When the user wants to check the details of file in the table(which shows in the Homepage), he/she can check with double-clicking the file(row)
 //The modal shows file name, file type, owner, organizer, file organizer, writer, commenter, reader, inherit permissions, direct permissions, created & modified date and the file size.
+
+//Display validation info if there exist
 // eslint-disable-next-line react/prop-types
 const DisplayValidation = ({ eachFileDetailData }) => {
   const detail = eachFileDetailData;
@@ -15,13 +17,10 @@ const DisplayValidation = ({ eachFileDetailData }) => {
   useEffect(() => {
     let validationForEachFile = [];
     detail["validation"]?.map((data, index) => {
-      console.log(detail.id);
-      console.log(data.file_id);
       if (data.file_id === detail.id) {
         validationForEachFile = detail["validation"][index];
       }
     });
-    console.log(validationForEachFile);
     setValidation(validationForEachFile);
   }, []);
 
@@ -49,7 +48,6 @@ const DisplayValidation = ({ eachFileDetailData }) => {
 const FileDetailModal = ({ eachFileDetailData }) => {
   // eslint-disable-next-line react/prop-types
   const detail = eachFileDetailData;
-  console.log(detail);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
@@ -414,7 +412,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
-        {detail.validation !== [] && (
+        {detail.validation.length !== 0 && (
           // eslint-disable-next-line react/no-unknown-property
           <DisplayValidation eachFileDetailData={eachFileDetailData} />
         )}
