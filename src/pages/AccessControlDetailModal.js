@@ -30,7 +30,7 @@ const AccessControlDetailModal = ({ eachDetailData }) => {
           InputProps={{
             readOnly: true,
           }}
-          style={{ marginBottom: "30px", width: "95%" }}
+          style={{ marginBottom: "30px", width: "95%", marginTop: "5px" }}
         />
         <TextField
           id="outlined-multiline-flexible"

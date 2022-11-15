@@ -69,6 +69,9 @@ const Homepage = () => {
     setValue(newValue);
   };
 
+  //search
+  const [searchInput, setSearchInput] = useState("");
+
   //This is for the scalability: we are going to provide two drives: Google Drive and Dropbox.
   const [drive, setDrive] = useState("google");
   const handleChange = (event) => {
@@ -484,10 +487,13 @@ const Homepage = () => {
             </Box>
 
             <TabPanel value="home">
-              <Home />
+              <Home searchInput={searchInput} setSearchInput={setSearchInput} />
             </TabPanel>
             <TabPanel value="accessControl">
-              <AccessControl />
+              <AccessControl
+                setValue={setValue}
+                setSearchInput={setSearchInput}
+              />
             </TabPanel>
             <TabPanel value="compareSnapshots">
               <CompareSnapshots />

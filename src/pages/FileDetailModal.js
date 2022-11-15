@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { InputAdornment } from "@mui/material";
 import Stack from "@mui/material/Stack";
@@ -8,9 +8,48 @@ import Avatar from "@mui/material/Avatar";
 //When the user wants to check the details of file in the table(which shows in the Homepage), he/she can check with double-clicking the file(row)
 //The modal shows file name, file type, owner, organizer, file organizer, writer, commenter, reader, inherit permissions, direct permissions, created & modified date and the file size.
 // eslint-disable-next-line react/prop-types
+const DisplayValidation = ({ eachFileDetailData }) => {
+  const detail = eachFileDetailData;
+  const [validation, setValidation] = useState([]);
+
+  useEffect(() => {
+    let validationForEachFile = [];
+    detail["validation"]?.map((data, index) => {
+      console.log(detail.id);
+      console.log(data.file_id);
+      if (data.file_id === detail.id) {
+        validationForEachFile = detail["validation"][index];
+      }
+    });
+    console.log(validationForEachFile);
+    setValidation(validationForEachFile);
+  }, []);
+
+  return (
+    <div style={{ width: "100%", height: "100%" }}>
+      <TextField
+        id="outlined-multiline-flexible"
+        label={validation.email_address}
+        multiline
+        maxRows={4}
+        value={JSON.stringify(validation.violationType)
+          ?.replace(/"/g, "")
+          .replace("[", "")
+          .replace("]", "")}
+        InputProps={{
+          readOnly: true,
+        }}
+        style={{ marginBottom: "15px", width: "95%" }}
+      />
+    </div>
+  );
+};
+
+// eslint-disable-next-line react/prop-types
 const FileDetailModal = ({ eachFileDetailData }) => {
   // eslint-disable-next-line react/prop-types
   const detail = eachFileDetailData;
+  console.log(detail);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
@@ -28,7 +67,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           label="File Name"
           multiline
           maxRows={4}
-          value={detail.name}
+          value={detail.name ? detail.name : ""}
           InputProps={{
             readOnly: true,
           }}
@@ -40,7 +79,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           label="File Type"
           multiline
           maxRows={4}
-          value={detail.type}
+          value={detail.type ? detail.type : ""}
           InputProps={{
             readOnly: true,
           }}
@@ -61,7 +100,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.owner["displayName"] !== undefined && (
+                  {detail.owner["displayName"] !== undefined ? (
                     <Chip
                       avatar={
                         <Avatar alt="Natacha" src={detail.owner["photoLink"]} />
@@ -74,6 +113,8 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                       variant="outlined"
                       key={detail.id}
                     />
+                  ) : (
+                    ""
                   )}
                 </Stack>
               </InputAdornment>
@@ -96,7 +137,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.organizer.map((data, index) => {
+                  {detail.organizer?.map((data, index) => {
                     return (
                       <Chip
                         avatar={
@@ -133,7 +174,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.fileOrganizer.map((data, index) => {
+                  {detail.fileOrganizer?.map((data, index) => {
                     return (
                       <Chip
                         avatar={
@@ -170,7 +211,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.writer.map((data, index) => {
+                  {detail.writer?.map((data, index) => {
                     return (
                       <Chip
                         avatar={
@@ -207,7 +248,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.commenter.map((data, index) => {
+                  {detail.commenter?.map((data, index) => {
                     return (
                       <Chip
                         avatar={
@@ -244,7 +285,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.reader.map((data, index) => {
+                  {detail.reader?.map((data, index) => {
                     return (
                       <Chip
                         avatar={
@@ -281,7 +322,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {JSON.parse(detail.inheritPermissions).map((data, index) => {
+                  {JSON.parse(detail.inheritPermissions)?.map((data, index) => {
                     return (
                       <Chip
                         avatar={
@@ -318,7 +359,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {JSON.parse(detail.directPermissions).map((data, index) => {
+                  {JSON.parse(detail.directPermissions)?.map((data, index) => {
                     return (
                       <Chip
                         avatar={
@@ -340,23 +381,12 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
-        {/*Deviant Permissions: it shows with chips in MUI*/}
-        <TextField
-          id="outlined-multiline-flexible"
-          label="Deviant Permissions"
-          multiline
-          value=""
-          InputProps={{
-            readOnly: true,
-          }}
-          style={{ marginBottom: "15px", width: "95%" }}
-        />
         {/*Created date*/}
         <TextField
           id="outlined-multiline-flexible"
           label="Created Date"
           multiline
-          value={detail.created}
+          value={detail.created ? detail.created : ""}
           InputProps={{
             readOnly: true,
           }}
@@ -367,7 +397,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           id="outlined-multiline-flexible"
           label="Modified Date"
           multiline
-          value={detail.modified}
+          value={detail.modified ? detail.modified : ""}
           InputProps={{
             readOnly: true,
           }}
@@ -378,12 +408,16 @@ const FileDetailModal = ({ eachFileDetailData }) => {
           id="outlined-multiline-flexible"
           label="Size"
           multiline
-          value={detail.size}
+          value={detail.size ? detail.size : ""}
           InputProps={{
             readOnly: true,
           }}
           style={{ marginBottom: "15px", width: "95%" }}
         />
+        {detail.validation !== [] && (
+          // eslint-disable-next-line react/no-unknown-property
+          <DisplayValidation eachFileDetailData={eachFileDetailData} />
+        )}
       </div>
     </div>
   );
