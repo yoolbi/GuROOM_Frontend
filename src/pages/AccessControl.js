@@ -29,7 +29,8 @@ const style = {
 };
 
 //This is the access control tab from the Homepage.
-const AccessControl = () => {
+// eslint-disable-next-line react/prop-types
+const AccessControl = ({ setValue, setSearchInput }) => {
   //open and close modal for creating access control
   const [openCreateAccessControlModal, setOpenCreateAccessControlModal] =
     useState(false);
@@ -54,6 +55,8 @@ const AccessControl = () => {
   //click use
   const handleClickUse = (params) => {
     console.log(params.row);
+    setValue("home");
+    setSearchInput("accessControl:" + params.row.name);
   };
 
   //The table columns
@@ -144,9 +147,9 @@ const AccessControl = () => {
   const [rows, setRows] = useState([]);
 
   //search
-  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
   const handleChangeSearch = (e) => {
-    setSearchInput(e.target.value);
+    setSearch(e.target.value);
   };
 
   //click search icon
@@ -155,7 +158,7 @@ const AccessControl = () => {
       let filtered,
         tempRows = [];
       filtered = res.body.filter((row) =>
-        row.name.toLowerCase().includes(searchInput.toLowerCase())
+        row.name.toLowerCase().includes(search.toLowerCase())
       );
       filtered.map((data, index) => {
         tempRows.push({

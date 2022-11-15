@@ -71,7 +71,8 @@ const styleforSharingDifferenceModal = {
   p: 4,
 };
 
-const Home = () => {
+// eslint-disable-next-line react/prop-types
+const Home = ({ searchInput, setSearchInput }) => {
   const [fileSnapshot, setFileSnapshot] = useState("");
   const [openSearchFilter, setOpenSearchFilter] = useState(false);
   const [openTakingSnapshot, setOpenTakingSnapshot] = useState(false);
@@ -110,6 +111,7 @@ const Home = () => {
 
   //set the table to the initial table
   const homeTable = (fileSnapshotParam) => {
+    setSearchInput("");
     setShowPath([]);
     getSharedDriveAPIMethod(fileSnapshotParam).then((res) => {
       let tempRows = [
@@ -145,13 +147,12 @@ const Home = () => {
     ]);
   };
 
-  //search
-  const [searchInput, setSearchInput] = useState("");
-
   //click search icon
   const handleClickSearchIcon = () => {
     if (searchInput === "is:file_folder_diff") {
       onClickFileFolderSharingDifferences();
+    } else if (searchInput === "") {
+      homeTable(fileSnapshot);
     } else {
       search();
     }
@@ -408,6 +409,8 @@ const Home = () => {
         console.log(fileSnapshot);
         console.log(event.target.value);
         onClickFileFolderSharingDifferences();
+      } else if (event.target.value === "") {
+        homeTable(fileSnapshot);
       } else {
         search();
       }
@@ -506,6 +509,104 @@ const Home = () => {
     return roleListTemp;
   };
 
+  //get violations
+  const getViolation = (permissions) => {
+    let violationListTemp = [];
+    for (var key in permissions) {
+      for (var key2 in permissions[key]["direct_permissions"]) {
+        if (
+          permissions[key]["direct_permissions"][key2]["violation"] === true
+        ) {
+          if (
+            permissions[key]["direct_permissions"][key2]["emailAddress"] ===
+            null
+          ) {
+            if (
+              permissions[key]["direct_permissions"][key2]["domain"] === null
+            ) {
+              violationListTemp.push({
+                email_address: "anyone",
+                violationType:
+                  permissions[key]["direct_permissions"][key2][
+                    "violation_type"
+                  ],
+                file_id:
+                  permissions[key]["direct_permissions"][key2]["file_id"],
+              });
+            } else {
+              violationListTemp.push({
+                email_address:
+                  permissions[key]["direct_permissions"][key2]["domain"],
+                violationType:
+                  permissions[key]["direct_permissions"][key2][
+                    "violation_type"
+                  ],
+                file_id:
+                  permissions[key]["direct_permissions"][key2]["file_id"],
+              });
+            }
+          } else {
+            violationListTemp.push({
+              email_address:
+                permissions[key]["direct_permissions"][key2]["emailAddress"],
+              violationType:
+                permissions[key]["direct_permissions"][key2]["violation_type"],
+              file_id: permissions[key]["direct_permissions"][key2]["file_id"],
+            });
+          }
+        }
+      }
+    }
+    for (var key3 in permissions) {
+      for (var key4 in permissions[key3]["inherit_permissions"]) {
+        if (
+          permissions[key3]["inherit_permissions"][key4]["violation"] === true
+        ) {
+          if (
+            permissions[key3]["inherit_permissions"][key4]["emailAddress"] ===
+            null
+          ) {
+            if (
+              permissions[key3]["inherit_permissions"][key4]["domain"] === null
+            ) {
+              violationListTemp.push({
+                email_address: "anyone",
+                violationType:
+                  permissions[key3]["inherit_permissions"][key4][
+                    "violation_type"
+                  ],
+                file_id:
+                  permissions[key]["inherit_permissions"][key2]["file_id"],
+              });
+            } else {
+              violationListTemp.push({
+                email_address:
+                  permissions[key3]["inherit_permissions"][key4]["domain"],
+                violationType:
+                  permissions[key3]["inherit_permissions"][key4][
+                    "violation_type"
+                  ],
+                file_id:
+                  permissions[key]["inherit_permissions"][key2]["file_id"],
+              });
+            }
+          } else {
+            violationListTemp.push({
+              email_address:
+                permissions[key3]["inherit_permissions"][key2]["emailAddress"],
+              violationType:
+                permissions[key3]["inherit_permissions"][key2][
+                  "violation_type"
+                ],
+              file_id: permissions[key]["inherit_permissions"][key2]["file_id"],
+            });
+          }
+        }
+      }
+    }
+    return violationListTemp;
+  };
+
   // get roles for each file
   const getRoleForEachFile = (fileWriterAll, id, fileWriter) => {
     for (var keyWriter in fileWriterAll) {
@@ -534,6 +635,8 @@ const Home = () => {
     let fileWriterAll = getRole(permissionsLet, "writer");
     let commenterAll = getRole(permissionsLet, "commenter");
     let readerAll = getRole(permissionsLet, "reader");
+    let violationAll = getViolation(permissionsLet);
+    console.log(violationAll);
 
     //organize permissions and roles for each file
     res.data.files.map((data) => {
@@ -588,6 +691,7 @@ const Home = () => {
         commenter: commenter,
         reader: reader,
         path: data.path,
+        validation: violationAll,
       });
     });
     setRows(fileRow);
