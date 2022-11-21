@@ -41,7 +41,6 @@ import {
   getQueriesAPIMethod,
 } from "../api/client";
 import FilterModal from "./FilterModal";
-import FilePermissionEditModal from "./FilePermissionEditModal";
 import SharingDifferenceModal from "./SharingDifferenceModal";
 import FileDetailModal from "./FileDetailModal";
 
@@ -77,15 +76,11 @@ const Home = ({ searchInput, setSearchInput }) => {
   const [openSearchFilter, setOpenSearchFilter] = useState(false);
   const [openTakingSnapshot, setOpenTakingSnapshot] = useState(false);
   const [count, setCount] = useState(2);
-  const [openEditModal, setOpenEditModal] = useState(false);
 
   const [sharingDifferenceModal, setSharingDifferenceModal] = useState(false);
 
   const handleOpenSearchFilter = () => setOpenSearchFilter(true);
   const handleCloseSearchFilter = () => setOpenSearchFilter(false);
-
-  const openFilePermissionEditModal = () => setOpenEditModal(true);
-  const closeFilePermissionEditModal = () => setOpenEditModal(false);
 
   const [
     selectedFileFolderSharingDifferences,
@@ -1202,28 +1197,7 @@ const Home = ({ searchInput, setSearchInput }) => {
           >
             File-Folder Sharing Differences
           </Button>
-          {/*button for editing file permissions*/}
-          <Button
-            variant="contained"
-            size="small"
-            onClick={openFilePermissionEditModal}
-          >
-            EDIT
-          </Button>
         </div>
-        {/*modal for editing file permissions*/}
-        <Modal
-          open={openEditModal}
-          onClose={closeFilePermissionEditModal}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <FilePermissionEditModal
-              closeFilePermissionEditModal={closeFilePermissionEditModal}
-            ></FilePermissionEditModal>
-          </Box>
-        </Modal>
       </div>
       <div style={{ height: "100%", marginTop: "10px" }}>
         <div style={{ height: 630, width: "100%" }}>
