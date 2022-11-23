@@ -144,7 +144,8 @@ const Home = ({ searchInput, setSearchInput }) => {
 
   //click search icon
   const handleClickSearchIcon = () => {
-    if (searchInput === "is:file_folder_diff") {
+    // eslint-disable-next-line react/prop-types
+    if (searchInput.includes("is:file_folder_diff")) {
       onClickFileFolderSharingDifferences();
     } else if (searchInput === "") {
       homeTable(fileSnapshot);
@@ -158,10 +159,14 @@ const Home = ({ searchInput, setSearchInput }) => {
 
   // search file-folder sharing differences
   const onClickFileFolderSharingDifferences = () => {
-    setSearchInput("is:file_folder_diff");
+    console.log(selectionModel);
+    console.log(JSON.stringify(selectionModel));
+    let tempString =
+      "is:file_folder_diff and file_ids:" + JSON.stringify(selectionModel);
+    setSearchInput(tempString);
     setShowPath([]);
     //get files from searching is:file_folder_diff
-    getSearchAPIMethod(fileSnapshot, "is:file_folder_diff").then((res) => {
+    getSearchAPIMethod(fileSnapshot, tempString).then((res) => {
       //get query logs
       getQueriesAPIMethod().then((res) => {
         setQueryLogs(res.body.reverse());
@@ -1220,7 +1225,8 @@ const Home = ({ searchInput, setSearchInput }) => {
             disableSelectionOnClick
             onCellDoubleClick={(params, event) => {
               event.defaultMuiPrevented = true;
-              searchInput === "is:file_folder_diff"
+              // eslint-disable-next-line react/prop-types
+              searchInput.includes("is:file_folder_diff")
                 ? openSharingDifferenceModal(params.row)
                 : handleDoubleClickRow(params.row);
             }}
