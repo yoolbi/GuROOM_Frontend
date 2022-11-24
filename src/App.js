@@ -17,15 +17,17 @@ function App() {
       <Routes>
         <Route path="/" element={<StartPage />} />
         <Route path="/InitialSetup" element={<InitialSetup />} />
-        <Route path="/InitialSetupDropbox" element={<InitialSetupDropbox />} />
         <Route path="/Homepage" element={<Homepage />} />
         <Route path="/auth/google/oauth-callback" element={<Authorization />} />
+
+        <Route path="/InitialSetupDropbox" element={<InitialSetupDropbox />} />
+        <Route path="/HomepageDropbox" element={<HomepageDropbox />} />
         <Route
           path="/auth/dropbox/oauth-callback"
           element={<AuthorizationDropbox />}
         />
+
         <Route path="/LoginFailed" element={<LoginFailed />} />
-        <Route path="/HomepageDropbox" element={<HomepageDropbox />} />
       </Routes>
     </Router>
   );

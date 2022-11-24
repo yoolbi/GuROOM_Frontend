@@ -468,3 +468,234 @@ export const deleteRevokeDropboxAPIMethod = () => {
     }
   ).then(parseJSON);
 };
+
+/*DROPBOX*/
+//Take a file snapshot
+export const postFileSnapshotDropboxAPIMethod = async (name) => {
+  return await fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL + "/apps/snapshot/v1/dropbox/files"
+    ),
+    {
+      credentials: "include",
+      method: "POST",
+      body: JSON.stringify({ snapshot_name: name }),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};
+
+//Get list of file snapshot names
+export const getFileSnapshotNamesDropboxAPIMethod = () => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/dropbox/files/names"
+    ),
+    {
+      credentials: "include",
+    }
+  ).then(parseJSON);
+};
+
+//Delete a file snapshot name
+export const deleteFileSnapshotNamesDropboxAPIMethod = (name) => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/dropbox/files"
+    ),
+    {
+      method: "DELETE",
+      credentials: "include",
+      body: JSON.stringify({ snapshot_name: name }),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};
+
+//Edit a file snapshot name
+export const putFileSnapshotNamesDropboxAPIMethod = (oldName, newName) => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/dropbox/files"
+    ),
+    {
+      method: "PUT",
+      credentials: "include",
+      body: JSON.stringify({
+        snapshot_name: oldName,
+        new_snapshot_name: newName,
+      }),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};
+
+//get all files of the selected file snapshot
+export const getFileSnapshotDropboxAPIMethod = async (
+  snapshot_name,
+  offset,
+  limit,
+  folder_path
+) => {
+  return await axios.get(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/dropbox/files"
+    ),
+    {
+      credentials: "include",
+      withCredentials: true,
+      params: {
+        snapshot_name: snapshot_name,
+        offset: offset,
+        limit: limit,
+        folder_path: folder_path,
+      },
+    }
+  );
+};
+
+//Get the results of search queries
+export const getSearchDropboxAPIMethod = async (snapshot_name, query) => {
+  return await axios.get(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/dropbox/files/search"
+    ),
+    {
+      credentials: "include",
+      withCredentials: true,
+      params: {
+        snapshot_name: snapshot_name,
+        query: query,
+      },
+    }
+  );
+};
+
+//Get file-folder sharing differences
+export const getFileFolderSharingDifferencesDropboxAPIMethod = async (
+  snapshot_name,
+  file_id
+) => {
+  return await axios.get(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/dropbox/files/differences/sharing"
+    ),
+    {
+      credentials: "include",
+      withCredentials: true,
+      params: {
+        snapshot_name: snapshot_name,
+        file_id: file_id,
+      },
+    }
+  );
+};
+
+//get differences of two snapshots. Comparing snapshots.
+export const getCompareSnapshotsDropboxAPIMethod = async (
+  base_snapshot_name,
+  compare_snapshot_name
+) => {
+  return await axios.get(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/dropbox/files/differences"
+    ),
+    {
+      credentials: "include",
+      withCredentials: true,
+      params: {
+        base_snapshot_name: base_snapshot_name,
+        compare_snapshot_name: compare_snapshot_name,
+      },
+    }
+  );
+};
+
+//Get unique members of a file snapshot
+export const getMembersDropboxAPIMethod = async (snapshot_name) => {
+  return await axios.get(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/dropbox/files/members"
+    ),
+    {
+      credentials: "include",
+      withCredentials: true,
+      params: {
+        snapshot_name: snapshot_name,
+      },
+    }
+  );
+};
+
+//Get query logs
+export const getQueriesDropboxAPIMethod = () => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL + "/apps/snapshot/v1/dropbox/queries"
+    ),
+    {
+      credentials: "include",
+    }
+  ).then(parseJSON);
+};
+
+//Create Access Control
+export const postAccessControlDropboxAPIMethod = (
+  name,
+  query,
+  AR,
+  AW,
+  DR,
+  DW,
+  Grp
+) => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL +
+        "/apps/snapshot/v1/dropbox/access-controls"
+    ),
+    {
+      credentials: "include",
+      method: "POST",
+      body: JSON.stringify({
+        name: name,
+        query: query,
+        AR: AR,
+        AW: AW,
+        DR: DR,
+        DW: DW,
+        Grp: Grp,
+      }),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};
+
+//get access control requirements
+export const getAccessControlDropboxAPIMethod = () => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL +
+        "/apps/snapshot/v1/dropbox/access-controls"
+    ),
+    {
+      credentials: "include",
+    }
+  ).then(parseJSON);
+};
