@@ -54,7 +54,7 @@ const AccessControl = ({ setValue, setSearchInput }) => {
 
   //click use
   const handleClickUse = (params) => {
-    console.log(params.row);
+    console.log("ACR use: ", params.row);
     setValue("home");
     setSearchInput("accessControl:" + params.row.name);
   };
@@ -187,7 +187,7 @@ const AccessControl = ({ setValue, setSearchInput }) => {
   useEffect(() => {
     //get access control requirements
     getAccessControlAPIMethod().then((res) => {
-      console.log(res);
+      console.log("get access control: ", res);
       let tempRows = [];
       res.body.map((data, index) => {
         tempRows.push({
@@ -201,7 +201,6 @@ const AccessControl = ({ setValue, setSearchInput }) => {
           DW: data.DW,
         });
       });
-      console.log(tempRows);
       setRows(tempRows);
     });
   }, [openCreateAccessControlModal]);

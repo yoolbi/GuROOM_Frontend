@@ -57,7 +57,7 @@ const InitialSetup = () => {
   const handleNextModal = () => {
     handleOpen();
     postFileSnapshotAPIMethod(fileSnapshot).then((data) => {
-      console.log(data.status);
+      console.log("post snapshot: ", data);
       if (data.status === 201) {
         handleOpenDone();
         setTimeout(() => {
@@ -76,7 +76,6 @@ const InitialSetup = () => {
   //The user can change the file snapshot name.
   const handleChangeFileSnapshot = (e) => {
     setFileSnapshot(e.target.value);
-    console.log(fileSnapshot);
   };
 
   return (

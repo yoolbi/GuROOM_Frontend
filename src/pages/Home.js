@@ -159,18 +159,16 @@ const Home = ({ searchInput, setSearchInput }) => {
 
   // search file-folder sharing differences
   const onClickFileFolderSharingDifferences = () => {
-    console.log(selectionModel);
-    console.log(JSON.stringify(selectionModel));
     let tempString =
       "is:file_folder_diff and file_ids:" + JSON.stringify(selectionModel);
     setSearchInput(tempString);
     setShowPath([]);
     //get files from searching is:file_folder_diff
     getSearchAPIMethod(fileSnapshot, tempString).then((res) => {
+      console.log("get search: ", res);
       //get query logs
       getQueriesAPIMethod().then((res) => {
         setQueryLogs(res.body.reverse());
-        console.log(res.body);
       });
       permissionsLetSearch = res.data.permissions;
 
@@ -184,8 +182,6 @@ const Home = ({ searchInput, setSearchInput }) => {
       let fileWriterAll = getRole("writer");
       let commenterAll = getRole("commenter");
       let readerAll = getRole("reader");
-
-      console.log(permissionsLetSearch);
 
       //organize roles and permissions for each file
       res.data.files.map((data) => {
@@ -390,9 +386,8 @@ const Home = ({ searchInput, setSearchInput }) => {
         //get query logs
         getQueriesAPIMethod().then((res) => {
           setQueryLogs(res.body.reverse());
-          console.log(res.body);
         });
-        console.log(res.data);
+        console.log("get search: ", res);
         displayTable(res);
       })
       .catch((err) => {
@@ -405,9 +400,8 @@ const Home = ({ searchInput, setSearchInput }) => {
   const onKeyPressEnter = (event) => {
     if (event.keyCode === 13) {
       event.preventDefault();
-      if (event.target.value === "is:file_folder_diff") {
-        console.log(fileSnapshot);
-        console.log(event.target.value);
+      if (event.target.value.includes("is:file_folder_diff")) {
+        console.log("search: ", event.target.value);
         onClickFileFolderSharingDifferences();
       } else if (event.target.value === "") {
         homeTable(fileSnapshot);
@@ -636,7 +630,6 @@ const Home = ({ searchInput, setSearchInput }) => {
     let commenterAll = getRole(permissionsLet, "commenter");
     let readerAll = getRole(permissionsLet, "reader");
     let violationAll = getViolation(permissionsLet);
-    console.log(violationAll);
 
     //organize permissions and roles for each file
     res.data.files.map((data) => {
@@ -795,13 +788,6 @@ const Home = ({ searchInput, setSearchInput }) => {
         ),
       },
       {
-        field: "deviantPermissions",
-        headerName: "Deviant Permissions",
-        description:
-          "The differences between this file’s permissions and the permissions of most other files in the folder",
-        width: 200,
-      },
-      {
         field: "created",
         headerName: "Created",
         description: "Created date",
@@ -860,7 +846,7 @@ const Home = ({ searchInput, setSearchInput }) => {
       id
     ).then((res) => {
       displayTable(res);
-      console.log(res.data);
+      console.log("get files: ", res);
     });
 
     setSelectionModel([]); //reset selected checkbox in table
@@ -869,10 +855,8 @@ const Home = ({ searchInput, setSearchInput }) => {
   // take a file snapshot
   const takingSnapshot = () => {
     setOpenTakingSnapshot(true);
-    console.log("take file snapshot");
     postFileSnapshotAPIMethod("File Snapshot " + count).then((data) => {
-      console.log(data);
-      console.log(data.status);
+      console.log("take file snapshot", data);
       if (data.status === 201) {
         setOpenTakingSnapshot(false);
       }
@@ -975,7 +959,7 @@ const Home = ({ searchInput, setSearchInput }) => {
   useEffect(() => {
     //get file snapshot names
     getFileSnapshotNamesAPIMethod().then((data) => {
-      console.log("get file snapshot names: ", data.body);
+      console.log("get snapshot names: ", data);
       setFileSnapshotNames(data.body.reverse());
       setCount(data.body.length + 1);
       setFileSnapshot(data.body[0].name);
@@ -995,14 +979,14 @@ const Home = ({ searchInput, setSearchInput }) => {
           tempRows.push({ id: data.id, name: data.name, type: "shared_drive" });
         });
         setRows(tempRows);
-        console.log(tempRows);
+        console.log("Initial table: ", tempRows);
       });
     });
 
     //get query logs
     getQueriesAPIMethod().then((res) => {
       setQueryLogs(res.body.reverse());
-      console.log(res.body);
+      console.log("get queries: ", res);
     });
   }, [openTakingSnapshot, editedFileSnapshotName]);
 

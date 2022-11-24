@@ -15,7 +15,7 @@ const startPage = () => {
   const googleAuth = () => {
     //get user info
     getUserAPIMethod().then((user) => {
-      console.log(user); //log user info
+      console.log("get user: ", user); //log user info
       //if user is valid and have a file snapshot, goto Homepage
       if (user.status === 200) {
         window.location.replace(
@@ -67,7 +67,7 @@ const startPage = () => {
   const dropboxAuth = () => {
     //get user info
     getUserDropboxAPIMethod().then((user) => {
-      console.log(user); //log user info
+      console.log("get user: ", user); //log user info
       //if user is valid and have a file snapshot, goto Homepage
       if (user.status === 200) {
         window.location.replace(

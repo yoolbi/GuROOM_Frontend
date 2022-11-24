@@ -22,7 +22,7 @@ const SharingDifferenceModal = ({
       // eslint-disable-next-line react/prop-types
       selectedFileFolderSharingDifferences["id"]
     ).then((res) => {
-      console.log(res);
+      console.log("get fileFolderSharingDif: ", res);
       for (let key in res.data) {
         //store data of different permissions
         if (key === "additional_folder_permissions") {
