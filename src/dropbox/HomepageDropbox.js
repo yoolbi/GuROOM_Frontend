@@ -13,9 +13,9 @@ import {
   ListItemText,
 } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import Home from "../pages/Home";
-import AccessControl from "../pages/AccessControl";
-import CompareSnapshots from "../pages/CompareSnapshots";
+import HomeDropbox from "../dropbox/HomeDropbox";
+import AccessControlDropbox from "../dropbox/AccessControlDropbox";
+import CompareSnapshotsDropbox from "../dropbox/CompareSnapshotsDropbox";
 import urlJoin from "url-join";
 import {
   getAuthorizeDropboxAPIMethod,
@@ -39,6 +39,9 @@ const HomepageDropbox = () => {
   const handleChangeTab = (event, newValue) => {
     setTab(newValue);
   };
+
+  //search
+  const [searchInput, setSearchInput] = useState("");
 
   //When the user clicks the logo on the top, then will go to the home table.
   const handleClickLogo = () => {
@@ -120,7 +123,7 @@ const HomepageDropbox = () => {
               borderColor: "divider",
             }}
           >
-            {/*tabs: Home, Access Control, Compare Snapshots*/}
+            {/*tabs: HomeDropbox, Access Control, Compare Snapshots*/}
             <TabList
               onChange={handleChangeTab}
               aria-label="lab API tabs example"
@@ -192,13 +195,19 @@ const HomepageDropbox = () => {
           </Box>
 
           <TabPanel value="home">
-            <Home />
+            <HomeDropbox
+              searchInput={searchInput}
+              setSearchInput={setSearchInput}
+            />
           </TabPanel>
           <TabPanel value="accessControl">
-            <AccessControl />
+            <AccessControlDropbox
+              setTab={setTab}
+              setSearchInput={setSearchInput}
+            />
           </TabPanel>
           <TabPanel value="compareSnapshots">
-            <CompareSnapshots />
+            <CompareSnapshotsDropbox />
           </TabPanel>
         </TabContext>
       </Box>
