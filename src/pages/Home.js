@@ -526,6 +526,10 @@ const Home = ({ searchInput, setSearchInput }) => {
                   ],
                 file_id:
                   permissions[key]["direct_permissions"][key2]["file_id"],
+                violation_description:
+                  permissions[key]["direct_permissions"][key2][
+                    "violation_description"
+                  ],
               });
             } else {
               violationListTemp.push({
@@ -537,6 +541,10 @@ const Home = ({ searchInput, setSearchInput }) => {
                   ],
                 file_id:
                   permissions[key]["direct_permissions"][key2]["file_id"],
+                violation_description:
+                  permissions[key]["direct_permissions"][key2][
+                    "violation_description"
+                  ],
               });
             }
           } else {
@@ -546,6 +554,10 @@ const Home = ({ searchInput, setSearchInput }) => {
               violationType:
                 permissions[key]["direct_permissions"][key2]["violation_type"],
               file_id: permissions[key]["direct_permissions"][key2]["file_id"],
+              violation_description:
+                permissions[key]["direct_permissions"][key2][
+                  "violation_description"
+                ],
             });
           }
         }
@@ -571,6 +583,10 @@ const Home = ({ searchInput, setSearchInput }) => {
                   ],
                 file_id:
                   permissions[key]["inherit_permissions"][key2]["file_id"],
+                violation_description:
+                  permissions[key]["inherit_permissions"][key2][
+                    "violation_description"
+                  ],
               });
             } else {
               violationListTemp.push({
@@ -582,6 +598,10 @@ const Home = ({ searchInput, setSearchInput }) => {
                   ],
                 file_id:
                   permissions[key]["inherit_permissions"][key2]["file_id"],
+                violation_description:
+                  permissions[key]["inherit_permissions"][key2][
+                    "violation_description"
+                  ],
               });
             }
           } else {
@@ -593,11 +613,16 @@ const Home = ({ searchInput, setSearchInput }) => {
                   "violation_type"
                 ],
               file_id: permissions[key]["inherit_permissions"][key2]["file_id"],
+              violation_description:
+                permissions[key]["inherit_permissions"][key2][
+                  "violation_description"
+                ],
             });
           }
         }
       }
     }
+    console.log(violationListTemp);
     return violationListTemp;
   };
 
@@ -969,11 +994,11 @@ const Home = ({ searchInput, setSearchInput }) => {
       getSharedDriveAPIMethod(fileSnapshotLet).then((res) => {
         let tempRows = [
           {
-            id: 1,
+            id: "My Drive",
             name: "My Drive",
             type: "folder",
           },
-          { id: 2, name: "Shared With Me", type: "folder" },
+          { id: "Shared With Me", name: "Shared With Me", type: "folder" },
         ];
         res.data.map((data) => {
           tempRows.push({ id: data.id, name: data.name, type: "shared_drive" });
