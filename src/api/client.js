@@ -369,6 +369,23 @@ export const getAccessControlAPIMethod = () => {
   ).then(parseJSON);
 };
 
+export const deleteAccessControlAPIMethod = (name) => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/google/access-controls"
+    ),
+    {
+      method: "DELETE",
+      credentials: "include",
+      body: JSON.stringify({ name: name }),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};
+
 //Dropbox
 //Authorize Request, retrieves url of dropbox login. Create Dropbox Auth.
 export const getAuthorizeDropboxAPIMethod = () => {

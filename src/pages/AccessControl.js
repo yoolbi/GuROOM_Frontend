@@ -10,7 +10,10 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { DataGrid } from "@mui/x-data-grid";
-import { getAccessControlAPIMethod } from "../api/client";
+import {
+  deleteAccessControlAPIMethod,
+  getAccessControlAPIMethod,
+} from "../api/client";
 import AccessControlPolicy from "./AccessControlPolicy";
 import AccessControlDetailModal from "./AccessControlDetailModal";
 
@@ -51,6 +54,9 @@ const AccessControl = ({ setValue, setSearchInput }) => {
     setEachDetailData(data);
     openDetailModal();
   };
+
+  //select from the table
+  const [selectionModel, setSelectionModel] = useState([]);
 
   //click use
   const handleClickUse = (params) => {
@@ -160,9 +166,9 @@ const AccessControl = ({ setValue, setSearchInput }) => {
       filtered = res.body.filter((row) =>
         row.name.toLowerCase().includes(search.toLowerCase())
       );
-      filtered.map((data, index) => {
+      filtered.map((data) => {
         tempRows.push({
-          id: index,
+          id: data.name,
           name: data.name,
           query: data.query,
           Grp: data.Grp,
@@ -184,14 +190,38 @@ const AccessControl = ({ setValue, setSearchInput }) => {
     }
   };
 
+  //delete access control
+  const handleClickDeleteAccessControlModal = () => {
+    deleteAccessControlAPIMethod(selectionModel[0]).then((data) => {
+      console.log("delete access control: ", data);
+      //get access control requirements
+      getAccessControlAPIMethod().then((res) => {
+        let tempRows = [];
+        res.body.map((data) => {
+          tempRows.push({
+            id: data.name,
+            name: data.name,
+            query: data.query,
+            Grp: data.Grp,
+            AR: data.AR,
+            AW: data.AW,
+            DR: data.DR,
+            DW: data.DW,
+          });
+        });
+        setRows(tempRows);
+      });
+    });
+  };
+
   useEffect(() => {
     //get access control requirements
     getAccessControlAPIMethod().then((res) => {
       console.log("get access control: ", res);
       let tempRows = [];
-      res.body.map((data, index) => {
+      res.body.map((data) => {
         tempRows.push({
-          id: index,
+          id: data.name,
           name: data.name,
           query: data.query,
           Grp: data.Grp,
@@ -250,6 +280,7 @@ const AccessControl = ({ setValue, setSearchInput }) => {
           <img
             src="/img/delete_button.png"
             style={{ width: "40px", height: "40px", cursor: "pointer" }}
+            onClick={handleClickDeleteAccessControlModal}
           />
         </div>
       </div>
@@ -260,6 +291,22 @@ const AccessControl = ({ setValue, setSearchInput }) => {
           pageSize={10}
           rowsPerPageOptions={[10]}
           checkboxSelection
+          // onSelectionModelChange={(newSelectionModel) => {
+          //   setSelectionModel(newSelectionModel);
+          //   console.log(newSelectionModel);
+          // }}
+          onSelectionModelChange={(selection) => {
+            if (selection.length > 1) {
+              const selectionSet = new Set(selectionModel);
+              const result = selection.filter((s) => !selectionSet.has(s));
+
+              setSelectionModel(result);
+            } else {
+              setSelectionModel(selection);
+            }
+          }}
+          selectionModel={selectionModel}
+          disableSelectionOnClick
           onCellDoubleClick={(params, event) => {
             event.defaultMuiPrevented = true;
             handleDoubleClickRow(params.row);
