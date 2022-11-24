@@ -87,7 +87,6 @@ const Homepage = () => {
   const [openGroup, setOpenGroup] = useState(true);
   const handleClickOpenGroup = () => {
     setOpenGroup(!openGroup);
-    console.log(openGroup);
   };
 
   // group creation modal
@@ -123,6 +122,7 @@ const Homepage = () => {
     //The dateTime will automatically set up.
     formData.append("create_time", createGroupDate.format());
     postGroupAPIMethod(formData).then((res) => {
+      console.log("post group: ", res);
       if (res.status === 201) {
         handleCloseGroupCreationModal();
       }
@@ -217,8 +217,7 @@ const Homepage = () => {
   useEffect(() => {
     getGroupAPIMethod().then((data) => {
       setGroups(data.body);
-      console.log(data);
-      console.log(groups);
+      console.log("get groups: ", data);
     });
   }, [openGroupCreationModal]);
 
@@ -609,7 +608,6 @@ const Homepage = () => {
                     label="Created Date"
                     value={createGroupDate}
                     onChange={(newValue) => {
-                      console.log(newValue);
                       setCreateGroupDate(newValue);
                     }}
                     maxDateTime={dayjs(new Date())}

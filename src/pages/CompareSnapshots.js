@@ -34,10 +34,9 @@ const CompareSnapshots = () => {
     setCompareFileSnapshot(event.target.value);
   };
 
-  const [selectedIndex, setSelectedIndex] = useState(1);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const [path, setPath] = useState([]);
-  const [fileName, setFileName] = useState("");
   let pathLet = [];
   let pathLetWithName = "";
   let differentPermissions = [];
@@ -49,14 +48,12 @@ const CompareSnapshots = () => {
     setCompareButton(true);
     getCompareSnapshotsAPIMethod(baseFileSnapshot, compareFileSnapshot).then(
       (res) => {
+        console.log("get compare snapshots: ", res);
         res.data.map((res) => {
           pathLetWithName =
             res.path + "/" + res.name + "." + res.mimeType.split(".")[2];
           pathLet.push(pathLetWithName);
           setPath(pathLet);
-
-          setFileName(res.name);
-          console.log(fileName);
         });
       }
     );
@@ -69,8 +66,6 @@ const CompareSnapshots = () => {
     setOpenCompareBox(true);
     getCompareSnapshotsAPIMethod(baseFileSnapshot, compareFileSnapshot).then(
       (res) => {
-        console.log(res);
-        console.log(res.data[0]);
         res.data[index]["additional_base_file_snapshot_permissions"].map(
           (data) => {
             differentPermissions.push({
@@ -99,6 +94,12 @@ const CompareSnapshots = () => {
             compareSnapshotPermission: data["to"]["role"],
           });
         });
+        if (differentPermissions.length === 0) {
+          differentPermissions.push({
+            id: 0,
+            name: "New File/Folder",
+          });
+        }
         setRows(differentPermissions);
       }
     );
@@ -133,15 +134,16 @@ const CompareSnapshots = () => {
   }, []);
 
   return (
-    <div>
-      <div className="select" style={{ display: "flex" }}>
-        <Box sx={{ minWidth: 250 }}>
+    <div style={{ height: "100%" }}>
+      <div className="select" style={{ display: "flex", height: "100%" }}>
+        <Box sx={{ minWidth: 250, height: "100%" }}>
           <FormControl sx={{ m: 1, minWidth: 250 }} size="small">
             <InputLabel id="baseFileSelect">Base File Snapshot</InputLabel>
             <Select
               labelId="BaseFileSnapshotLabelId"
               id="BaseFileSnapshot"
               label="Base File Snapshot"
+              value={baseFileSnapshot}
               onChange={handleChangeFirst}
             >
               {baseFileFirst.map((data) => (
@@ -168,6 +170,7 @@ const CompareSnapshots = () => {
               id="CompareFileSnapshot"
               label="Compare File Snapshot"
               onChange={handleChangeSecond}
+              value={compareFileSnapshot}
             >
               {baseFileFirst.map((data) => (
                 <MenuItem
@@ -190,14 +193,23 @@ const CompareSnapshots = () => {
           COMPARE
         </Button>
       </div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          height: "100%",
+        }}
+      >
         {compareButton ? (
-          <div style={{ marginRight: "20px" }}>
+          <div
+            style={{ marginRight: "20px", height: "800px", overflowY: "auto" }}
+          >
             <Box
               sx={{
                 width: "270px",
                 bgcolor: "background.paper",
-                // paddingTop: "15px",
+                height: "100%",
+                overflowY: "auto",
               }}
             >
               <List component="nav" aria-label="secondary mailbox folder">

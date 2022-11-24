@@ -66,7 +66,7 @@ const AccessControlPolicyModal = ({ handleCloseCreateAccessControlModal }) => {
       deniedReaders.toString().split(", "),
       checkedGroup
     ).then((res) => {
-      console.log(res);
+      console.log("post access control: ", res);
       handleCloseCreateAccessControlModal();
     });
   };

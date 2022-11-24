@@ -161,7 +161,7 @@ const QueryBuilder = ({
       (query = query + "sharing:domain:" + domain + " and ");
 
     query = query.slice(0, -5);
-    console.log(query);
+    console.log("generate query: ", query);
     query = setSearchInput(query);
     handleCloseSearchFilter();
   };
@@ -170,7 +170,7 @@ const QueryBuilder = ({
   useEffect(() => {
     getMembersAPIMethod(fileSnapshot, checkedGroup).then((data) => {
       setMembers(data.data);
-      console.log(members);
+      console.log("get members: ", data);
     });
   }, [checkedGroup]);
 

@@ -18,8 +18,7 @@ const Authorization = () => {
     // BE에 받은 code(access_code) 보내주기
     // post해서 받은 걸 확인하고 괜찮으면 redirect
     postAccessTokenAPIMethod(code).then((res) => {
-      console.log(res);
-      console.log(res.status);
+      console.log("post access token: ", res);
       if (res.status === 201) {
         getUserAPIMethod().then((data) => {
           if (data.status === 201) {
