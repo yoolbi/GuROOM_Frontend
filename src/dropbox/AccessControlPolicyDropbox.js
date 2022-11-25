@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { Box, TextField, Button, Autocomplete } from "@mui/material";
 import {
-  Box,
-  TextField,
-  FormControlLabel,
-  Switch,
-  Button,
-  Autocomplete,
-} from "@mui/material";
-import { getQueriesAPIMethod, postAccessControlAPIMethod } from "../api/client";
+  getQueriesDropboxAPIMethod,
+  postAccessControlDropboxAPIMethod,
+} from "../api/client";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import Tab from "@mui/material/Tab";
@@ -21,14 +17,8 @@ const AccessControlPolicyModal = ({ handleCloseCreateAccessControlModal }) => {
   const [allowedWriters, setAllowedWriters] = useState([]);
   const [deniedReaders, setDeniedReaders] = useState([]);
   const [deniedWriters, setDeniedWriters] = useState([]);
-  const [checkedGroup, setCheckedGroup] = useState(false);
   const [query, setQuery] = useState("");
   const [queryLogs, setQueryLogs] = useState([]);
-
-  //check group
-  const handleChangeCheckedGroup = (event) => {
-    setCheckedGroup(event.target.checked);
-  };
 
   //change name of access control
   const handleChangeAccessControlPolicies = (event) => {
@@ -57,34 +47,27 @@ const AccessControlPolicyModal = ({ handleCloseCreateAccessControlModal }) => {
 
   //apply access control
   const handleClickCreate = () => {
-    postAccessControlAPIMethod(
+    postAccessControlDropboxAPIMethod(
       accessControlPolicies,
       query,
       allowedReaders.toString().split(", "),
       allowedWriters.toString().split(", "),
       deniedReaders.toString().split(", "),
-      deniedReaders.toString().split(", "),
-      checkedGroup
+      deniedReaders.toString().split(", ")
     ).then((res) => {
-      console.log(res);
+      console.log("post access control: ", res);
       handleCloseCreateAccessControlModal();
     });
   };
 
   useEffect(() => {
     //get list of queries
-    getQueriesAPIMethod().then((res) => {
+    getQueriesDropboxAPIMethod().then((res) => {
       setQueryLogs(res.body.reverse());
     });
   }, []);
   return (
     <div style={{ height: 570, overflowY: "scroll" }}>
-      <FormControlLabel
-        control={
-          <Switch checked={checkedGroup} onChange={handleChangeCheckedGroup} />
-        }
-        label="Group"
-      />
       <Box sx={{ width: "545px" }}>
         <TextField
           id="filled-textarea"

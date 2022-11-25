@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  FormControlLabel,
-  Checkbox,
   TextField,
   InputAdornment,
   InputLabel,
@@ -10,12 +8,11 @@ import {
   Select,
   Box,
   Autocomplete,
-  Switch,
   Button,
 } from "@mui/material";
-import { getMembersAPIMethod } from "../api/client";
+import { getMembersDropboxAPIMethod } from "../api/client";
 
-const sharingTypes = ["None", "Anything", "Individual", "Domain"];
+const sharingTypes = ["None"];
 
 // eslint-disable-next-line react/prop-types
 const QueryBuilderDropbox = ({
@@ -27,25 +24,16 @@ const QueryBuilderDropbox = ({
   fileSnapshot,
 }) => {
   let query = "";
-  const [sharedDrive, setSharedDrive] = useState("");
   const [owner, setOwner] = useState("");
   const [creator, setCreator] = useState("");
-  const [sharedFrom, setSharedFrom] = useState("");
   const [sharedTo, setSharedTo] = useState("");
   const [name, setName] = useState("");
   const [readable, setReadable] = useState("");
   const [writable, setWritable] = useState("");
-  const [sharable, setSharable] = useState("");
   const [path, setPath] = useState("");
   const [pathSelect, setPathSelect] = useState("");
   const [sharingTypeSelect, setSharingTypeSelect] = useState("");
-  const [individual, setIndividual] = useState("");
-  const [domain, setDomain] = useState("");
   const [members, setMembers] = useState([]);
-
-  const handleChangeSharedDrive = (event) => {
-    setSharedDrive(event.target.value);
-  };
 
   const handleChangeOwner = (event) => {
     setOwner(event.target.value);
@@ -53,10 +41,6 @@ const QueryBuilderDropbox = ({
 
   const handleChangeCreator = (event) => {
     setCreator(event.target.value);
-  };
-
-  const handleChangeSharedFrom = (event) => {
-    setSharedFrom(event.target.value);
   };
 
   const handleChangeSharedTo = (event) => {
@@ -91,18 +75,6 @@ const QueryBuilderDropbox = ({
     setWritable(writableLet);
   };
 
-  const handleChangeSharable = (newValue) => {
-    let sharableLet = "";
-    newValue.map((value, index) => {
-      if (index === 0) {
-        sharableLet = value.email;
-      } else {
-        sharableLet = sharableLet + "," + value.email;
-      }
-    });
-    setSharable(sharableLet);
-  };
-
   const handleChangePath = (event) => {
     setPath(event.target.value);
   };
@@ -114,111 +86,35 @@ const QueryBuilderDropbox = ({
     setSharingTypeSelect(event.target.value);
   };
 
-  const [checkedMyDrive, setCheckedMyDrive] = useState(true);
-  const handleChangeCheckboxMyDrive = (event) => {
-    setCheckedMyDrive(event.target.checked);
-    setCheckedSharedDrive(!event.target.checked);
-  };
-
-  const [checkedSharedDrive, setCheckedSharedDrive] = useState(false);
-  const handleChangeCheckboxSharedDrive = (event) => {
-    setCheckedSharedDrive(event.target.checked);
-    setCheckedMyDrive(!event.target.checked);
-  };
-
-  const [checkedGroup, setCheckedGroup] = useState(false);
-  const handleChangeCheckedGroup = (event) => {
-    setCheckedGroup(event.target.checked);
-  };
-
-  const handleChangeIndividual = (event) => {
-    setIndividual(event.target.value);
-  };
-
-  const handleChangeDomain = (event) => {
-    setDomain(event.target.value);
-  };
-
   //generate query from query builder
   const handleClickGenerate = () => {
-    checkedMyDrive && (query = query + "drive:MyDrive and ");
-    checkedSharedDrive && (query = query + "drive:" + sharedDrive + " and ");
     owner && (query = query + "owner:" + owner + " and ");
     creator && (query = query + "creator:" + creator + " and ");
-    sharedFrom && (query = query + "sharedFrom:" + sharedFrom + " and ");
     sharedTo && (query = query + "sharedTo:" + sharedTo + " and ");
     readable && (query = query + "readable:" + readable + " and ");
     writable && (query = query + "writable:" + writable + " and ");
-    sharable && (query = query + "sharable:" + sharable + " and ");
     name && (query = query + "name:" + name + " and ");
     pathSelect === "inFolder" && (query = query + "inFolder:" + path + " and ");
     pathSelect === "folder" && (query = query + "folder:" + path + " and ");
     sharingTypeSelect === "None" && (query = query + "sharing:none and ");
-    sharingTypeSelect === "Anyone" && (query = query + "sharing:anyone and ");
-    sharingTypeSelect === "Individual" &&
-      (query = query + "sharing:individual:" + individual + " and ");
-    sharingTypeSelect === "Domain" &&
-      (query = query + "sharing:domain:" + domain + " and ");
 
     query = query.slice(0, -5);
-    console.log(query);
+    console.log("query: ", query);
     query = setSearchInput(query);
     handleCloseSearchFilter();
   };
 
   //get list of emails of members
   useEffect(() => {
-    getMembersAPIMethod(fileSnapshot, checkedGroup).then((data) => {
+    getMembersDropboxAPIMethod(fileSnapshot).then((data) => {
       setMembers(data.data);
-      console.log(members);
+      console.log("get members: ", data);
     });
-  }, [checkedGroup]);
+  }, []);
 
   return (
     <div style={{ height: "100%" }}>
       <div style={{ height: 575, overflowY: "scroll" }}>
-        <div>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={checkedGroup}
-                onChange={handleChangeCheckedGroup}
-              />
-            }
-            label="Group"
-          />
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={checkedMyDrive}
-                  onChange={handleChangeCheckboxMyDrive}
-                />
-              }
-              label="My Drive"
-            />
-
-            <FormControlLabel
-              style={{ marginRight: "5px" }}
-              control={
-                <Checkbox
-                  checked={checkedSharedDrive}
-                  onChange={handleChangeCheckboxSharedDrive}
-                />
-              }
-              label="Shared Drive"
-            />
-            {checkedSharedDrive && (
-              <TextField
-                label="Shared Drive Name"
-                id="outlined-start-adornment"
-                sx={{ width: "300px", marginBottom: "15px" }}
-                value={sharedDrive}
-                onChange={handleChangeSharedDrive}
-              />
-            )}
-          </div>
-        </div>
         <div>
           <div>
             <TextField
@@ -242,21 +138,6 @@ const QueryBuilderDropbox = ({
               sx={{ width: "545px", marginBottom: "15px" }}
             />
           </div>
-          <div>
-            <TextField
-              label="shared"
-              id="outlined-start-adornment"
-              sx={{ width: "545px", marginBottom: "15px" }}
-              value={sharedFrom}
-              onChange={handleChangeSharedFrom}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">From</InputAdornment>
-                ),
-              }}
-            />
-          </div>
-
           <div>
             <TextField
               label="shared"
@@ -300,22 +181,6 @@ const QueryBuilderDropbox = ({
               <TextField
                 {...params}
                 label="Writable by"
-                placeholder="Email"
-                sx={{ width: "545px", marginBottom: "20px" }}
-              />
-            )}
-          />
-          <Autocomplete
-            multiple
-            id="tags-outlined"
-            options={members}
-            getOptionLabel={(option) => (option.email ? option.email : "")}
-            filterSelectedOptions
-            onChange={(event, newValue) => handleChangeSharable(newValue)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Sharable by"
                 placeholder="Email"
                 sx={{ width: "545px", marginBottom: "20px" }}
               />
@@ -378,28 +243,6 @@ const QueryBuilderDropbox = ({
               ))}
             </Select>
           </FormControl>
-          {sharingTypeSelect === "Individual" && (
-            <TextField
-              id="outlined-textareas"
-              label="Individual Name"
-              placeholder="username"
-              multiline
-              value={individual}
-              onChange={handleChangeIndividual}
-              style={{ width: "365px" }}
-            />
-          )}
-          {sharingTypeSelect === "Domain" && (
-            <TextField
-              id="outlined-textareas"
-              label="Domain Address"
-              placeholder="username"
-              multiline
-              value={domain}
-              onChange={handleChangeDomain}
-              style={{ width: "365px" }}
-            />
-          )}
         </div>
       </div>
       <div

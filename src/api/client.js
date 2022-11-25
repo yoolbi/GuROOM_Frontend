@@ -699,3 +699,20 @@ export const getAccessControlDropboxAPIMethod = () => {
     }
   ).then(parseJSON);
 };
+
+export const deleteAccessControlDropboxAPIMethod = (name) => {
+  return fetch(
+    urlJoin(
+      process.env.REACT_APP_BACKEND_URL,
+      "/apps/snapshot/v1/dropbox/access-controls"
+    ),
+    {
+      method: "DELETE",
+      credentials: "include",
+      body: JSON.stringify({ name: name }),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+  ).then(parseJSON);
+};

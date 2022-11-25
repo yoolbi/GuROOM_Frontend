@@ -291,10 +291,6 @@ const AccessControl = ({ setValue, setSearchInput }) => {
           pageSize={10}
           rowsPerPageOptions={[10]}
           checkboxSelection
-          // onSelectionModelChange={(newSelectionModel) => {
-          //   setSelectionModel(newSelectionModel);
-          //   console.log(newSelectionModel);
-          // }}
           onSelectionModelChange={(selection) => {
             if (selection.length > 1) {
               const selectionSet = new Set(selectionModel);

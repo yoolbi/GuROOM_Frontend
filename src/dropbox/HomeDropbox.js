@@ -105,7 +105,8 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
 
   //set the table to the initial table
   const homeTable = (snapshot) => {
-    setSearchInput("");
+    // eslint-disable-next-line react/prop-types
+    !searchInput.includes("accessControl:") && setSearchInput("");
     setShowPath([]);
     getFileSnapshotDropboxAPIMethod(snapshot, 0, 1000).then((res) => {
       console.log("get files: ", res);
