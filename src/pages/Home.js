@@ -352,13 +352,6 @@ const Home = ({ searchInput, setSearchInput }) => {
           ),
         },
         {
-          field: "deviantPermissions",
-          headerName: "Deviant Permissions",
-          description:
-            "The differences between this file’s permissions and the permissions of most other files in the folder",
-          width: 200,
-        },
-        {
           field: "created",
           headerName: "Created",
           width: 120,
@@ -644,7 +637,7 @@ const Home = ({ searchInput, setSearchInput }) => {
     let fileRow = [];
     permissionsLet = res.data.permissions;
 
-    //remover owner from permmisions
+    //remove owner from permissions
     removeOwnerFromPermissions(permissionsLet);
     removeOwnerFromInheritPermissions(permissionsLet);
 
