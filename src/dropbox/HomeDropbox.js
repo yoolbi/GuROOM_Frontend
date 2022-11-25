@@ -135,10 +135,8 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
       //get query logs
       getQueriesDropboxAPIMethod().then((res) => {
         setQueryLogs(res.body.reverse());
-        console.log(res.body);
       });
 
-      console.log(res);
       let fileRow = [];
       let ownerLet = [];
       let commenterLet = [];
@@ -187,13 +185,8 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
         }
       }
 
-      console.log(ownerLet[0]["emailAddress"]);
-      console.log(writerLet);
-      console.log(commenterLet);
-
       // organize roles and permissions for each file
       res.data.files.map((data) => {
-        console.log("disPlayData: ", data);
         let owner = [];
         let writer = [];
         let commenter = [];
@@ -255,7 +248,7 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
           size: data.size === 0 ? "" : data.size,
           writer: writer,
           commenter: commenter,
-          path: data.path,
+          path: data.path + "/" + data.name,
         });
       });
       setRows(fileRow);
@@ -363,9 +356,8 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
         //get query logs
         getQueriesDropboxAPIMethod().then((res) => {
           setQueryLogs(res.body.reverse());
-          console.log(res.body);
         });
-        console.log(res.data);
+        console.log("get search: ", res);
         displayTable(res);
       })
       .catch((err) => {
@@ -379,8 +371,7 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
     if (event.keyCode === 13) {
       event.preventDefault();
       if (event.target.value.includes("is:file_folder_diff")) {
-        console.log(fileSnapshot);
-        console.log(event.target.value);
+        console.log("search: ", event.target.value);
         onClickFileFolderSharingDifferences();
       } else if (event.target.value === "") {
         homeTable(fileSnapshot);
@@ -510,7 +501,6 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
 
   //display table
   const displayTable = (res) => {
-    console.log(res);
     let fileRow = [];
     let ownerLet = [];
     let commenterLet = [];
@@ -561,7 +551,6 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
     let violationAll = getViolation(permissionsLet2);
 
     res.data.files.map((data) => {
-      // console.log("disPlayData: ", data);
       let owner = [];
       let writer = [];
       let commenter = [];
@@ -615,7 +604,7 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
         size: data.size === 0 ? "" : data.size,
         writer: writer,
         commenter: commenter,
-        path: data.path,
+        path: data.path + "/" + data.name,
         validation: violationAll,
       });
     });
@@ -712,11 +701,8 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
 
   //onClick folder name in table. Change table when clicking the folder names.
   const handleClickCell = (name, id, path) => {
-    console.log("click", name);
-    console.log("path", path);
-
     //add path for selected folder
-    currentPath.push({ name: name, id: id });
+    currentPath.push({ name: name, id: id, path: path });
     setShowPath(currentPath);
 
     //get file snapshot files
@@ -726,6 +712,7 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
       10000,
       path
     ).then((res) => {
+      console.log("get files: ", res);
       displayTable(res);
     });
 
@@ -735,10 +722,8 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
   // take a file snapshot
   const takingSnapshot = () => {
     setOpenTakingSnapshot(true);
-    console.log("take file snapshot");
     postFileSnapshotDropboxAPIMethod("File Snapshot " + count).then((data) => {
-      console.log(data);
-      console.log(data.status);
+      console.log("take file snapshot", data);
       if (data.status === 201) {
         setOpenTakingSnapshot(false);
       }
@@ -843,6 +828,8 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
       setFileSnapshotNames(res.body.reverse());
       setCount(res.body.length + 1);
       setFileSnapshot(res.body[0].name);
+      fileSnapshotLet = res.body[0].name;
+
       homeTable(res.body[0].name);
     });
   }, [openTakingSnapshot, editedFileSnapshotName]);
@@ -851,7 +838,7 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
     //get query logs
     getQueriesDropboxAPIMethod().then((res) => {
       setQueryLogs(res.body.reverse());
-      console.log(res.body);
+      console.log("get queries: ", res);
     });
   }, [openTakingSnapshot, editedFileSnapshotName]);
 
