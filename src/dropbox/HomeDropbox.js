@@ -108,6 +108,7 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
     setSearchInput("");
     setShowPath([]);
     getFileSnapshotDropboxAPIMethod(snapshot, 0, 1000).then((res) => {
+      console.log("get files: ", res);
       displayTable(res);
     });
   };
@@ -195,8 +196,6 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
 
         for (var key11 in ownerLet) {
           if (ownerLet[key11]["file_id"] === data.id) {
-            console.log("HELLO");
-            console.log(ownerLet[key11]["emailAddress"]);
             owner.push(ownerLet[key11]["emailAddress"]);
           }
         }
@@ -224,10 +223,6 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
             );
           }
         }
-
-        console.log(owner);
-        console.log(commenter);
-        console.log(writer);
 
         fileRow.push({
           id: data.id,
@@ -283,6 +278,23 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
             ) : (
               <div>{params.row.name}</div>
             ),
+        },
+        {
+          field: "path",
+          headerName: "Path",
+          width: 200,
+          sortable: false,
+          renderCell: (params) => (
+            <div style={{ width: "100%", overflowX: "auto" }}>
+              {params.row.path}
+            </div>
+          ),
+        },
+        {
+          field: "type",
+          headerName: "Type",
+          width: 130,
+          sortable: false,
         },
         {
           field: "owner",
@@ -636,6 +648,13 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
           ) : (
             <div>{params.row.name}</div>
           ),
+      },
+      {
+        field: "type",
+        headerName: "Type",
+        width: 130,
+        sortable: false,
+        description: "File/folder type",
       },
       {
         field: "owner",
@@ -1061,7 +1080,8 @@ const HomeDropbox = ({ searchInput, setSearchInput }) => {
             disableSelectionOnClick
             onCellDoubleClick={(params, event) => {
               event.defaultMuiPrevented = true;
-              searchInput === "is:file_folder_diff"
+              // eslint-disable-next-line react/prop-types
+              searchInput.includes("is:file_folder_diff")
                 ? openSharingDifferenceModal(params.row)
                 : handleDoubleClickRow(params.row);
             }}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import ClearIcon from "@mui/icons-material/Clear";
 import { DataGrid } from "@mui/x-data-grid";
-import { getFileFolderSharingDifferencesAPIMethod } from "../api/client";
+import { getFileFolderSharingDifferencesDropboxAPIMethod } from "../api/client";
 
 //Modal to show details for file-folder sharing differences
 const SharingDifferenceModalDropbox = ({
@@ -17,7 +17,7 @@ const SharingDifferenceModalDropbox = ({
 
   //get file-folder sharing differences info
   useEffect(() => {
-    getFileFolderSharingDifferencesAPIMethod(
+    getFileFolderSharingDifferencesDropboxAPIMethod(
       fileSnapshot,
       // eslint-disable-next-line react/prop-types
       selectedFileFolderSharingDifferences["id"]
@@ -72,6 +72,8 @@ const SharingDifferenceModalDropbox = ({
     },
   ]);
 
+  console.log(selectedFileFolderSharingDifferences);
+
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -90,7 +92,7 @@ const SharingDifferenceModalDropbox = ({
           defaultValue={selectedFileFolderSharingDifferences["path"]
             // eslint-disable-next-line react/prop-types
             .split("/")
-            .slice(-1)}
+            .slice(-2, -1)}
           InputProps={{
             readOnly: true,
           }}
