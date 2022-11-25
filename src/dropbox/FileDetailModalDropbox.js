@@ -3,7 +3,6 @@ import TextField from "@mui/material/TextField";
 import { InputAdornment } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
-import Avatar from "@mui/material/Avatar";
 
 //When the user wants to check the details of file in the table(which shows in the Homepage), he/she can check with double-clicking the file(row)
 //The modal shows file name, file type, owner, organizer, file organizer, writer, commenter, reader, inherit permissions, direct permissions, created & modified date and the file size.
@@ -66,6 +65,7 @@ const DisplayValidation = ({ eachFileDetailData }) => {
 const FileDetailModalDropbox = ({ eachFileDetailData }) => {
   // eslint-disable-next-line react/prop-types
   const detail = eachFileDetailData;
+  console.log(detail);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
@@ -104,16 +104,9 @@ const FileDetailModalDropbox = ({ eachFileDetailData }) => {
                   spacing={1}
                   style={{ width: "100%", overflowX: "auto" }}
                 >
-                  {detail.owner["displayName"] !== undefined ? (
+                  {detail.owner[0] !== undefined ? (
                     <Chip
-                      avatar={
-                        <Avatar alt="Natacha" src={detail.owner["photoLink"]} />
-                      }
-                      label={
-                        detail.owner["displayName"] === null
-                          ? "Anyone"
-                          : detail.owner["displayName"]
-                      }
+                      label={detail.owner[0]}
                       variant="outlined"
                       key={detail.id}
                     />
@@ -142,20 +135,7 @@ const FileDetailModalDropbox = ({ eachFileDetailData }) => {
                   style={{ width: "100%", overflowX: "auto" }}
                 >
                   {detail.writer?.map((data, index) => {
-                    return (
-                      <Chip
-                        avatar={
-                          <Avatar alt="Natacha" src={data["photoLink"]} />
-                        }
-                        label={
-                          data["displayName"] === null
-                            ? "Anyone"
-                            : data["displayName"]
-                        }
-                        variant="outlined"
-                        key={index}
-                      />
-                    );
+                    return <Chip label={data} variant="outlined" key={index} />;
                   })}
                 </Stack>
               </InputAdornment>
@@ -179,20 +159,7 @@ const FileDetailModalDropbox = ({ eachFileDetailData }) => {
                   style={{ width: "100%", overflowX: "auto" }}
                 >
                   {detail.commenter?.map((data, index) => {
-                    return (
-                      <Chip
-                        avatar={
-                          <Avatar alt="Natacha" src={data["photoLink"]} />
-                        }
-                        label={
-                          data["displayName"] === null
-                            ? "Anyone"
-                            : data["displayName"]
-                        }
-                        variant="outlined"
-                        key={index}
-                      />
-                    );
+                    return <Chip label={data} variant="outlined" key={index} />;
                   })}
                 </Stack>
               </InputAdornment>
@@ -216,20 +183,7 @@ const FileDetailModalDropbox = ({ eachFileDetailData }) => {
                   style={{ width: "100%", overflowX: "auto" }}
                 >
                   {JSON.parse(detail.inheritPermissions)?.map((data, index) => {
-                    return (
-                      <Chip
-                        avatar={
-                          <Avatar alt="Natacha" src={data["photoLink"]} />
-                        }
-                        label={
-                          data["displayName"] === null
-                            ? "Anyone"
-                            : data["displayName"]
-                        }
-                        variant="outlined"
-                        key={index}
-                      />
-                    );
+                    return <Chip label={data} variant="outlined" key={index} />;
                   })}
                 </Stack>
               </InputAdornment>
@@ -253,20 +207,7 @@ const FileDetailModalDropbox = ({ eachFileDetailData }) => {
                   style={{ width: "100%", overflowX: "auto" }}
                 >
                   {JSON.parse(detail.directPermissions)?.map((data, index) => {
-                    return (
-                      <Chip
-                        avatar={
-                          <Avatar alt="Natacha" src={data["photoLink"]} />
-                        }
-                        label={
-                          data["displayName"] === null
-                            ? "Anyone"
-                            : data["displayName"]
-                        }
-                        variant="outlined"
-                        key={index}
-                      />
-                    );
+                    return <Chip label={data} variant="outlined" key={index} />;
                   })}
                 </Stack>
               </InputAdornment>
@@ -279,7 +220,7 @@ const FileDetailModalDropbox = ({ eachFileDetailData }) => {
           id="outlined-multiline-flexible"
           label="Modified Date"
           multiline
-          value={detail.modified ? detail.modified : ""}
+          value={detail.modified ? detail.modified : " "}
           InputProps={{
             readOnly: true,
           }}
@@ -290,7 +231,7 @@ const FileDetailModalDropbox = ({ eachFileDetailData }) => {
           id="outlined-multiline-flexible"
           label="Size"
           multiline
-          value={detail.size ? detail.size : ""}
+          value={detail.size ? detail.size : " "}
           InputProps={{
             readOnly: true,
           }}
