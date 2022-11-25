@@ -10,7 +10,10 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { DataGrid } from "@mui/x-data-grid";
-import { getAccessControlAPIMethod } from "../api/client";
+import {
+  deleteAccessControlDropboxAPIMethod,
+  getAccessControlDropboxAPIMethod,
+} from "../api/client";
 import AccessControlPolicyDropbox from "./AccessControlPolicyDropbox";
 import AccessControlDetailModalDropbox from "./AccessControlDetailModalDropbox";
 
@@ -30,7 +33,7 @@ const style = {
 
 //This is the access control tab from the Homepage.
 // eslint-disable-next-line react/prop-types
-const AccessControlDropbox = ({ setValue, setSearchInput }) => {
+const AccessControlDropbox = ({ setTab, setSearchInput }) => {
   //open and close modal for creating access control
   const [openCreateAccessControlModal, setOpenCreateAccessControlModal] =
     useState(false);
@@ -52,10 +55,13 @@ const AccessControlDropbox = ({ setValue, setSearchInput }) => {
     openDetailModal();
   };
 
+  //select from the table
+  const [selectionModel, setSelectionModel] = useState([]);
+
   //click use
   const handleClickUse = (params) => {
-    console.log(params.row);
-    setValue("home");
+    console.log("ACR use: ", params.row);
+    setTab("home");
     setSearchInput("accessControl:" + params.row.name);
   };
 
@@ -154,7 +160,7 @@ const AccessControlDropbox = ({ setValue, setSearchInput }) => {
 
   //click search icon
   const handleClickSearchIcon = () => {
-    getAccessControlAPIMethod().then((res) => {
+    getAccessControlDropboxAPIMethod().then((res) => {
       let filtered,
         tempRows = [];
       filtered = res.body.filter((row) =>
@@ -184,10 +190,34 @@ const AccessControlDropbox = ({ setValue, setSearchInput }) => {
     }
   };
 
+  //delete access control
+  const handleClickDeleteAccessControlModal = () => {
+    deleteAccessControlDropboxAPIMethod(selectionModel[0]).then((data) => {
+      console.log("delete access control: ", data);
+      //get access control requirements
+      getAccessControlDropboxAPIMethod().then((res) => {
+        let tempRows = [];
+        res.body.map((data) => {
+          tempRows.push({
+            id: data.name,
+            name: data.name,
+            query: data.query,
+            Grp: data.Grp,
+            AR: data.AR,
+            AW: data.AW,
+            DR: data.DR,
+            DW: data.DW,
+          });
+        });
+        setRows(tempRows);
+      });
+    });
+  };
+
   useEffect(() => {
     //get access control requirements
-    getAccessControlAPIMethod().then((res) => {
-      console.log(res);
+    getAccessControlDropboxAPIMethod().then((res) => {
+      console.log("get access control: ", res);
       let tempRows = [];
       res.body.map((data, index) => {
         tempRows.push({
@@ -201,7 +231,6 @@ const AccessControlDropbox = ({ setValue, setSearchInput }) => {
           DW: data.DW,
         });
       });
-      console.log(tempRows);
       setRows(tempRows);
     });
   }, [openCreateAccessControlModal]);
@@ -251,6 +280,7 @@ const AccessControlDropbox = ({ setValue, setSearchInput }) => {
           <img
             src="/img/delete_button.png"
             style={{ width: "40px", height: "40px", cursor: "pointer" }}
+            onClick={handleClickDeleteAccessControlModal}
           />
         </div>
       </div>
@@ -261,6 +291,18 @@ const AccessControlDropbox = ({ setValue, setSearchInput }) => {
           pageSize={10}
           rowsPerPageOptions={[10]}
           checkboxSelection
+          onSelectionModelChange={(selection) => {
+            if (selection.length > 1) {
+              const selectionSet = new Set(selectionModel);
+              const result = selection.filter((s) => !selectionSet.has(s));
+
+              setSelectionModel(result);
+            } else {
+              setSelectionModel(selection);
+            }
+          }}
+          selectionModel={selectionModel}
+          disableSelectionOnClick
           onCellDoubleClick={(params, event) => {
             event.defaultMuiPrevented = true;
             handleDoubleClickRow(params.row);
