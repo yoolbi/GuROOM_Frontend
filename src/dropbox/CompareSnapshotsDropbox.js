@@ -11,8 +11,8 @@ import Divider from "@mui/material/Divider";
 import { Button } from "@mui/material";
 
 import {
-  getCompareSnapshotsAPIMethod,
-  getFileSnapshotNamesAPIMethod,
+  getCompareSnapshotsDropboxAPIMethod,
+  getFileSnapshotNamesDropboxAPIMethod,
 } from "../api/client";
 import { DataGrid } from "@mui/x-data-grid";
 
@@ -43,65 +43,68 @@ const CompareSnapshotsDropbox = () => {
   let differentPermissions = [];
 
   //When the user chooses the snapshots to compare, then click the compare button.
-  //Then, we will request the "getCompareSnapshotsAPIMethod" with two snapshots.
+  //Then, we will request the "getCompareSnapshotsDropboxAPIMethod" with two snapshots.
   //After the action, we can get data from the backend, and we will show each path that has a difference with two snapshots.
   const clickCompareButton = () => {
     setCompareButton(true);
-    getCompareSnapshotsAPIMethod(baseFileSnapshot, compareFileSnapshot).then(
-      (res) => {
-        res.data.map((res) => {
-          pathLetWithName =
-            res.path + "/" + res.name + "." + res.mimeType.split(".")[2];
-          pathLet.push(pathLetWithName);
-          setPath(pathLet);
+    getCompareSnapshotsDropboxAPIMethod(
+      baseFileSnapshot,
+      compareFileSnapshot
+    ).then((res) => {
+      res.data.map((res) => {
+        console.log(res);
+        pathLetWithName = res.path + "/" + res.name;
+        pathLet.push(pathLetWithName);
+        setPath(pathLet);
 
-          setFileName(res.name);
-          console.log(fileName);
-        });
-      }
-    );
+        setFileName(res.name);
+        console.log(fileName);
+      });
+    });
   };
 
   //By clicking the path, the user can check what difference between two snapshots in the path.
   //It shows a list of people with different permissions and shows how it was changed.
   const handleListItemClick = (event, index) => {
+    console.log("HELOO");
     setSelectedIndex(index);
     setOpenCompareBox(true);
-    getCompareSnapshotsAPIMethod(baseFileSnapshot, compareFileSnapshot).then(
-      (res) => {
-        console.log(res);
-        console.log(res.data[0]);
-        res.data[index]["additional_base_file_snapshot_permissions"].map(
-          (data) => {
-            differentPermissions.push({
-              id: data["id"],
-              name: data["emailAddress"],
-              baseSnapshotPermission: data["role"],
-              compareSnapshotPermission: "X",
-            });
-          }
-        );
-        res.data[index]["additional_compare_file_snapshot_permissions"].map(
-          (data) => {
-            differentPermissions.push({
-              id: data["id"],
-              name: data["emailAddress"],
-              baseSnapshotPermission: "X",
-              compareSnapshotPermission: data["role"],
-            });
-          }
-        );
-        res.data[index]["changed_permissions"].map((data) => {
+    getCompareSnapshotsDropboxAPIMethod(
+      baseFileSnapshot,
+      compareFileSnapshot
+    ).then((res) => {
+      console.log(res);
+      console.log(res.data[0]);
+      res.data[index]["additional_base_file_snapshot_permissions"].map(
+        (data) => {
           differentPermissions.push({
-            id: data["from"]["id"],
-            name: data["from"]["emailAddress"],
-            baseSnapshotPermission: data["from"]["role"],
-            compareSnapshotPermission: data["to"]["role"],
+            id: data["id"],
+            name: data["emailAddress"],
+            baseSnapshotPermission: data["role"],
+            compareSnapshotPermission: "X",
           });
+        }
+      );
+      res.data[index]["additional_compare_file_snapshot_permissions"].map(
+        (data) => {
+          differentPermissions.push({
+            id: data["id"],
+            name: data["emailAddress"],
+            baseSnapshotPermission: "X",
+            compareSnapshotPermission: data["role"],
+          });
+        }
+      );
+      res.data[index]["changed_permissions"].map((data) => {
+        differentPermissions.push({
+          id: data["from"]["id"],
+          name: data["from"]["emailAddress"],
+          baseSnapshotPermission: data["from"]["role"],
+          compareSnapshotPermission: data["to"]["role"],
         });
-        setRows(differentPermissions);
-      }
-    );
+      });
+      setRows(differentPermissions);
+    });
   };
 
   const [rows, setRows] = useState([
@@ -126,7 +129,7 @@ const CompareSnapshotsDropbox = () => {
 
   //This is the set-up for the list of snapshots.
   useEffect(() => {
-    getFileSnapshotNamesAPIMethod().then((data) => {
+    getFileSnapshotNamesDropboxAPIMethod().then((data) => {
       console.log("get file snapshot names: ", data.body);
       setBaseFileFirst(data.body.reverse());
     });
@@ -197,7 +200,6 @@ const CompareSnapshotsDropbox = () => {
               sx={{
                 width: "270px",
                 bgcolor: "background.paper",
-                // paddingTop: "15px",
               }}
             >
               <List component="nav" aria-label="secondary mailbox folder">
