@@ -57,6 +57,14 @@ const AccessControlPolicyModal = ({ handleCloseCreateAccessControlModal }) => {
 
   //apply access control
   const handleClickCreate = () => {
+    console.log(
+      accessControlPolicies,
+      query,
+      allowedReaders.toString().split(", "),
+      allowedWriters.toString().split(", "),
+      deniedReaders.toString().split(", "),
+      deniedReaders.toString().split(", ")
+    );
     postAccessControlAPIMethod(
       accessControlPolicies,
       query,
