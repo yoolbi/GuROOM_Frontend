@@ -20,6 +20,10 @@ const DisplayValidation = ({ eachFileDetailData }) => {
         validationForEachFile.push(detail["validation"][index]);
       }
     });
+    validationForEachFile = validationForEachFile.filter(
+      (value, index, self) =>
+        index === self.findIndex((t) => t.email_address === value.email_address)
+    );
     setValidation(validationForEachFile);
   }, []);
 

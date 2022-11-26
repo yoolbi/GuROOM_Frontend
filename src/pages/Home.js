@@ -575,7 +575,7 @@ const Home = ({ searchInput, setSearchInput }) => {
                     "violation_type"
                   ],
                 file_id:
-                  permissions[key]["inherit_permissions"][key2]["file_id"],
+                  permissions[key3]["inherit_permissions"][key4]["file_id"],
                 violation_description:
                   permissions[key]["inherit_permissions"][key2][
                     "violation_description"
@@ -590,9 +590,9 @@ const Home = ({ searchInput, setSearchInput }) => {
                     "violation_type"
                   ],
                 file_id:
-                  permissions[key]["inherit_permissions"][key2]["file_id"],
+                  permissions[key3]["inherit_permissions"][key4]["file_id"],
                 violation_description:
-                  permissions[key]["inherit_permissions"][key2][
+                  permissions[key3]["inherit_permissions"][key4][
                     "violation_description"
                   ],
               });
@@ -605,9 +605,10 @@ const Home = ({ searchInput, setSearchInput }) => {
                 permissions[key3]["inherit_permissions"][key2][
                   "violation_type"
                 ],
-              file_id: permissions[key]["inherit_permissions"][key2]["file_id"],
+              file_id:
+                permissions[key3]["inherit_permissions"][key4]["file_id"],
               violation_description:
-                permissions[key]["inherit_permissions"][key2][
+                permissions[key3]["inherit_permissions"][key4][
                   "violation_description"
                 ],
             });
@@ -615,7 +616,6 @@ const Home = ({ searchInput, setSearchInput }) => {
         }
       }
     }
-    console.log(violationListTemp);
     return violationListTemp;
   };
 
