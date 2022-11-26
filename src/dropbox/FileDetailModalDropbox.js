@@ -31,24 +31,45 @@ const DisplayValidation = ({ eachFileDetailData }) => {
     <div style={{ width: "100%", height: "100%" }}>
       {validation.map((data, index) => {
         return (
-          <div key={index} style={{ display: "flex" }}>
-            <TextField
-              id="outlined-multiline-flexible"
-              label="Violated Email"
-              multiline
-              maxRows={4}
-              value={data.email_address}
-              InputProps={{
-                readOnly: true,
-              }}
-              style={{ marginBottom: "15px", width: "45%", marginRight: "5%" }}
-            />
+          <div key={index}>
+            <div style={{ display: "flex" }}>
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Violated Email"
+                multiline
+                maxRows={4}
+                value={data.email_address}
+                InputProps={{
+                  readOnly: true,
+                }}
+                style={{
+                  marginBottom: "15px",
+                  width: "45%",
+                  marginRight: "5%",
+                }}
+              />
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Violation Type"
+                multiline
+                maxRows={4}
+                value={JSON.stringify(data.violationType)
+                  ?.replace(/"/g, "")
+                  .replace("[", "")
+                  .replace("]", "")
+                  .replace(",", ", ")}
+                InputProps={{
+                  readOnly: true,
+                }}
+                style={{ marginBottom: "15px", width: "45%" }}
+              />
+            </div>
             <TextField
               id="outlined-multiline-flexible"
               label="Violation Type"
               multiline
               maxRows={4}
-              value={JSON.stringify(data.violationType)
+              value={JSON.stringify(data.violation_description)
                 ?.replace(/"/g, "")
                 .replace("[", "")
                 .replace("]", "")
@@ -56,7 +77,7 @@ const DisplayValidation = ({ eachFileDetailData }) => {
               InputProps={{
                 readOnly: true,
               }}
-              style={{ marginBottom: "15px", width: "45%" }}
+              style={{ marginBottom: "15px", width: "95%" }}
             />
           </div>
         );
