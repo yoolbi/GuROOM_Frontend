@@ -34,7 +34,7 @@ const CompareSnapshotsDropbox = () => {
     setCompareFileSnapshot(event.target.value);
   };
 
-  const [selectedIndex, setSelectedIndex] = useState(1);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const [path, setPath] = useState([]);
   const [fileName, setFileName] = useState("");
@@ -145,6 +145,7 @@ const CompareSnapshotsDropbox = () => {
               labelId="BaseFileSnapshotLabelId"
               id="BaseFileSnapshot"
               label="Base File Snapshot"
+              value={baseFileSnapshot}
               onChange={handleChangeFirst}
             >
               {baseFileFirst.map((data) => (
@@ -171,6 +172,7 @@ const CompareSnapshotsDropbox = () => {
               id="CompareFileSnapshot"
               label="Compare File Snapshot"
               onChange={handleChangeSecond}
+              value={compareFileSnapshot}
             >
               {baseFileFirst.map((data) => (
                 <MenuItem
