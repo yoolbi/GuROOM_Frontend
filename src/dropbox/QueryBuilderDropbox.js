@@ -25,7 +25,6 @@ const QueryBuilderDropbox = ({
 }) => {
   let query = "";
   const [owner, setOwner] = useState("");
-  const [creator, setCreator] = useState("");
   const [sharedTo, setSharedTo] = useState("");
   const [name, setName] = useState("");
   const [readable, setReadable] = useState("");
@@ -37,10 +36,6 @@ const QueryBuilderDropbox = ({
 
   const handleChangeOwner = (event) => {
     setOwner(event.target.value);
-  };
-
-  const handleChangeCreator = (event) => {
-    setCreator(event.target.value);
   };
 
   const handleChangeSharedTo = (event) => {
@@ -89,8 +84,7 @@ const QueryBuilderDropbox = ({
   //generate query from query builder
   const handleClickGenerate = () => {
     owner && (query = query + "owner:" + owner + " and ");
-    creator && (query = query + "creator:" + creator + " and ");
-    sharedTo && (query = query + "sharedTo:" + sharedTo + " and ");
+    sharedTo && (query = query + "to:" + sharedTo + " and ");
     readable && (query = query + "readable:" + readable + " and ");
     writable && (query = query + "writable:" + writable + " and ");
     name && (query = query + "name:" + name + " and ");
@@ -124,17 +118,6 @@ const QueryBuilderDropbox = ({
               multiline
               value={owner}
               onChange={handleChangeOwner}
-              sx={{ width: "545px", marginBottom: "15px" }}
-            />
-          </div>
-          <div>
-            <TextField
-              id="outlined-textareas"
-              label="Creator"
-              placeholder="Email"
-              multiline
-              value={creator}
-              onChange={handleChangeCreator}
               sx={{ width: "545px", marginBottom: "15px" }}
             />
           </div>

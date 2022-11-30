@@ -29,7 +29,6 @@ const QueryBuilder = ({
   let query = "";
   const [sharedDrive, setSharedDrive] = useState("");
   const [owner, setOwner] = useState("");
-  const [creator, setCreator] = useState("");
   const [sharedFrom, setSharedFrom] = useState("");
   const [sharedTo, setSharedTo] = useState("");
   const [name, setName] = useState("");
@@ -49,10 +48,6 @@ const QueryBuilder = ({
 
   const handleChangeOwner = (event) => {
     setOwner(event.target.value);
-  };
-
-  const handleChangeCreator = (event) => {
-    setCreator(event.target.value);
   };
 
   const handleChangeSharedFrom = (event) => {
@@ -115,24 +110,24 @@ const QueryBuilder = ({
   };
 
   const [checkedAll, setCheckedAll] = useState(true);
-  const handleChangeCheckboxAll = (event) => {
-    setCheckedAll(event.target.checked);
-    setCheckedSharedDrive(!event.target.checked);
-    setCheckedMyDrive(!event.target.checked);
+  const handleChangeCheckboxAll = () => {
+    setCheckedAll(true);
+    setCheckedSharedDrive(false);
+    setCheckedMyDrive(false);
   };
 
   const [checkedMyDrive, setCheckedMyDrive] = useState(false);
-  const handleChangeCheckboxMyDrive = (event) => {
-    setCheckedMyDrive(event.target.checked);
-    setCheckedSharedDrive(!event.target.checked);
-    setCheckedAll(!event.target.checked);
+  const handleChangeCheckboxMyDrive = () => {
+    setCheckedMyDrive(true);
+    setCheckedSharedDrive(false);
+    setCheckedAll(false);
   };
 
   const [checkedSharedDrive, setCheckedSharedDrive] = useState(false);
-  const handleChangeCheckboxSharedDrive = (event) => {
-    setCheckedSharedDrive(event.target.checked);
-    setCheckedMyDrive(!event.target.checked);
-    setCheckedAll(!event.target.checked);
+  const handleChangeCheckboxSharedDrive = () => {
+    setCheckedSharedDrive(true);
+    setCheckedMyDrive(false);
+    setCheckedAll(false);
   };
 
   const [checkedGroup, setCheckedGroup] = useState(false);
@@ -153,9 +148,8 @@ const QueryBuilder = ({
     checkedMyDrive && (query = query + "drive:MyDrive and ");
     checkedSharedDrive && (query = query + "drive:" + sharedDrive + " and ");
     owner && (query = query + "owner:" + owner + " and ");
-    creator && (query = query + "creator:" + creator + " and ");
-    sharedFrom && (query = query + "sharedFrom:" + sharedFrom + " and ");
-    sharedTo && (query = query + "sharedTo:" + sharedTo + " and ");
+    sharedFrom && (query = query + "from:" + sharedFrom + " and ");
+    sharedTo && (query = query + "to:" + sharedTo + " and ");
     readable && (query = query + "readable:" + readable + " and ");
     writable && (query = query + "writable:" + writable + " and ");
     sharable && (query = query + "sharable:" + sharable + " and ");
@@ -249,17 +243,7 @@ const QueryBuilder = ({
               sx={{ width: "545px", marginBottom: "15px" }}
             />
           </div>
-          <div>
-            <TextField
-              id="outlined-textareas"
-              label="Creator"
-              placeholder="Email"
-              multiline
-              value={creator}
-              onChange={handleChangeCreator}
-              sx={{ width: "545px", marginBottom: "15px" }}
-            />
-          </div>
+
           <div>
             <TextField
               label="shared"
