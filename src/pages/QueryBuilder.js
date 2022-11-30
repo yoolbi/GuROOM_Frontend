@@ -34,7 +34,6 @@ const QueryBuilder = ({
   const [name, setName] = useState("");
   const [readable, setReadable] = useState("");
   const [writable, setWritable] = useState("");
-  const [sharable, setSharable] = useState("");
   const [path, setPath] = useState("");
   const [pathSelect, setPathSelect] = useState("");
   const [sharingTypeSelect, setSharingTypeSelect] = useState("");
@@ -86,18 +85,6 @@ const QueryBuilder = ({
     setWritable(writableLet);
   };
 
-  const handleChangeSharable = (newValue) => {
-    let sharableLet = "";
-    newValue.map((value, index) => {
-      if (index === 0) {
-        sharableLet = value.email;
-      } else {
-        sharableLet = sharableLet + "," + value.email;
-      }
-    });
-    setSharable(sharableLet);
-  };
-
   const handleChangePath = (event) => {
     setPath(event.target.value);
   };
@@ -145,6 +132,7 @@ const QueryBuilder = ({
 
   //generate query from query builder
   const handleClickGenerate = () => {
+    !checkedGroup && (query = query + "groups:off and ");
     checkedMyDrive && (query = query + "drive:MyDrive and ");
     checkedSharedDrive && (query = query + "drive:" + sharedDrive + " and ");
     owner && (query = query + "owner:" + owner + " and ");
@@ -152,7 +140,6 @@ const QueryBuilder = ({
     sharedTo && (query = query + "to:" + sharedTo + " and ");
     readable && (query = query + "readable:" + readable + " and ");
     writable && (query = query + "writable:" + writable + " and ");
-    sharable && (query = query + "sharable:" + sharable + " and ");
     name && (query = query + "name:" + name + " and ");
     pathSelect === "inFolder" && (query = query + "inFolder:" + path + " and ");
     pathSelect === "folder" && (query = query + "folder:" + path + " and ");
@@ -302,22 +289,6 @@ const QueryBuilder = ({
               <TextField
                 {...params}
                 label="Writable by"
-                placeholder="Email"
-                sx={{ width: "545px", marginBottom: "20px" }}
-              />
-            )}
-          />
-          <Autocomplete
-            multiple
-            id="tags-outlined"
-            options={members}
-            getOptionLabel={(option) => (option.email ? option.email : "")}
-            filterSelectedOptions
-            onChange={(event, newValue) => handleChangeSharable(newValue)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Sharable by"
                 placeholder="Email"
                 sx={{ width: "545px", marginBottom: "20px" }}
               />
