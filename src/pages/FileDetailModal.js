@@ -149,7 +149,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                       label={
                         detail.owner["displayName"] === null
                           ? "Anyone"
-                          : detail.owner["displayName"]
+                          : detail.owner["emailAddress"]
                       }
                       variant="outlined"
                       key={detail.id}
@@ -187,7 +187,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                         label={
                           data["displayName"] === null
                             ? "Anyone"
-                            : data["displayName"]
+                            : data["emailAddress"]
                         }
                         variant="outlined"
                         key={index}
@@ -224,7 +224,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                         label={
                           data["displayName"] === null
                             ? "Anyone"
-                            : data["displayName"]
+                            : data["emailAddress"]
                         }
                         variant="outlined"
                         key={index}
@@ -261,7 +261,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                         label={
                           data["displayName"] === null
                             ? "Anyone"
-                            : data["displayName"]
+                            : data["emailAddress"]
                         }
                         variant="outlined"
                         key={index}
@@ -298,7 +298,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                         label={
                           data["displayName"] === null
                             ? "Anyone"
-                            : data["displayName"]
+                            : data["emailAddress"]
                         }
                         variant="outlined"
                         key={index}
@@ -335,7 +335,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                         label={
                           data["displayName"] === null
                             ? "Anyone"
-                            : data["displayName"]
+                            : data["emailAddress"]
                         }
                         variant="outlined"
                         key={index}
@@ -372,7 +372,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                         label={
                           data["displayName"] === null
                             ? "Anyone"
-                            : data["displayName"]
+                            : data["emailAddress"]
                         }
                         variant="outlined"
                         key={index}
@@ -409,7 +409,7 @@ const FileDetailModal = ({ eachFileDetailData }) => {
                         label={
                           data["displayName"] === null
                             ? "Anyone"
-                            : data["displayName"]
+                            : data["emailAddress"]
                         }
                         variant="outlined"
                         key={index}

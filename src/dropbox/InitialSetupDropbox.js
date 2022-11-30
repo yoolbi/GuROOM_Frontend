@@ -76,7 +76,6 @@ const InitialSetupDropbox = () => {
   //The user can change the file snapshot name.
   const handleChangeFileSnapshot = (e) => {
     setFileSnapshot(e.target.value);
-    console.log(fileSnapshot);
   };
 
   return (
