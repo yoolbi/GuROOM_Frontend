@@ -90,7 +90,6 @@ const DisplayValidation = ({ eachFileDetailData }) => {
 const FileDetailModalDropbox = ({ eachFileDetailData }) => {
   // eslint-disable-next-line react/prop-types
   const detail = eachFileDetailData;
-  console.log(detail);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>

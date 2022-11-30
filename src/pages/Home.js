@@ -216,6 +216,7 @@ const Home = ({ searchInput, setSearchInput }) => {
           owner: {
             displayName: data.owners[0]?.displayName,
             photoLink: data.owners[0]?.photoLink,
+            emailAddress: data.owners[0]?.emailAddress,
           },
           inheritPermissions: JSON.stringify(inheritPermissionsLet),
           directPermissions: JSON.stringify(directPermissionsLet),
@@ -680,6 +681,7 @@ const Home = ({ searchInput, setSearchInput }) => {
         owner: {
           displayName: data.owners[0]?.displayName,
           photoLink: data.owners[0]?.photoLink,
+          emailAddress: data.owners[0]?.emailAddress,
         },
         inheritPermissions: JSON.stringify(inheritPermissionsLet),
         directPermissions: JSON.stringify(directPermissionsLet),
