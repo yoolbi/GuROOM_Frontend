@@ -114,16 +114,25 @@ const QueryBuilder = ({
     setSharingTypeSelect(event.target.value);
   };
 
-  const [checkedMyDrive, setCheckedMyDrive] = useState(true);
+  const [checkedAll, setCheckedAll] = useState(true);
+  const handleChangeCheckboxAll = (event) => {
+    setCheckedAll(event.target.checked);
+    setCheckedSharedDrive(!event.target.checked);
+    setCheckedMyDrive(!event.target.checked);
+  };
+
+  const [checkedMyDrive, setCheckedMyDrive] = useState(false);
   const handleChangeCheckboxMyDrive = (event) => {
     setCheckedMyDrive(event.target.checked);
     setCheckedSharedDrive(!event.target.checked);
+    setCheckedAll(!event.target.checked);
   };
 
   const [checkedSharedDrive, setCheckedSharedDrive] = useState(false);
   const handleChangeCheckboxSharedDrive = (event) => {
     setCheckedSharedDrive(event.target.checked);
     setCheckedMyDrive(!event.target.checked);
+    setCheckedAll(!event.target.checked);
   };
 
   const [checkedGroup, setCheckedGroup] = useState(false);
@@ -188,6 +197,15 @@ const QueryBuilder = ({
             label="Group"
           />
           <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={checkedAll}
+                  onChange={handleChangeCheckboxAll}
+                />
+              }
+              label="All"
+            />
             <FormControlLabel
               control={
                 <Checkbox

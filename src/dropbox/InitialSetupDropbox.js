@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import lottie from "lottie-web";
 import { defineLordIconElement } from "lord-icon-element";
-import { postFileSnapshotAPIMethod } from "../api/client";
+import { postFileSnapshotDropboxAPIMethod } from "../api/client";
 
 // // register lottie and define custom element
 defineLordIconElement(lottie.loadAnimation);
@@ -56,7 +56,7 @@ const InitialSetupDropbox = () => {
   //After taking the snapshot, the modal shows the "Done!" and automatically closes.
   const handleNextModal = () => {
     handleOpen();
-    postFileSnapshotAPIMethod(fileSnapshot).then((data) => {
+    postFileSnapshotDropboxAPIMethod(fileSnapshot).then((data) => {
       console.log(data.status);
       if (data.status === 201) {
         handleOpenDone();
