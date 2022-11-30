@@ -327,7 +327,7 @@ const Homepage = () => {
                                   >
                                     <ListItemText
                                       style={{ marginBottom: "10px" }}
-                                      primary={membership["member"]}
+                                      primary={membership["email"]}
                                     />
                                   </ListItem>
                                 </List>
