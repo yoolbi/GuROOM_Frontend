@@ -29,7 +29,7 @@ const SharingDifferenceModal = ({
           res.data[key].map((data) => {
             differentPermissions.push({
               id: data["id"],
-              name: data["emailAddress"],
+              name: data["emailAddress"] ? data["emailAddress"] : "anyone",
               folderPermission: data["role"],
               filePermission: "X",
             });
@@ -39,7 +39,7 @@ const SharingDifferenceModal = ({
           res.data[key].map((data) => {
             differentPermissions.push({
               id: data["id"],
-              name: data["emailAddress"],
+              name: data["emailAddress"] ? data["emailAddress"] : "anyone",
               folderPermission: "X",
               filePermission: data["role"],
             });
@@ -49,7 +49,9 @@ const SharingDifferenceModal = ({
           res.data[key].map((data) => {
             differentPermissions.push({
               id: data["from"]["id"],
-              name: data["from"]["emailAddress"],
+              name: data["from"]["emailAddress"]
+                ? data["from"]["emailAddress"]
+                : "anyone",
               folderPermission: data["from"]["role"],
               filePermission: data["to"]["role"],
             });
